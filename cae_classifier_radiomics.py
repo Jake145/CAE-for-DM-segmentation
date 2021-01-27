@@ -8,8 +8,482 @@ Original file is located at
 
 #In questo notebook si allena la rete definita in CAE_Classifier_No_RADIOMICS.ipynb, ma con la caratteristica di estrarre le feature dalle immagini con Pyradiomics, con si fa una PCA per trovare le componenti di maggiore risalto da dare alla rete per migliorare la classificazione delle immagini.
 
-# Carichiamo i dati dal Drive
+#Helper Functions
 """
+
+!pip install SimpleITK
+
+!pip install pyradiomics
+
+#In questo file sono riportate tutte le funzioni helper per il software. Farò in un altro i codici per i modelli
+import numpy as np
+import os
+import pickle
+import shutil
+from PIL import Image
+import cv2
+import os
+import numpy as np
+import glob
+from skimage.io import imread
+import time
+def save_newext(file_name,data_path,ext1,ext2,endpath):
+  """
+  Riscrive le immagini in formato leggibile per pyradiomics
+  type file_name: stringa
+  param file_path: nome del file della immagine
+
+  type data_path: stringa
+  param data_path: percorso della cartella dove si trova la immagine
+
+  type ext1: stringa
+  param ext1: stringa identificativa dell'estenzione di partenza della immagine
+
+  type ext2: stringa
+  param ext2: stringa identificativa dell'estenzione finale della immagine
+
+  type endpath: stringa
+  param endpath: percorso della cartella di arrivo
+  """
+  try:
+    image=plt.imread(os.path.join(data_path,file_name))
+    file_name=file_name.replace(f'.{ext1}',f'.{ext2}') #insert logging warning if ext1==ext2
+  except:
+    raise ValueError('immagine o path non trovati')
+  status = cv2.imwrite(os.path.join(endpath,file_name),image)
+
+  return status
+
+def unit_masks(file_name,data_path,ext1,ext2, endpath):
+  """
+  Normalizza i valori dei pixel delle maschere già nei file per essere utilizzati con pyradiomics.
+  Permette inoltre di cambiare l'estenzione da .pgm a .png o qualunque altra estenzione supportata.
+
+  type file_name: stringa
+  param file_path: nome del file della maschera
+
+  type data_path: stringa
+  param data_path: percorso della cartella dove si trova la maschera
+
+  type ext1: stringa
+  param ext1: stringa identificativa dell'estenzione di partenza della maschera
+
+  type ext2: stringa
+  param ext2: stringa identificativa dell'estenzione finale della maschera
+
+  type endpath: stringa
+  param endpath: percorso della cartella di arrivo
+  """
+  try:
+    image=plt.imread(os.path.join(data_path,file_name))
+  except:
+    raise ValueError('immagine o path non trovati!')
+  image=image/255
+  file_name=file_name.replace(f'.{ext1}',f'.{ext2}')
+  status = cv2.imwrite(os.path.join(endpath,file_name),image)
+  return status,image
+
+def read_dataset(dataset_path,ext,benign_label,malign_label,x_id ="_resized", y_id="_mass_mask"):
+  """
+  Data la cartella con le maschere e le immagini, restituisce i vettori con le immagini, le maschere e le classi.
+  Restituisce i vettori come tensori da dare alla rete.
+
+  type dataset_path: stringa
+  param dataset_path: Cartella con le immagini e le relative maschere
+
+  type data_path: stringa
+  param data_path: percorso della cartella dove si trova la maschera
+
+  type ext: stringa
+  param ext: stringa identificativa dell'estenzione delle immagini e maschere
+
+  type x_id: stringa
+  param x_id: identificativo delle immagini
+
+  type x_id: stringa
+  param x_id: identificativo delle maschere
+
+  type benign_label: stringa
+  param benign_label: identificativo delle masse benigne
+
+  type malign_label: stringa
+  param malign_label: identificativo delle masse maligne
+
+  """
+
+  fnames = glob.glob(os.path.join(dataset_path, f"*{x_id}.{ext}"))
+  if fnames == []:
+    raise Exception('Niente immagini! Il path è sbagliato, magari x_id o ext sono sbagliati! ')
+  else:
+    pass
+  X = []
+  Y = []
+  class_labels=[]
+  for fname in fnames:
+      X.append(plt.imread(fname)[1:,1:,np.newaxis])
+      Y.append(plt.imread(fname.replace(x_id, y_id))[1:,1:,np.newaxis])
+      if benign_label in fname:
+        class_labels.append(0)
+      elif malign_label in fname:
+        class_labels.append(1)
+  return np.array(X), np.array(Y) , np.array(class_labels)
+
+def read_dataset_big(dataset_path_mass,dataset_path_mask,benign_label,malign_label,ext='png',resize=False):
+  """
+  Versione di read_dataset per il dataset del TCIA.
+  Data la cartella con le maschere e le immagini, restituisce i vettori con i filepath delle immagini, le maschere e le classi.
+  Restituisce i vettori come tensori da dare al generatore per la rete.
+
+  type dataset_path_mass: stringa
+  param dataset_path_mass: Cartella con le immagini
+
+  type dataset_path_mask: stringa
+  param dataset_path_mask: percorso della cartella dove si trovano le maschera
+
+  type ext: stringa
+  param ext: stringa identificativa dell'estenzione delle immagini e maschere
+
+  type resize: bool
+  param resize: Se TRUE fa il reshape delle maschere per combaciare con quello delle immagini
+
+
+
+  """
+  fnames  = glob.glob(os.path.join(dataset_path_mass, f"*.{ext}"))
+  if fnames == []:
+    raise Exception('Niente immagini! Il path è sbagliato, magari ext è sbagliato! ')
+  else:
+    pass
+  masknames = glob.glob(os.path.join(dataset_path_mask, f"*.{ext}"))
+  if masknames==[]:
+    raise Exception('Immagini o path non trovati!')
+  else:
+    pass
+  X = []
+  Y = []
+  class_labels=[]
+  for fname in fnames:
+    try:
+      assert(fname.replace(dataset_path_mass, dataset_path_mask) in masknames)
+    except:
+      raise Exception('Non vi è corrispondenza tra i nomi delle immagini e quelle delle maschere')
+    Y.append(fname.replace(dataset_path_mass, dataset_path_mask))
+    X.append(fname)
+    if resize == True:
+      X_image=imread(fname)
+      Y_image=imread(fname.replace(dataset_path_mass, dataset_path_mask))
+      image=np.array(Image.fromarray(Y_image).resize(size=(X_image.shape[1],X_image.shape[0])))
+      cv2.imwrite(fname.replace(dataset_path_mass, dataset_path_mask),image)
+
+    if benign_label in fname:
+      class_labels.append(0)
+    elif malign_label in fname:
+      class_labels.append(1)
+
+
+  return np.array(X), np.array(Y) , np.array(class_labels)
+
+import pickle
+import SimpleITK as sitk
+import radiomics
+from radiomics import featureextractor
+
+def radiomic_dooer(list_test,datapath,endpath):
+
+  """
+  Funzione per estrarre le feature con pyradiomics e salvarle in un dizionario
+
+  type list_test: lista
+  param list_test: lista con path immagine e relativa maschera normalizzata
+
+  type datapath: stringa
+  param datapath: percorso cartella dove si trova l'immagine
+
+  type endpath: stringa
+  param endpath: cartella dove si salva il pickle del dizionario
+
+  type resize: bool
+  param resize: Se TRUE fa il reshape delle maschere per combaciare con quello delle immagini
+
+
+
+  """
+  a=time.perf_counter()
+  try:
+    image = sitk.ReadImage(list_test[0], imageIO="PNGImageIO")
+  except:
+    raise Exception('Immagine non è .png o non esiste il path')
+  try:
+    mask = sitk.ReadImage(list_test[1], imageIO="PNGImageIO")
+  except:
+    raise Exception('Maschera non è .png o non esiste il path')
+
+  b=time.perf_counter()
+  print(f'time to read:{b-a}') #sostituisci con logging
+  try:
+    info=extractor.execute(image,mask)
+  except:
+    raise Exception('Problema con pyradiomics: forse la maschera non è normalizzata')
+  c=time.perf_counter()
+  print(f'time to extract:{c-b}')#sostituisci con logging
+  del(mask)
+  del(image)
+  d=time.perf_counter()
+  name=list_test[0].replace(datapath+'/','')
+  name=name.replace('.png','')
+  dict_r={list_test[0]:info}
+  try:
+    with open(os.path.join(endpath,f'feats_{name}.pickle'), 'wb') as handle:
+      pickle.dump(dict_r, handle, protocol=pickle.HIGHEST_PROTOCOL)
+  except:
+    raise Exception('Qualcosa è andato male nel definire il path di arrivo, controlla che endpath sia giusto')
+
+  print(f'time to update:{d-c}') #substitute with logging
+
+  return name
+
+def dict_update_radiomics(data_path,dictionary):
+
+  """
+  Funzione per unire i vari dizionari creati con radiomic_dooer per poi creare il dataframe
+
+  type data_path: stringa (.pickle)
+  param data_path: percorso del pickle da aprire
+
+  type dictionary: dizionario
+  param dictionary: dizionario generale del dataframe
+
+  """
+  with open(data_path, 'rb') as handle:
+    b = pickle.load(handle)
+    dictionary.update(b)
+
+  return(dictionary)
+
+def blender(img1,img2,a,b):
+  """
+  Funzione per sovraimporre due immagini con sfumatura
+
+  type img1: array numpy
+  param img1: immagine da sovrapporre
+  type img2: array numpy
+  param img2: immagine da svrapporre
+  type a: int or float
+  param a: valore di sfumatura di img1
+  type b: int or float
+  param b: valore di sfumatura di img2
+  """
+  try:
+    image=cv2.addWeighted(img1,a, img2, b,0)
+  except:
+    raise Exception('Sovrapposizione non riuscita. Controllare che le immagini siano giuste e che a e b siano numeri.')
+
+  return  image
+
+def dice(pred, true, k = 1):
+  """
+    Funzione per calcolare l'indice di Dice
+
+    type pred: array numpy
+    param pred: immagini predette dal modello
+
+    type true : array numpy
+    param true: immagini target
+
+    type k : int
+    param k: valore pixel true della maschera
+  """
+
+  intersection = np.sum(pred[true==k]) * 2.0
+  dice = intersection / (np.sum(pred) + np.sum(true))
+  return dice
+
+def dice_vectorized(pred, true, k = 1):
+  """
+    Versione vettorizzata per calcolare il coefficiente di dice
+    type pred: array numpy
+    param pred: immagini predette dal modello
+
+    type true : array numpy
+    param true: immagini target
+
+    type k : int
+    param k: valore pixel true della maschera
+  """
+  intersection = 2.0 *np.sum(pred * (true==k), axis=(1,2,3))
+  dice = intersection / (pred.sum(axis=(1,2,3)) + true.sum(axis=(1,2,3)))
+  return dice
+
+import matplotlib.pyplot as plt
+def modelviewer(model):
+  """
+  Funzione per visualizzare l'andamento della loss di training e validazione per l'autoencoder e per il classificatore
+    type model:  model.fit()
+    param model: history del modello di Keras ottenuto dalla funzione
+  """
+  plt.figure(figsize=(8,8))
+  plt.subplot(2,1,1)
+  plt.title('autoencoder')
+  try:
+    plt.plot(model.history['decoder_output_loss'])
+    plt.plot(model.history['val_decoder_output_loss'])
+  except:
+    raise Exception('Attenzione, o model non è un modello Keras o il modello non ha i campi decoder_output_loss o val_decoder_output_loss')
+  plt.legend(['loss', 'val_loss'])
+  plt.subplot(2,1,2)
+  plt.title('classifier')
+  try:
+    plt.plot(model.history['classification_output_loss'])
+    plt.plot(model.history['val_classification_output_loss'])
+  except:
+    raise Exception('Attenzione, il modello non ha i campi classification_output_loss o val_classification_output_loss')
+  plt.legend(['loss', 'val_loss'])
+  return
+
+import tensorflow as tf
+
+def heatmap(x,model):
+  """
+  Funzione che mostra la heatmap dell'ultimo layer convoluzionale prima del classificatore senza funzionalità radiomiche
+    type x: array numpy
+    param x: immagine da segmentare
+
+    type model : keras model
+    param model: modello allenato
+  """
+  img_tensor =x[np.newaxis,...]
+  preds = model.predict(img_tensor)[1]
+  argmax = np.argmax(preds)
+  conv_layer = model.get_layer("last_conv")
+  heatmap_model = models.Model([model.inputs], [conv_layer.output, model.output])
+
+  # Get gradient of the winner class w.r.t. the output of the (last) conv. layer
+  with tf.GradientTape() as gtape:
+      conv_output, predictions = heatmap_model(img_tensor)
+      loss = predictions[1][:, np.argmax(predictions[1])]
+      grads = gtape.gradient(loss, conv_output)
+      pooled_grads = K.mean(grads, axis=(0, 1, 2))
+
+  heatmap = tf.reduce_mean(tf.multiply(pooled_grads, conv_output), axis=-1)
+  heatmap = np.maximum(heatmap, 0)
+  max_heat = np.max(heatmap)
+  if max_heat == 0:
+      max_heat = 1e-10
+  heatmap /= max_heat
+
+
+  plt.matshow(heatmap.squeeze())
+  plt.show()
+
+  x = np.asarray(255*x, np.uint8)
+  heatmap = np.asarray(255*heatmap.squeeze(), np.uint8)
+
+
+  heatmap = cv2.resize(heatmap, (x.shape[1], x.shape[0]))
+
+
+
+  plt.imshow(blender(x,heatmap,1,1))
+  plt.axis('off')
+  if argmax==1:
+    plt.title('the mass is malign')
+  else:
+    plt.title('the mass is benign')
+
+  return heatmap
+
+import tensorflow as tf
+from tensorflow.python.keras import backend as K
+from tensorflow.keras import models
+
+def heatmap_rad(x,feature,model):
+  """
+  Funzione che mostra la heatmap dell'ultimo layer convoluzionale prima del classificatore con funzionalità radiomiche
+    type x: array numpy
+    param x: immagine da segmentare
+
+    type feature: array numpy
+    param feature:feature estratte con pyradiomics
+
+    type model : keras model
+    param model: modello allenato
+  """
+  img_tensor =x[np.newaxis,...]
+  feature_tensor=feature[np.newaxis,...]
+  preds = model.predict([img_tensor,feature_tensor])[1]
+  argmax = np.argmax(preds)
+  conv_layer = model.get_layer("last_conv")
+  heatmap_model = models.Model([model.inputs], [conv_layer.output, model.output])
+
+  # Get gradient of the winner class w.r.t. the output of the (last) conv. layer
+  with tf.GradientTape() as gtape:
+      conv_output, predictions = heatmap_model([img_tensor,feature_tensor])
+      loss = predictions[1][:, np.argmax(predictions[1])]
+      grads = gtape.gradient(loss, conv_output)
+      pooled_grads = K.mean(grads, axis=(0, 1, 2))
+
+  heatmap = tf.reduce_mean(tf.multiply(pooled_grads, conv_output), axis=-1)
+  heatmap = np.maximum(heatmap, 0)
+  max_heat = np.max(heatmap)
+  if max_heat == 0:
+      max_heat = 1e-10
+  heatmap /= max_heat
+
+
+  plt.matshow(heatmap.squeeze())
+  plt.show()
+
+  x = np.asarray(255*x, np.uint8)
+  heatmap = np.asarray(255*heatmap.squeeze(), np.uint8)
+
+
+  heatmap = cv2.resize(heatmap, (x.shape[1], x.shape[0]))
+
+
+  plt.imshow(blender(x,heatmap,1,1))
+  plt.axis('off')
+  if argmax==1:
+    plt.title('the mass is malign')
+  else:
+    plt.title('the mass is benign')
+
+  return heatmap
+
+def plot_roc_curve(fper, tper,auc):
+  """
+  Funzione che fa il plot della curva roc
+  type fper: float
+  param fper: percentuale falsi positivi
+
+  type tper: float
+  param tper:percentuale veri positivi
+
+  """
+  plt.plot(fper, tper, color='orange', label='ROC')
+  plt.plot([0, 1], [0, 1], color='darkblue', linestyle='--')
+  plt.xlabel('False Positive Rate')
+  plt.ylabel('True Positive Rate')
+  plt.title('Receiver Operating Characteristic (ROC) Curve with AUC = %.2f'%auc)
+  plt.legend()
+  plt.show()
+
+from skimage.filters import threshold_multiotsu
+
+def otsu(image,n_items=2):
+  """
+  Funzione che implementa l'algoritmo di Otsu per la segmentazione
+    type image: numpy array
+    param fper: immagine da segmentare
+
+    type n_items: intero
+    param n_items:numero di oggetti da segmentare nell'immagine
+
+  """
+  thresholds = threshold_multiotsu(image,classes=n_items)
+  regions = np.digitize(image, bins=thresholds)
+  return regions
+
+"""# Carichiamo i dati dal Drive"""
 
 from google.colab import drive #remember to add the features from the data if you can load it correctly
 drive.mount('/content/drive')
@@ -25,6 +499,9 @@ import numpy as np
 from keras.utils import to_categorical
 import matplotlib.pyplot as plt
 from skimage import io, transform
+from keras.utils import to_categorical
+import PIL
+from sklearn.model_selection import train_test_split
 
 """# Possiamo vedere un esempio dei dati a disposizione"""
 
@@ -39,68 +516,40 @@ plt.title('real mass')
 plt.imshow(img)
 plt.show()
 
-"""Per poter utilizzare Pyradiomics, è necessario utilizzare un format di immagini compatibile, dunque si convertono le immagini in .png e si normalizza subito le maschere, in quanto pyradiomics legge i path e cerca maschere normalizzate."""
+"""Per poter utilizzare Pyradiomics, è necessario utilizzare un format di immagini compatibile, dunque si con SimpleITK"""
 
-pngpath='/content/drive/My Drive/GoodPNGMassesV2'
-
-"""Questa funzione deve essere convertita in multiprocessing."""
-
-import cv2
-x_id ="_resized"
-y_id="_mass_mask"
-for f in glob.glob(dataset_path+'/*'):
-  try: 
-    image=plt.imread(f)
-    if x_id in f:
-      image=image
-    elif y_id in f:
-      image=image/255
-    else:
-      print('error, no mask or mass files')
-    f=f.replace('.pgm','.png')
-    f=f.replace('/content/drive/My Drive/large_sample_Im_segmented_ref/','')
-
-    status = cv2.imwrite(os.path.join(endpath,f),image)
-  except:
-    pass
+def read_pgm_as_sitk(image_path):
+  """ Read a pgm image as sitk image """
+  np_array = np.asarray(PIL.Image.open(image_path))
+  sitk_image = sitk.GetImageFromArray(np_array)
+  return sitk_image
 
 """Importiamo la funzione read_dataset e normalizziamo le immagini"""
 
-X_rad,Y_rad,LABELS_rad = read_dataset(endpath,'png')
+datapath='/content/drive/MyDrive/large_sample_Im_segmented_ref'
+
+X_rad,Y_rad,LABELS_rad = read_dataset(datapath,'pgm','_2_resized','_1_resized')
 X_rad = X_rad/255
+Y_rad = Y_rad/255
 Y_rad.min(),Y_rad.max()
+
+LABELS_rad
 
 """#In questa sezione estraiamo le feature con pyradiomics e facciamo la PCA
 
+Ora si estraggono le feature e si mettono in un dizionario che verrà poi convertito in un pandas dataframe
 """
 
-!pip install pyradiomics
-
-"""Ora si estraggono le feature e si mettono in un dizionario che verrà poi convertito in un pandas dataframe"""
-
-import radiomics
-from radiomics import featureextractor 
+import PIL
 x_id ="_resized"
 y_id="_mass_mask"
-ext='png'
-fnames = glob.glob(os.path.join(endpath, f"*{x_id}.{ext}"))
-fnamesmask = glob.glob(os.path.join(endpath, f"*{y_id}.{ext}"))
+ext='pgm'
+fnames = glob.glob(os.path.join(datapath, f"*{x_id}.{ext}"))
+fnamesmask = glob.glob(os.path.join(datapath, f"*{y_id}.{ext}"))
 
 extractor = featureextractor.RadiomicsFeatureExtractor()
 
-#Nel caso vi sia una categoria di feature che non interessano, si possono
-#selezionare dopo aver disabilitato tutte le altre e abilitato quelle che interessano
-
-#extractor.disableAllFeatures()
-#extractor.enableFeatureClassByName('firstorder')
-#extractor.enableFeatureClassByName('glcm')
-#extractor.enableFeatureClassByName('gldm')
-#extractor.enableFeatureClassByName('glrlm')
-#extractor.enableFeatureClassByName('glszm')
-#extractor.enableFeatureClassByName('ngtdm')
-#extractor.enableFeatureClassByName('shape')
-
-dataframe={f.replace(endpath,''):extractor.execute(f, f.replace(x_id,y_id)) for f in fnames}
+dataframe={f.replace(datapath,''):extractor.execute(read_pgm_as_sitk(f), read_pgm_as_sitk(f.replace(x_id,y_id)),label=255) for f in fnames}
 
 import pandas as pd
 
@@ -252,13 +701,177 @@ class MassesSequence_radiomics(keras.utils.Sequence):
           
         return [np.asarray(X,np.float64),np.asarray(Features,np.float64)], [np.asarray(Y,np.float64) ,np.asarray(Classes,np.float)]
 
-X_train_rad_tr, X_train_rad_val, Y_train_rad_tr, Y_train_rad_val,class_train_rad_tr,class_train_rad_val,feature_train_tr,feature_train_val = train_test_split(X_train_rad, Y_train_rad, to_categorical(class_train,2),feature_train, test_size=0.2, random_state=24)
+X_train_rad_tr, X_train_rad_val, Y_train_rad_tr, Y_train_rad_val,class_train_rad_tr,class_train_rad_val,feature_train_tr,feature_train_val = train_test_split(X_train_rad, Y_train_rad, to_categorical(class_train_rad,2),feature_train, test_size=0.2, random_state=24)
 
 mass_gen_rad = MassesSequence_radiomics(X_train_rad_tr, Y_train_rad_tr,class_train_rad_tr,feature_train_tr, train_datagen)
 
 batch=mass_gen_rad[6]
 
-batch[0].shape
+batch[0][0].shape[1:]
+
+"""#Definiamo i modelli"""
+
+# Commented out IPython magic to ensure Python compatibility.
+# %load_ext tensorboard
+
+import tensorflow as tf
+import datetime, os
+
+from keras.layers import Conv2D, Conv2DTranspose, Input, Dropout,MaxPooling2D, UpSampling2D, Dense, Flatten
+from keras.models import Model, load_model
+from keras.layers.experimental.preprocessing import Resizing
+from keras.layers.merge import concatenate
+
+def make_model_rad_REGULIZER(shape_tensor=batch[0][0].shape[1:],feature_dim=batch[0][1].shape[1:]):
+    input_tensor = Input(shape=shape_tensor,name="tensor_input")
+    input_vector= Input(shape=feature_dim)
+
+    x = Conv2D(32, (5, 5), strides=2, padding='same', activation='relu')(input_tensor)
+    x = Dropout(.2,)(x)
+    x = MaxPooling2D((2, 2), strides=(2,2),padding='same')(x)
+    x = Conv2D(64, (3,3), strides=2,  padding='same', activation='relu')(x)
+    x = Dropout(.2,)(x) 
+    x = Conv2D(128, (3,3), strides=2, padding='same', activation='relu',name='last_conv')(x)
+
+    flat=Flatten()(x)
+    flat=concatenate([flat,input_vector])
+    den = Dense(16, activation='relu')(flat)
+    #den= Dropout(.1,)(den)
+    
+
+
+
+    classification_output = Dense(2, activation = 'sigmoid', name="classification_output")(den)
+    
+    x = Conv2DTranspose(64, (3,3), strides=2,  padding='same', activation='relu')(x)
+    x = Dropout(.2,)(x)
+    x = UpSampling2D((2, 2))(x)
+    x = Conv2DTranspose(32, (3,3), strides=2, padding='same',activation='relu')(x)
+    x = Conv2DTranspose(32, (3,3), strides=2, padding='same',activation='relu')(x)
+    decoder_out = Conv2D(1, (5,5), padding='valid',activation='sigmoid',name="decoder_output")(x)
+    model = Model([input_tensor,input_vector], [decoder_out,classification_output])
+    
+    return model
+
+def make_model_rad(shape_tensor=batch[0][0].shape[1:],feature_dim=batch[0][1].shape[1:]):
+    input_tensor = Input(shape=shape_tensor)
+    input_vector= Input(shape=feature_dim)
+    
+    x = Conv2D(32, (5, 5), strides=2, padding='same', activation='relu')(input_tensor)
+   
+    x = Conv2D(64, (3,3), strides=2,  padding='same', activation='relu')(x)
+    
+    x = Conv2D(128, (3,3), strides=2, padding='same', activation='relu',name='last_conv')(x)
+
+    flat=Flatten()(x)
+    flat=concatenate([flat,input_vector])
+    den = Dense(16, activation='relu')(flat)
+   
+
+    classification_output = Dense(2, activation = 'sigmoid', name="classification_output")(flat)
+
+    x = Conv2DTranspose(64, (3,3), strides=2,  padding='same', activation='relu')(x)
+    x = Conv2DTranspose(32, (3,3), strides=2, padding='same',activation='relu')(x)
+    x = Conv2DTranspose(32, (3,3), strides=2, padding='same',activation='relu')(x)
+    decoder_out = Conv2D(1, (5,5), padding='valid',activation='sigmoid',name="decoder_output")(x)
+    model = Model([input_tensor,input_vector], [decoder_out,classification_output])
+    
+    return model
+
+from tensorflow.keras import regularizers
+
+ 
+def make_model_rad_UNET(shape_tensor=batch[0][0].shape[1:],feature_dim=batch[0][1].shape[1:]):
+    input_tensor = Input(shape=shape_tensor)
+    input_vector= Input(shape=feature_dim)
+
+    c1 = Conv2D(16, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(input_tensor)
+    c1 = Dropout(0.2)(c1)
+    c1 = Conv2D(16, (3, 3),activation='relu', kernel_initializer='he_normal',
+                            padding='same')(c1)
+    p1 =MaxPooling2D((2, 2))(c1)
+    c2 = Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(p1)
+    c2 = Dropout(0.1)(c2)
+    c2 = Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(c2)
+    p2 = MaxPooling2D((2, 2))(c2)
+    p2 = Resizing(32,32,interpolation='nearest')(p2)
+    c3 = Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(p2)
+
+    
+    c3 = Dropout(0.2)(c3)
+    c3 = Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same', name="last_conv")(c3)
+    p3 = MaxPooling2D((2, 2))(c3)
+    p3 = Resizing(16,16,interpolation='nearest')(p3)
+    c4 = Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(p3)
+    c4 = Dropout(0.2)(c4)
+    c4 = Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(c4)
+
+    p4 = MaxPooling2D((2, 2))(c4)
+
+    c5 = Conv2D(256, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(p4)
+                            
+    c5 = Dropout(0.2)(c5)
+    c5 = Conv2D(256, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(c5)
+#fc layers
+
+    flat=Flatten()(c3)   
+    flat=concatenate([flat,input_vector]) 
+    den = Dense(16, activation='relu', activity_regularizer=regularizers.l2(1e-4))(flat)
+    
+
+    classification_output = Dense(2, activation = 'softmax', name="classification_output")(flat)
+
+    u6 = Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same')(c5)
+    
+    u6 = concatenate([u6, c4])
+    c6 = Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(u6)
+    c6 = Dropout(0.2)(c6)
+    c6 = Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(c6)
+
+    u7 = Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same')(c6)
+
+    u7 = concatenate([u7, c3])
+    c7 = Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(u7)
+    c7 = Dropout(0.2)(c7)
+    c7 = Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(c7)
+
+    u8 = Conv2DTranspose(32, (2, 2), strides=(2, 2), padding='same')(c7)
+    u8 = Resizing(62,62,interpolation='nearest')(c2)
+
+    u8 = concatenate([u8, c2])
+    c8 = Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(u8)
+    c8 = Dropout(0.2)(c8)
+    c8 = Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(c8)
+
+    u9 = Conv2DTranspose(16, (2, 2), strides=(2, 2), padding='same')(c8)
+
+    u9 = concatenate([u9, c1], axis=3)
+    c9 = Conv2D(16, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(u9)
+    c9 = Dropout(0.2)(c9)
+    c9 = Conv2D(16, (3, 3), activation='relu', kernel_initializer='he_normal',
+                            padding='same')(c9)
+
+
+    decoder_out = Conv2D(1, (1, 1), activation='sigmoid',name="decoder_output")(c9)
+
+    model = Model([input_tensor,input_vector], [decoder_out,classification_output])
+    return model
 
 """Ora importiamo i modelli e facciamo il training. Questa parte del notebook contiene parti di codice simile alla versione senza pyradiomics, dunque non vi sono riportati i commenti di quella versione"""
 
@@ -319,9 +932,8 @@ plt.imshow(otsu(model_rad.predict([xtrain,feature_train[idx][np.newaxis,...]])[0
 """Ora su immagini di test"""
 
 idx=16
-xtest = X_test[idx][np.newaxis,...]
-ytest = Y_test[idx][np.newaxis,...]
-xtest.shape
+xtest = X_test_rad[idx][np.newaxis,...]
+ytest = Y_test_rad[idx][np.newaxis,...]
 
 plt.figure(figsize=(14,4))
 plt.subplot(1,3,1)
@@ -336,21 +948,21 @@ plt.imshow(otsu(model_rad.predict([xtest,feature_test[idx][np.newaxis,...]])[0].
 The average Dice on the train set is:
 """
 
-dice_vectorized(Y_train,otsu(model_rad.predict([X_train,feature_train])[0])).mean()
+dice_vectorized(Y_train_rad,otsu(model_rad.predict([X_train_rad,feature_train])[0])).mean()
 
-dice_vectorized(Y_test,otsu(model_rad.predict([X_test,feature_test])[0])).mean()
+dice_vectorized(Y_test_rad,otsu(model_rad.predict([X_test_rad,feature_test])[0])).mean()
 
 """Visualizziamo una heatmap di attivazione del layer convoluzionale prima del fully connected del classificatore"""
 
-heatmap_rad(X_test[18],feature_test[18],model_rad)
+hmap=heatmap_rad(X_test_rad[18],feature_test[18],model_rad)
 
 """Vediamo ora la curva roc e l'AUC"""
 
 from sklearn.metrics import roc_curve
 y_pred = model_rad.predict([X_test_rad,feature_test])[1]
-fpr, tpr, thresholds = roc_curve(class_test, [item[0] for _,item in enumerate(y_pred)],pos_label=0)
+fpr, tpr, thresholds = roc_curve(class_test_rad, [item[0] for _,item in enumerate(y_pred)],pos_label=0)
 
 from sklearn.metrics import auc
 auc = auc(fpr, tpr)
 
-plot_roc_curve(fpr, tpr)
+plot_roc_curve(fpr, tpr,auc)
