@@ -14,139 +14,80 @@ import glob
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
-
-
-datapath='/content/drive/MyDrive/Mass_data_New'
-train='TRAINING'
-test='TESTING'
+import sys
+sys.path.append('C:/Users/pensa/Desktop/CAE-for-DM-segmentation/package')
+import caehelper
+##
+datapath='E:'
+maindir='Mass_data'
 mass_train='Train_data'
 mass_test='Test_data'
-mask_train='mask_train_resized'
-mask_test='mask_test_resized'
+mask_train='Train_data_masks'
+mask_test='Test_data_masks'
 benign_label='BENIGN'
 malign_label='MALIGNANT'
+features_path='feats'
 
-masks_1=os.path.join(datapath,train,mask_train)
-masks_2=os.path.join(datapath,test,mask_test)
+path_mass_tr=os.path.join(datapath,maindir,mass_train)
+path_masks_tr=os.path.join(datapath,maindir,mask_train)
 
-masks_2
 
-#os.mkdir(os.path.join(datapath,train,'mask_tr_V2'))
-#os.mkdir(os.path.join(datapath,test,'mask_test_V2'))
 
-"""La funzione seguente , che aggiungerò all'helper functions, normalizza le maschere per pyradiomics"""
 
-import cv2 #these kind of functions can be implemented in multithreading
-#This function is to use to normalize the mask from the file because pyradiomics
-#needs a filemask that is max 1 and min 0
-#don't need to run it everytime
-def mask_unit(path_in,path_out):
-  for f in glob.glob(path_in+'/*.png'):
-    image=imread(f)
-    image=image/255
-    g=f.replace(path_in+'/','')
-    status = cv2.imwrite(os.path.join(path_out,g),image)
+X_big_train,Y_big_train,Class_big_train=caehelper.read_dataset_big(path_mass_tr
+,path_masks_tr,benign_label,malign_label,resize=False)
 
-"""Questa funzione carica i filename in array che posso organizzare in train e test. Poi li passo al generatore che durante il training carica le immagini leggendo il path. Qui si dovrebbe anche separare la funzionalità che rende le immagini e le relative maschere delle stesse dimensioni"""
 
-def read_dataset_big(dataset_path_mass,dataset_path_mask,ext='png'):
-  #this function loads the datapaths in arrays, the commented part is to make mask and data same size 
-    fnames = glob.glob(os.path.join(dataset_path_mass, f"*.{ext}"))
-    masknames = glob.glob(os.path.join(dataset_path_mask, f"*.{ext}"))
-    X = []
-    Y = []
-    class_labels=[]
-    for fname in fnames:
-      try:
-        assert(fname.replace(dataset_path_mass, dataset_path_mask) in masknames)
-        Y.append(fname.replace(dataset_path_mass, dataset_path_mask))
-        X.append(fname)
-        #X_image=imread(fname)
-        #Y_image=imread(fname.replace(dataset_path_mass, dataset_path_mask))
-        #image=np.array(Image.fromarray(Y_image).resize(size=(X_image.shape[1],X_image.shape[0])))
-        #cv2.imwrite(fname.replace(dataset_path_mass, dataset_path_mask),image)
-        #np.delete(X_image)
-        #np.delete(Y_image)
-        if benign_label in fname:
-          class_labels.append(0)
-        elif malign_label in fname:
-          class_labels.append(1)
-      except:
-        pass
-          
-    return np.array(X), np.array(Y) , np.array(class_labels)
-
-X_big_train,Y_big_train,Class_big_train=read_dataset_big(os.path.join(datapath,train,mass_train)
-,os.path.join(datapath,train,'mask_tr_V2'))
-
-X_big_test,Y_big_test,Class_big_test=read_dataset_big(os.path.join(datapath,test,mass_test)
-,os.path.join(datapath,test,'mask_test_V2'))
-
+##
 """#Pyradiomics on big dataset"""
 
-!pip install pyradiomics
-
-from __future__ import print_function
-import SimpleITK as sitk
-
-import six
-import os  # needed navigate the system to get the input data
-
-import radiomics
-from radiomics import featureextractor  # This module is used for interaction with pyradiomics
-
-#os.mkdir('/content/drive/My Drive/radiomic_feats_big_test')
+endpath_tr=os.path.join(datapath,maindir,features_path)
+if not os.path.exists(endpath_tr):
+  os.makedirs(endpath_tr)
+##
 
 """Questa funzione serve per estrarre le feature in multiprocessing e aggiungerle a un dizionario"""
 
-import radiomics 
-from radiomics import featureextractor
+
 import time
 import pickle
-featpath='/content/drive/My Drive/radiomic_feats_big_TEST'
+from functools import partial
+import radiomics
+from radiomics import featureextractor  
+
+
+
 extractor = featureextractor.RadiomicsFeatureExtractor()
 
-def radiomic_dooer_test(list_test):
-  a=time.perf_counter()
-  image = sitk.ReadImage(list_test[0], imageIO="PNGImageIO")
-  mask = sitk.ReadImage(list_test[1], imageIO="PNGImageIO")
-  b=time.perf_counter()
-  print(f'time to read:{b-a}')
-  info=extractor.execute(image,mask)
-  c=time.perf_counter()
-  print(f'time to extract:{c-b}')
-  del(mask)
-  del(image)
-  d=time.perf_counter()
-  name=list_test[0].replace('/content/drive/MyDrive/Mass_data_New/TESTING/Test_data/','')
-  name=name.replace('.png','')
-  dict_r={list_test[0]:info}
-  with open(f'/content/drive/My Drive/radiomic_feats_big_test/feats_{name}.pickle', 'wb') as handle:
-    pickle.dump(dict_r, handle, protocol=pickle.HIGHEST_PROTOCOL)  
-  del(name)
-  del(dict_r)                                                    #each dict in a file then 
-                                                    #put everything in a csv table
-  print(f'time to update:{d-c}')
-
-  return 'one image done!'
 
 biggy=[[X_big_train[i],Y_big_train[i]] for i in range(len(X_big_train))] 
-biggy_test=[[X_big_test[i],Y_big_test[i]] for i in range(len(X_big_test))] 
+#biggy_test=[[X_big_test[i],Y_big_test[i]] for i in range(len(X_big_test))] 
+
+radiomic_dooer=partial(caehelper.radiomic_dooer,datapath=path_mass_tr,endpath=endpath_tr,label=255,extrc=extractor)
+##
+
+#nam=radiomic_dooer(biggy[2],path_mass_tr,endpath_tr,255,extractor)
+
+##
 
 #this is the filename list for the multiprocessing
 
 import concurrent.futures
 
-extractor = featureextractor.RadiomicsFeatureExtractor()
+
 
 a1=time.perf_counter()
 
 with concurrent.futures.ThreadPoolExecutor() as executor:
-  executor.map(radiomic_dooer_test, 
-               biggy_test)
+  executor.map(radiomic_dooer, biggy)
+  
+  
 b1=time.perf_counter()
-print(f'time spent:{b-a}')
+print(f'time spent:{b1-a1}')#logging
 
+
+
+##
 dataframe_big_train={}
 
 def dict_update_radiomics(data_path,remove_string,dictionary):
