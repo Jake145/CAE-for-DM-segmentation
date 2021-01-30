@@ -28,123 +28,191 @@ import concurrent.futures
 import time
 from functools import partial
 import re
-def dycomrconverter(dir,end_path,dataframe,mask=False):
+
+import os
+
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
+
+file_handler = logging.FileHandler('Dicomdatagen.log')
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+
+def dycomrconverterV2(data,dir_mass,dir_mask,end_path_mass,end_path_mask):
+    logger.debug(f'Per estrarre le immagini e maschere, carico da {dir_mass} e {dir_mask} con cartelle di arrivo {end_path_mass} e {end_path_mask}')
+    def search_files(directory='.', extension=''):
+        extension = extension.lower()
+        filelist=[]
+        for dirpath, dirnames, files in os.walk(directory):
+            for name in files:
+                if extension and name.lower().endswith(extension):
+                    filelist.append(os.path.join(dirpath, name))
+                elif not extension:
+                    filelist.append(os.path.join(dirpath, name))
+        return filelist
     a=time.perf_counter()
-    print(f'time started:{a}')
-    files=next(os.walk(dir))[2]
+    logger.info(f'time started:{a}')
+    pattern=re.compile(r'[\w-]+[\w]\b')
+    match_mass=re.findall(pattern,data['image file path'])[0] #data=df.iloc[i,:]
+    logger.debug(f'trovato come nome della immagine: {match_mass}')
+    match_mask=re.findall(pattern,data['ROI mask file path'])[0] #data=df.iloc[i,:]
+    logger.debug(f'trovato come nome della maschera: {match_mask}')
 
-    #
-    for f in files:
+
+    dir_masses=os.path.join(dir_mass,match_mass)
+    logger.info(f'impostato come directory di arrivo per le immagini: {dir_masses}')
 
 
-        if mask==True:
-            dg = pydicom.dcmread(os.path.join(dir,f))
-            good=dg.SeriesDescription
-            if good=='ROI mask images':
+    files=search_files(dir_masses,'.dcm')
+    logger.info('sto cercando i dycom in {dir_masses}')
+    try:
+        len(files)==1
+        logger.debug('ho verificato che nella cartella vi è una sola immagine')
+        #questo va bene nel nostro caso specifico. Nel caso generale sarebbe meglio guardare il nome del file dal dycom, ma questo modo è più rapido
+    except:
+        raise Exception(f'Nella directory {dir_masses} delle singole immagini ci sono più file')
+        logger.exception(f'Nella directory {dir_masses} delle singole immagini ci sono più file')
 
-                ds = pydicom.read_file(os.path.join(dir,f))
-            elif good=='cropped images':
-                pass
-            else:
-                print('error code not working')#replace with logging
-        else:
-            try:
-                len(files)==1
-            except:
-                raise Exception(f'Nella directory {dir} delle singole immagini ci sono più file')
-            ds = pydicom.read_file(os.path.join(dir, f))
 
+
+    f=files[0]
+    logger.info(f'ho letto {f}')
+    ds = pydicom.read_file(f)
+    logger.info(f'ho letto correttamente il dicom di {f}')
     image = ds.pixel_array
-    pattern=re.compile('P_0\d*')
-    match=re.findall(pattern,dir)
-    if 'MLO' in dir and 'LEFT' in dir:
-        i=np.logical_and.reduce((df['patient_id']==match[0],df['image view']=='MLO',df['left or right breast']=='LEFT'))
-    elif 'MLO' in dir and 'RIGHT' in dir:
-        i=np.logical_and.reduce((df['patient_id']==match[0],df['image view']=='MLO',df['left or right breast']=='RIGHT'))
-    elif 'CC' in dir and 'RIGHT' in dir:
-        i=np.logical_and.reduce((df['patient_id']==match[0],df['image view']=='CC',df['left or right breast']=='RIGHT'))
-    elif 'CC' in dir and 'LEFT' in dir:
-        i=np.logical_and.reduce((df['patient_id']==match[0],df['image view']=='CC',df['left or right breast']=='LEFT'))
-    else:
-        raise Exception('Identificazione identificativo della immagine fallito')
-    abn_type=dataframe['abnormality type'][i].array[0]
-    pat_id=dataframe['patient_id'][i].array[0]
-    pathology=dataframe['pathology'][i].array[0]
-    view=dataframe['image view'][i].array[0]
-    lor=dataframe['left or right breast'][i].array[0]
+
+    pathology=data['pathology']
+
     if 'WindowWidth' in ds:
-        print('Dataset has windowing')#rimpiazza con logging
+        logger.info('Dataset ha windowing')
 
     windowed = apply_voi_lut(image, ds)
-    filename = f'{abn_type}_{pat_id}_{pathology}_{view}_{lor}.png'
-    filename = os.path.join(end_path, filename)
-    status = cv2.imwrite(filename,image)
+    filename = f'{match_mass}_{pathology}.png'
+    filename = os.path.join(end_path_mass, filename)
+    logger.debug(f'salvato in {filename}')
+    status_mass = cv2.imwrite(filename,image)
+    logger.info(f'correttamente salvato {filename}')
+
+    #ora facciamo la maschera
+    dir_masks=os.path.join(dir_mask,match_mask)
+    logger.info(f'impostato come directory di arrivo per le maschere: {dir_masks}')
+    files=search_files(dir_masks,'.dcm')
+    logger.info('sto cercando i dycom in {dir_masks}')
+
+    try:
+        len(files)<=2
+        logger.debug('ho verificato che nella cartella vi è al più due immagini')
+
+    except:
+        raise Exception(f'Nella directory {dir_masks} delle maschere ci sono più masks')
+        logger.exception(f'Nella directory {dir_masks} delle maschere ci sono più di due file')
+    for f in files:
+
+        dg = pydicom.dcmread(f)
+        logger.debug(f'ho letto correttamente il dicom di {f}')
+        good=dg.SeriesDescription
+        if good=='ROI mask images':
+
+            ds_mask = pydicom.read_file(f)
+            logger.debug(f'in {f} vi è una maschera')
+        elif good=='cropped images':
+            logger.debug(f'in {f} vi è una ROI')
+
+            pass
+        else:
+            raise Exception(f'{f} File sconosciuto!')
+            logger.warning(f'{f} File sconosciuto!')
+
+    image_mask = ds_mask.pixel_array
+
+
+
+
+
+    if 'WindowWidth' in ds_mask:
+        logger.info('Dataset ha windowing')
+
+    windowed = apply_voi_lut(image_mask, ds_mask)
+    filename_mask = f'{match_mass}_{pathology}.png'
+    filename_mask = os.path.join(end_path_mask, filename_mask)
+    logger.debug(f'salvato in {filename}')
+
+    status_mask = cv2.imwrite(filename_mask,image_mask)
+    logger.info(f'maschera correttamente salvato {filename}')
+
     b=time.perf_counter()
-    print(f'Time elapsed:{b-a}')
-    return status
+    logger.info(f'Time elapsed:{b-a}')
+    return status_mass,status_mask
+
+
+
+###
 
 if __name__ == '__main__':
 
-    ##define the datapaths
+
+
+#Definiamo i path e il dataframe
+
+
     datapath_mask_train='E:/massdata' #modificare con il proprio path
     datapath_mass_train='E:/massdatafull' #modificare con il proprio path
     main_directory='CBIS-DDSM'
-    datapath_example=os.path.join(datapath_mass_train+main_directory)
-    secondary_dir='Mass-Training_P_0'
-    tertiary_dir='1.000000-ROI mask images'
 
-    ##here we make the csv
+
 
     csv_path='C:/Users/pensa/Desktop/CAE/csvs'
     csv_filename='mass_case_description_train_set.csv'
     df = pd.read_csv(os.path.join(csv_path,csv_filename))
 
+    datas=[]
+    for i in range(len(df)):
+        datas.append(df.iloc[i,:])
 
-    ##now we create the png files for the full image
+    directory_mass=os.path.join(datapath_mass_train,main_directory)
+    directory_mask=os.path.join(datapath_mask_train,main_directory)
 
-    dirpath=os.path.join(datapath_mass_train,main_directory,secondary_dir+'*','*','*')
-    directories=glob.glob(dirpath)
-    endpath='E:/Mass_data'
+
+    endpath='E:/Mass_data_new'
     if not os.path.exists(endpath):
         os.makedirs(endpath)
+    logger.info(f'creato il path {endpath}')
+
+
     trpath='Train_data'
     endpath_1=os.path.join(endpath,trpath)
     if not os.path.exists(endpath_1):
         os.makedirs(endpath_1)
+    logger.info(f'creato il path {endpath_1}')
 
-    ## Definiamo la funzione da mappare nell'esecutore del MT
-
-
-    dycomrconverter=partial(dycomrconverter,end_path=endpath_1,dataframe=df,mask=False)
-
-    ##multi thread
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-
-        results = executor.map(dycomrconverter, directories)
-
-    ##Definiamo i path per le maschere
-
-    dirpath_mask=os.path.join(datapath_mask_train,main_directory,secondary_dir+'*','*','*')
-    directories_mask=glob.glob(dirpath_mask)
     trpath_mask='Train_data_masks'
     endpath_2=os.path.join(endpath,trpath_mask)
     if not os.path.exists(endpath_2):
         os.makedirs(endpath_2)
+    logger.info(f'creato il path {endpath_2}')
 
-    ## Definiamo la funzione da mappare nell'esecutore del MT
 
 
-    dycomrconverter_masks=partial(dycomrconverter,end_path=endpath_2,dataframe=df,mask=True)
+    dycomrconverter_new=partial(dycomrconverterV2,dir_mass=directory_mass,dir_mask=directory_mask,end_path_mass=endpath_1,end_path_mask=endpath_2)
+
 
     ##multi thread
     start=time.perf_counter()
     with concurrent.futures.ThreadPoolExecutor() as executor:
 
-        results = executor.map(dycomrconverter_masks, directories_mask)
-
+        results = executor.map(dycomrconverter_new, datas)
+        print(results)
     end=time.perf_counter()
 
-    print(f'Elapsed time for MT:{end-start}')
+    logger.info(f'Elapsed time for MT:{end-start}')
+
+
+
 
 
 
