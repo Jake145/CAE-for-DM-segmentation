@@ -17,6 +17,8 @@ import glob
 from skimage.io import imread
 import time
 import re
+import warnings
+
 
 def save_newext(file_name,data_path,ext1,ext2,endpath):
   """
@@ -119,7 +121,7 @@ def read_dataset(dataset_path,ext,benign_label,malign_label,x_id ="_resized", y_
         class_labels.append(1)
   return np.array(X), np.array(Y) , np.array(class_labels)
 
-def read_dataset_big(dataset_path_mass,dataset_path_mask,benign_label,malign_label,ext='png',resize=False):
+def read_dataset_big(dataset_path_mass,dataset_path_mask,benign_label,malign_label,ext='png'):
   """
   Versione di read_dataset per il dataset del TCIA.
   Data la cartella con le maschere e le immagini, restituisce i vettori con i filepath delle immagini, le maschere e le classi.
@@ -156,21 +158,16 @@ def read_dataset_big(dataset_path_mass,dataset_path_mask,benign_label,malign_lab
   for fname in fnames:
     try:
       assert(fname.replace(dataset_path_mass, dataset_path_mask) in masknames)
+      Y.append(fname.replace(dataset_path_mass, dataset_path_mask))
+      X.append(fname)
+
+      if benign_label in fname:
+        class_labels.append(0)
+      elif malign_label in fname:
+        class_labels.append(1)
     except:
-      raise Exception('Non vi è corrispondenza tra i nomi delle immagini e quelle delle maschere')
-    Y.append(fname.replace(dataset_path_mass, dataset_path_mask))
-    X.append(fname)
-    if resize == True:
-      X_image=imread(fname)
-      Y_image=imread(fname.replace(dataset_path_mass, dataset_path_mask))
-      image=np.array(Image.fromarray(Y_image).resize(size=(X_image.shape[1],X_image.shape[0])))
-      cv2.imwrite(fname.replace(dataset_path_mass, dataset_path_mask),image)
-
-    if benign_label in fname:
-      class_labels.append(0)
-    elif malign_label in fname:
-      class_labels.append(1)
-
+      warnings.warn(f"Attenzione, per {fname} non vi è corrispondenza in {dataset_path_mask}, controlla che l'immagine non sia corrotta o non sia mancante")
+      pass
 
   return np.array(X), np.array(Y) , np.array(class_labels)
 
@@ -200,21 +197,23 @@ def radiomic_dooer(list_test,datapath,endpath,lab,extrc):
 
   """
   b=time.perf_counter()
-  #try:
-  info=extrc.execute(list_test[0],list_test[1],lab)
-  #except:
-    #raise Exception('Problema con pyradiomics: forse vi è un problema col label o i path. Controlla che pyradiomics sia installato e che da radiomics sia importato featureextractor')
+  try:
+
+    info=extrc.execute(list_test[0],list_test[1],lab)
+
+  except:
+    raise Exception('Problema con pyradiomics: forse vi è un problema col label o i path. Controlla che pyradiomics sia installato e che da radiomics sia importato featureextractor')
   c=time.perf_counter()
   print(f'time to extract:{c-b}')#sostituisci con logging
   d=time.perf_counter()
-  pattern=re.compile('P_0\d*_[A-Z]*_[A-Z]*_[A-Z]*')
+  pattern=re.compile('[M][\w-]*[0-9]*[\w]{13}')
   name=re.findall(pattern,list_test[0])
   dict_r={name[0]:info}
-  #try:
-  with open(os.path.join(endpath,f'feats_{name[0]}.pickle'), 'wb') as handle:
-    pickle.dump(dict_r, handle, protocol=pickle.HIGHEST_PROTOCOL)
-  #except:
-  #  raise Exception('Qualcosa è andato male nel definire il path di arrivo, controlla che endpath sia giusto')
+  try:
+    with open(os.path.join(endpath,f'feats_{name[0]}.pickle'), 'wb') as handle:
+      pickle.dump(dict_r, handle, protocol=pickle.HIGHEST_PROTOCOL)
+  except:
+    raise Exception('Qualcosa è andato male nel definire il path di arrivo, controlla che endpath sia giusto')
   del(dict_r)
   print(f'time to update:{d-c}') #substitute with logging
 
