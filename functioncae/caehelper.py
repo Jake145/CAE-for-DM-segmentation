@@ -40,7 +40,7 @@ def save_newext(file_name,data_path,ext1,ext2,endpath):
   param endpath: percorso della cartella di arrivo
   """
   if ext1==ext2:
-    logger.debug(f'il file {file_name} in {data_path} ha già la estenzione {ext2}' ')
+    logger.debug(f'il file {file_name} in {data_path} ha già la estenzione {ext2}' )
   try:
     image=plt.imread(os.path.join(data_path,file_name))
     file_name=file_name.replace(f'.{ext1}',f'.{ext2}') #insert logging warning if ext1==ext2
@@ -177,7 +177,7 @@ def read_dataset_big(dataset_path_mass,dataset_path_mask,benign_label,malign_lab
   for fname in fnames:
     try:
       assert(fname.replace(dataset_path_mass, dataset_path_mask) in masknames)
-      logger.debug(f'sto verificando che {fname} sia in {dataset_path_mask})
+      logger.debug(f'sto verificando che {fname} sia in {dataset_path_mask}')
       Y.append(fname.replace(dataset_path_mass, dataset_path_mask))
       X.append(fname)
 
@@ -270,9 +270,9 @@ def dict_update_radiomics(data_path,dictionary):
   with open(data_path, 'rb') as handle:
     logger.info(f'ho aperto {data_path}')
     b = pickle.load(handle)
-    logger.info(f'ho caricato {handle})
+    logger.info(f'ho caricato {handle}')
     dictionary.update(b)
-    logger.info(f'ho fatto un update a {dictionary})
+    logger.info(f'ho fatto un update a {dictionary}')
 
 
   return(dictionary)
@@ -334,7 +334,8 @@ def dice_vectorized(pred, true, k = 1):
     param k: valore pixel true della maschera
   """
   intersection = 2.0 *np.sum(pred * (true==k), axis=(1,2,3))
-  dice = intersection / (pred.sum(axis=(1,2,3)) + true.sum(axis=(1,2,3)))
+  try:
+    dice = intersection / (pred.sum(axis=(1,2,3)) + true.sum(axis=(1,2,3)))
   except ZeroDivisionError:
     logger.exception('provato a dividere per zero!')
   logger(f'calcolato correttamente il dice medio ottenendo {dice}')

@@ -10,7 +10,7 @@ import pickle
 import shutil
 from PIL import Image
 sys.path
-sys.path.append('C:/Users/pensa/Desktop/Unittest/package')
+sys.path.append('C:/Users/pensa/Desktop/CAE-for-DM-segmentation/functioncae')
 import caehelper
 
 
@@ -159,11 +159,10 @@ class Test_CAE(unittest.TestCase):
 
     def test_read_dataset_big(self):
 
-        X,Y,CLASS=caehelper.read_dataset_big(self.temp_dir_big_mass.name,self.temp_dir_big_masks.name,'benign','malign',ext='png',resize=True)
+        X,Y,CLASS=caehelper.read_dataset_big(self.temp_dir_big_mass.name,self.temp_dir_big_masks.name,'benign','malign',ext='png')
         self.assertEqual(len(X),len(Y))
         self.assertEqual(len(X),len(CLASS))
         self.assertEqual(list(CLASS),[0,1])
-        self.assertEqual(X.shape,Y.shape)
         with self.assertRaises(Exception):
             X,Y,CLASS=caehelper.read_dataset_big(self.temp_dir_big_mass.name,self.temp_dir_big_masks.name,'benign','malign',ext='jpg',resize=True)
         with self.assertRaises(Exception):
