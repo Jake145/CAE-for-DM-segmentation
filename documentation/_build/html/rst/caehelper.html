@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>caehelper module &#8212; CAE 1.0 documentazione</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Indice" href="../genindex.html" />
+    <link rel="search" title="Cerca" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-caehelper">
+<span id="caehelper-module"></span><h1>caehelper module<a class="headerlink" href="#module-caehelper" title="Link a questa intestazione">¶</a></h1>
+<dl class="py function">
+<dt id="caehelper.blender">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">blender</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img1</span></em>, <em class="sig-param"><span class="n">img2</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.blender" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per sovraimporre due immagini con sfumatura</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img1</strong> (<em>array numpy</em>) – immagine da sovrapporre</p></li>
+<li><p><strong>img2</strong> (<em>array numpy</em>) – immagine da svrapporre</p></li>
+<li><p><strong>a</strong> (<em>int</em><em> or </em><em>float</em>) – valore di sfumatura di img1</p></li>
+<li><p><strong>b</strong> (<em>int</em><em> or </em><em>float</em>) – valore di sfumatura di img2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>restituisce l’immagine sovrapposta</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.dice">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">dice</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pred</span></em>, <em class="sig-param"><span class="n">true</span></em>, <em class="sig-param"><span class="n">k</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.dice" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per calcolare l’indice di Dice</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pred</strong> (<em>array numpy</em>) – immagini predette dal modello</p></li>
+<li><p><strong>true</strong> (<em>array numpy</em>) – immagini target</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – valore pixel true della maschera</p></li>
+</ul>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>restituisce il valore di Dice</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.dice_vectorized">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">dice_vectorized</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pred</span></em>, <em class="sig-param"><span class="n">true</span></em>, <em class="sig-param"><span class="n">k</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.dice_vectorized" title="Link a questa definizione">¶</a></dt>
+<dd><p>Versione vettorizzata per calcolare il coefficiente di dice</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pred</strong> (<em>array numpy</em>) – immagini predette dal modello</p></li>
+<li><p><strong>true</strong> (<em>array numpy</em>) – immagini target</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – valore pixel true della maschera</p></li>
+</ul>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>restituisce il dice medio</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.dict_update_radiomics">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">dict_update_radiomics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_path</span></em>, <em class="sig-param"><span class="n">dictionary</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.dict_update_radiomics" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per unire i vari dizionari creati con radiomic_dooer per poi creare il dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<em>str</em>) – percorso del pickle da aprire</p></li>
+<li><p><strong>dictionary</strong> (<em>dict</em>) – dizionario generale del dataframe</p></li>
+</ul>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>restituisce il dizionario aggiornato</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.heatmap">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">heatmap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.heatmap" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione che mostra la heatmap dell’ultimo layer convoluzionale prima del classificatore senza funzionalità radiomiche</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array numpy</em>) – immagine da segmentare</p></li>
+<li><p><strong>model</strong> (<em>str</em>) – modello allenato</p></li>
+</ul>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>dopo aver plottato la heatmap sovrapposta e l’immagine a cui si riferisce, restituisce la heatmap</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.heatmap_rad">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">heatmap_rad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">feature</span></em>, <em class="sig-param"><span class="n">model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.heatmap_rad" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione che mostra la heatmap dell’ultimo layer convoluzionale prima del classificatore con funzionalità radiomiche</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array numpy</em>) – immagine da segmentare</p></li>
+<li><p><strong>feature</strong> (<em>array numpy</em>) – feature estratte con pyradiomics</p></li>
+<li><p><strong>model</strong> (<em>class</em>) – modello allenato</p></li>
+</ul>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>dopo aver plottato la heatmap sovrapposta e l’immagine a cui si riferisce, restituisce la heatmap</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.modelviewer">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">modelviewer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.modelviewer" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per visualizzare l’andamento della loss di training e validazione per l’autoencoder e per il classificatore
+:type model: str
+:param model: history del modello di Keras ottenuto dalla funzione</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.otsu">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">otsu</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">n_items</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.otsu" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione che implementa l’algoritmo di Otsu per la segmentazione</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fper</strong> – immagine da segmentare</p></li>
+<li><p><strong>n_items</strong> (<em>int</em>) – numero di oggetti da segmentare nell’immagine</p></li>
+</ul>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>restituisce l’immagine binarizzata</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.plot_roc_curve">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">plot_roc_curve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fper</span></em>, <em class="sig-param"><span class="n">tper</span></em>, <em class="sig-param"><span class="n">auc</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.plot_roc_curve" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione che fa il plot della curva roc</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fper</strong> (<em>float</em>) – percentuale falsi positivi</p></li>
+<li><p><strong>tper</strong> (<em>float</em>) – percentuale veri positivi</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.radiomic_dooer">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">radiomic_dooer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">list_test</span></em>, <em class="sig-param"><span class="n">datapath</span></em>, <em class="sig-param"><span class="n">endpath</span></em>, <em class="sig-param"><span class="n">lab</span></em>, <em class="sig-param"><span class="n">extrc</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.radiomic_dooer" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione per estrarre le feature con pyradiomics e salvarle in un dizionario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list_test</strong> (<em>list</em>) – lista con path immagine e relativa maschera normalizzata</p></li>
+<li><p><strong>datapath</strong> (<em>str</em>) – percorso cartella dove si trova l’immagine</p></li>
+<li><p><strong>endpath</strong> (<em>str</em>) – cartella dove si salva il pickle del dizionario</p></li>
+<li><p><strong>lab</strong> (<em>int</em>) – label per indicare la maschera, va da 1 a 255</p></li>
+</ul>
+</dd>
+<dt class="field-even">Extrc type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Extr param</dt>
+<dd class="field-odd"><p>classe estrattore di pyradiomics</p>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>dopo aver salvato il pickle, restituisce il tempo impiegato</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.read_dataset">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">read_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset_path</span></em>, <em class="sig-param"><span class="n">ext</span></em>, <em class="sig-param"><span class="n">benign_label</span></em>, <em class="sig-param"><span class="n">malign_label</span></em>, <em class="sig-param"><span class="n">x_id</span><span class="o">=</span><span class="default_value">'_resized'</span></em>, <em class="sig-param"><span class="n">y_id</span><span class="o">=</span><span class="default_value">'_mass_mask'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.read_dataset" title="Link a questa definizione">¶</a></dt>
+<dd><p>Data la cartella con le maschere e le immagini, restituisce i vettori con le immagini, le maschere e le classi. Restituisce i vettori come tensori da dare alla rete.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset_path</strong> (<em>str</em>) – Cartella con le immagini e le relative maschere</p></li>
+<li><p><strong>data_path</strong> (<em>str</em>) – percorso della cartella dove si trova la maschera</p></li>
+<li><p><strong>ext</strong> (<em>str</em>) – stringa identificativa dell’estenzione delle immagini e maschere</p></li>
+<li><p><strong>x_id</strong> (<em>str</em>) – identificativo delle immagini</p></li>
+<li><p><strong>x_id</strong> – identificativo delle maschere</p></li>
+<li><p><strong>benign_label</strong> (<em>str</em>) – identificativo delle masse benigne</p></li>
+<li><p><strong>malign_label</strong> (<em>str</em>) – identificativo delle masse maligne</p></li>
+</ul>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>restituisce i vettori con le immagini, le maschere e le classi</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.read_dataset_big">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">read_dataset_big</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset_path_mass</span></em>, <em class="sig-param"><span class="n">dataset_path_mask</span></em>, <em class="sig-param"><span class="n">benign_label</span></em>, <em class="sig-param"><span class="n">malign_label</span></em>, <em class="sig-param"><span class="n">ext</span><span class="o">=</span><span class="default_value">'png'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.read_dataset_big" title="Link a questa definizione">¶</a></dt>
+<dd><p>Versione di read_dataset per il dataset del TCIA. Data la cartella con le maschere e le immagini, restituisce i vettori con i filepath delle immagini, le maschere e le classi.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset_path_mass</strong> (<em>str</em>) – Cartella con le immagini</p></li>
+<li><p><strong>dataset_path_mask</strong> (<em>str</em>) – percorso della cartella dove si trovano le maschera</p></li>
+<li><p><strong>ext</strong> (<em>str</em>) – stringa identificativa dell’estenzione delle immagini e maschere</p></li>
+</ul>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>restituisce i vettori con i path delle immagini, le maschere e le classi</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.read_pgm_as_sitk">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">read_pgm_as_sitk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.read_pgm_as_sitk" title="Link a questa definizione">¶</a></dt>
+<dd><p>Legge un .pgm come una immagine Simple ITK</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><p><strong>image_path</strong> (<em>str</em>) – path dell’immagine voluta</p>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>restituisce l’immagine da far leggere a pyradiomics</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.save_newext">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">save_newext</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_name</span></em>, <em class="sig-param"><span class="n">data_path</span></em>, <em class="sig-param"><span class="n">ext1</span></em>, <em class="sig-param"><span class="n">ext2</span></em>, <em class="sig-param"><span class="n">endpath</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.save_newext" title="Link a questa definizione">¶</a></dt>
+<dd><p>Riscrive le immagini in formato leggibile per pyradiomics
+:type file_name: str
+:param file_path: nome del file della immagine</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<em>str</em>) – percorso della cartella dove si trova la immagine</p></li>
+<li><p><strong>ext1</strong> (<em>str</em>) – stringa identificativa dell’estenzione di partenza della immagine</p></li>
+<li><p><strong>ext2</strong> (<em>str</em>) – stringa identificativa dell’estenzione finale della immagine</p></li>
+<li><p><strong>endpath</strong> (<em>str</em>) – percorso della cartella di arrivo</p></li>
+</ul>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>dopo aver salvato il nuovo file, restituisce l’esito</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="caehelper.unit_masks">
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">unit_masks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_name</span></em>, <em class="sig-param"><span class="n">data_path</span></em>, <em class="sig-param"><span class="n">ext1</span></em>, <em class="sig-param"><span class="n">ext2</span></em>, <em class="sig-param"><span class="n">endpath</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.unit_masks" title="Link a questa definizione">¶</a></dt>
+<dd><p>Normalizza i valori dei pixel delle maschere già nei file per essere utilizzati con pyradiomics. Permette inoltre di cambiare l’estenzione da .pgm a .png o qualunque altra estenzione supportata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametri</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> – nome del file della maschera</p></li>
+<li><p><strong>data_path</strong> (<em>str</em>) – percorso della cartella dove si trova la maschera</p></li>
+<li><p><strong>ext1</strong> (<em>str</em>) – stringa identificativa dell’estenzione di partenza della maschera</p></li>
+<li><p><strong>ext2</strong> (<em>str</em>) – stringa identificativa dell’estenzione finale della maschera</p></li>
+<li><p><strong>endpath</strong> (<em>str</em>) – percorso della cartella di arrivo</p></li>
+</ul>
+</dd>
+<dt class="field-even">Ritorna</dt>
+<dd class="field-even"><p>dopo aver salvato il nuovo file, restituisce l’esito e l’immagine</p>
+</dd>
+<dt class="field-odd">Tipo di ritorno</dt>
+<dd class="field-odd"><p>bool, array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">CAE</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigazione</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Ricerca veloce</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Vai" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Jake Harold Pensavalle.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/rst/caehelper.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

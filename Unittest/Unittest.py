@@ -13,7 +13,22 @@ sys.path
 sys.path.append('C:/Users/pensa/Desktop/CAE-for-DM-segmentation/functioncae')
 import caehelper
 
+import logging
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('%(asctime)s:%(name)s:%(message)s')
+
+file_handler = logging.FileHandler('Unittest.log')
+file_handler.setLevel(logging.ERROR)
+file_handler.setFormatter(formatter)
+
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
 
 
 class Test_CAE(unittest.TestCase):
@@ -127,7 +142,7 @@ class Test_CAE(unittest.TestCase):
                                         'pgm','png',self.endpath.name)
         self.assertTrue(stat)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(Exception):
             caehelper.save_newext('failfile.pgm',self.temp_dir.name,
                                         'pgm','png',self.endpath.name)
 
@@ -137,7 +152,7 @@ class Test_CAE(unittest.TestCase):
                                         'png','pgm',self.endpath.name)
         self.assertTrue(stat)
         np.testing.assert_allclose(np.round(image),self.image_zeros) #qui entra in gioco dei problemi con arrotondamento
-        with self.assertRaises(ValueError):
+        with self.assertRaises(Exception):
             caehelper.unit_masks('failfile.pgm',self.temp_dir.name,
                                         'pgm','png',self.endpath.name)
     #@mock.patch('caehelper.os.listdir') using mock is good to use for the heatmap and modelviewer maybe

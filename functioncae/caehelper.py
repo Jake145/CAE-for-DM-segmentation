@@ -24,20 +24,22 @@ logger.addHandler(file_handler)
 def save_newext(file_name,data_path,ext1,ext2,endpath):
   """
   Riscrive le immagini in formato leggibile per pyradiomics
-  type file_name: stringa
-  param file_path: nome del file della immagine
+  :type file_name: stringa
+  :param file_path: nome del file della immagine
 
-  type data_path: stringa
-  param data_path: percorso della cartella dove si trova la immagine
+  :type data_path: stringa
+  :param data_path: percorso della cartella dove si trova la immagine
 
-  type ext1: stringa
-  param ext1: stringa identificativa dell'estenzione di partenza della immagine
+  :type ext1: stringa
+  :param ext1: stringa identificativa dell'estenzione di partenza della immagine
 
-  type ext2: stringa
-  param ext2: stringa identificativa dell'estenzione finale della immagine
+  :type ext2: stringa
+  :param ext2: stringa identificativa dell'estenzione finale della immagine
 
-  type endpath: stringa
-  param endpath: percorso della cartella di arrivo
+  :type endpath: stringa
+  :param endpath: percorso della cartella di arrivo
+
+  :rtype:bool
   """
   if ext1==ext2:
     logger.debug(f'il file {file_name} in {data_path} ha già la estenzione {ext2}' )
@@ -57,20 +59,23 @@ def unit_masks(file_name,data_path,ext1,ext2, endpath):
   Normalizza i valori dei pixel delle maschere già nei file per essere utilizzati con pyradiomics.
   Permette inoltre di cambiare l'estenzione da .pgm a .png o qualunque altra estenzione supportata.
 
-  type file_name: stringa
-  param file_path: nome del file della maschera
+  :type file_name: stringa
+  :param file_path: nome del file della maschera
 
-  type data_path: stringa
-  param data_path: percorso della cartella dove si trova la maschera
+  :type data_path: stringa
+  :param data_path: percorso della cartella dove si trova la maschera
 
-  type ext1: stringa
-  param ext1: stringa identificativa dell'estenzione di partenza della maschera
+  :type ext1: stringa
+  :param ext1: stringa identificativa dell'estenzione di partenza della maschera
 
-  type ext2: stringa
-  param ext2: stringa identificativa dell'estenzione finale della maschera
+  :type ext2: stringa
+  :param ext2: stringa identificativa dell'estenzione finale della maschera
 
-  type endpath: stringa
-  param endpath: percorso della cartella di arrivo
+  :type endpath: stringa
+  :param endpath: percorso della cartella di arrivo
+
+  :rtype:bool,array
+
   """
   try:
     image=plt.imread(os.path.join(data_path,file_name))
@@ -89,26 +94,29 @@ def read_dataset(dataset_path,ext,benign_label,malign_label,x_id ="_resized", y_
   Data la cartella con le maschere e le immagini, restituisce i vettori con le immagini, le maschere e le classi.
   Restituisce i vettori come tensori da dare alla rete.
 
-  type dataset_path: stringa
-  param dataset_path: Cartella con le immagini e le relative maschere
+  :type dataset_path: stringa
+  :param dataset_path: Cartella con le immagini e le relative maschere
 
-  type data_path: stringa
-  param data_path: percorso della cartella dove si trova la maschera
+  :type data_path: stringa
+  :param data_path: percorso della cartella dove si trova la maschera
 
-  type ext: stringa
-  param ext: stringa identificativa dell'estenzione delle immagini e maschere
+  :type ext: stringa
+  :param ext: stringa identificativa dell'estenzione delle immagini e maschere
 
-  type x_id: stringa
-  param x_id: identificativo delle immagini
+  :type x_id: stringa
+  :param x_id: identificativo delle immagini
 
-  type x_id: stringa
-  param x_id: identificativo delle maschere
+  :type x_id: stringa
+  :param x_id: identificativo delle maschere
 
-  type benign_label: stringa
-  param benign_label: identificativo delle masse benigne
+  :type benign_label: stringa
+  :param benign_label: identificativo delle masse benigne
 
-  type malign_label: stringa
-  param malign_label: identificativo delle masse maligne
+  :type malign_label: stringa
+  :param malign_label: identificativo delle masse maligne
+
+  :rtype:array
+
 
   """
 
@@ -136,19 +144,19 @@ def read_dataset_big(dataset_path_mass,dataset_path_mask,benign_label,malign_lab
   """
   Versione di read_dataset per il dataset del TCIA.
   Data la cartella con le maschere e le immagini, restituisce i vettori con i filepath delle immagini, le maschere e le classi.
-  Restituisce i vettori come tensori da dare al generatore per la rete.
 
-  type dataset_path_mass: stringa
-  param dataset_path_mass: Cartella con le immagini
+  :type dataset_path_mass: stringa
+  :param dataset_path_mass: Cartella con le immagini
 
-  type dataset_path_mask: stringa
-  param dataset_path_mask: percorso della cartella dove si trovano le maschera
+  :type dataset_path_mask: stringa
+  :param dataset_path_mask: percorso della cartella dove si trovano le maschera
 
-  type ext: stringa
-  param ext: stringa identificativa dell'estenzione delle immagini e maschere
+  :type ext: stringa
+  :param ext: stringa identificativa dell'estenzione delle immagini e maschere
 
-  type resize: bool
-  param resize: Se TRUE fa il reshape delle maschere per combaciare con quello delle immagini
+  :rtype:array
+
+
 
 
 
@@ -202,18 +210,19 @@ def radiomic_dooer(list_test,datapath,endpath,lab,extrc):
   """
   Funzione per estrarre le feature con pyradiomics e salvarle in un dizionario.
 
-  type list_test: lista
-  param list_test: lista con path immagine e relativa maschera normalizzata
+  :type list_test: lista
+  :param list_test: lista con path immagine e relativa maschera normalizzata
 
-  type datapath: stringa
-  param datapath: percorso cartella dove si trova l'immagine
+  :type datapath: stringa
+  :param datapath: percorso cartella dove si trova l'immagine
 
-  type endpath: stringa
-  param endpath: cartella dove si salva il pickle del dizionario
+  :type endpath: stringa
+  :param endpath: cartella dove si salva il pickle del dizionario
 
-  type resize: bool
-  param resize: Se TRUE fa il reshape delle maschere per combaciare con quello delle immagini
+  :type lab : int
+  :param lab : label per indicare la maschera, va da 1 a 255
 
+  :rtype:string
 
 
   """
@@ -247,7 +256,13 @@ def radiomic_dooer(list_test,datapath,endpath,lab,extrc):
   return 'time to update:{d-c}'
 
 def read_pgm_as_sitk(image_path):
-  """ Read a pgm image as sitk image """
+  """ Read a pgm image as sitk image
+  :type image_path: stringa
+  :param image_path: path dell'immagine voluta
+
+  :rtype:array
+
+  """
   np_array = np.asarray(PIL.Image.open(image_path))
   logger.info(f'sto leggendo {image_path}')
   sitk_image = sitk.GetImageFromArray(np_array)
@@ -260,11 +275,13 @@ def dict_update_radiomics(data_path,dictionary):
   """
   Funzione per unire i vari dizionari creati con radiomic_dooer per poi creare il dataframe
 
-  type data_path: stringa (.pickle)
-  param data_path: percorso del pickle da aprire
+  :type data_path: stringa (.pickle)
+  :param data_path: percorso del pickle da aprire
 
-  type dictionary: dizionario
-  param dictionary: dizionario generale del dataframe
+  :type dictionary: dizionario
+  :param dictionary: dizionario generale del dataframe
+
+  :rtype:dict
 
   """
   with open(data_path, 'rb') as handle:
@@ -281,14 +298,17 @@ def blender(img1,img2,a,b):
   """
   Funzione per sovraimporre due immagini con sfumatura
 
-  type img1: array numpy
-  param img1: immagine da sovrapporre
-  type img2: array numpy
-  param img2: immagine da svrapporre
-  type a: int or float
-  param a: valore di sfumatura di img1
-  type b: int or float
-  param b: valore di sfumatura di img2
+  :type img1: array numpy
+  :param img1: immagine da sovrapporre
+  :type img2: array numpy
+  :param img2: immagine da svrapporre
+  :type a: int or float
+  :param a: valore di sfumatura di img1
+  :type b: int or float
+  :param b: valore di sfumatura di img2
+
+  :rtype:array
+
   """
   try:
     image=cv2.addWeighted(img1,a, img2, b,0)
@@ -301,16 +321,19 @@ def blender(img1,img2,a,b):
 
 def dice(pred, true, k = 1):
   """
-    Funzione per calcolare l'indice di Dice
+  Funzione per calcolare l'indice di Dice
 
-    type pred: array numpy
-    param pred: immagini predette dal modello
+  :type pred: array numpy
+  :param pred: immagini predette dal modello
 
-    type true : array numpy
-    param true: immagini target
+  :type true : array numpy
+  :param true: immagini target
 
-    type k : int
-    param k: valore pixel true della maschera
+  :type k : int
+  :param k: valore pixel true della maschera
+
+  :rtype:float
+
   """
 
   intersection = np.sum(pred[true==k]) * 2.0
@@ -318,20 +341,23 @@ def dice(pred, true, k = 1):
     dice = intersection / (np.sum(pred) + np.sum(true))
   except ZeroDivisionError:
     logger.exception('provato a dividere per zero!')
-  logger(f'calcolato correttamente il dice ottenendo {dice}')
+  logger.info(f'calcolato correttamente il dice ottenendo {dice}')
   return dice
 
 def dice_vectorized(pred, true, k = 1):
   """
-    Versione vettorizzata per calcolare il coefficiente di dice
-    type pred: array numpy
-    param pred: immagini predette dal modello
+  Versione vettorizzata per calcolare il coefficiente di dice
+  :type pred: array numpy
+  :param pred: immagini predette dal modello
 
-    type true : array numpy
-    param true: immagini target
+  :type true : array numpy
+  :param true: immagini target
 
-    type k : int
-    param k: valore pixel true della maschera
+  :type k : int
+  :param k: valore pixel true della maschera
+
+  :rtype:float
+
   """
   intersection = 2.0 *np.sum(pred * (true==k), axis=(1,2,3))
   try:
@@ -345,8 +371,9 @@ import matplotlib.pyplot as plt
 def modelviewer(model):
   """
   Funzione per visualizzare l'andamento della loss di training e validazione per l'autoencoder e per il classificatore
-    type model:  model.fit()
-    param model: history del modello di Keras ottenuto dalla funzione
+  :type model:  model.fit()
+  :param model: history del modello di Keras ottenuto dalla funzione
+
   """
 
   plt.figure('modelviewer')
@@ -369,18 +396,21 @@ def modelviewer(model):
     logger.exception('Attenzione, il modello non ha i campi classification_output_loss o val_classification_output_loss')
   plt.legend(['loss', 'val_loss'])
   plt.show()
-  return
+
 
 import tensorflow as tf
 
 def heatmap(x,model):
   """
   Funzione che mostra la heatmap dell'ultimo layer convoluzionale prima del classificatore senza funzionalità radiomiche
-    type x: array numpy
-    param x: immagine da segmentare
+  :type x: array numpy
+  :param x: immagine da segmentare
 
-    type model : keras model
-    param model: modello allenato
+  :type model : keras model
+  :param model: modello allenato
+
+  :rtype:array
+
   """
   img_tensor =x[np.newaxis,...]
   preds = model.predict(img_tensor)[1]
@@ -429,14 +459,17 @@ from tensorflow.keras import models
 def heatmap_rad(x,feature,model):
   """
   Funzione che mostra la heatmap dell'ultimo layer convoluzionale prima del classificatore con funzionalità radiomiche
-    type x: array numpy
-    param x: immagine da segmentare
+  :type x: array numpy
+  :param x: immagine da segmentare
 
-    type feature: array numpy
-    param feature:feature estratte con pyradiomics
+  :type feature: array numpy
+  :param feature:feature estratte con pyradiomics
 
-    type model : keras model
-    param model: modello allenato
+  :type model : keras model
+  :param model: modello allenato
+
+  :rtype:array
+
   """
   img_tensor =x[np.newaxis,...]
   feature_tensor=feature[np.newaxis,...]
@@ -482,11 +515,11 @@ def heatmap_rad(x,feature,model):
 def plot_roc_curve(fper, tper,auc):
   """
   Funzione che fa il plot della curva roc
-  type fper: float
-  param fper: percentuale falsi positivi
+  :type fper: float
+  :param fper: percentuale falsi positivi
 
-  type tper: float
-  param tper:percentuale veri positivi
+  :type tper: float
+  :param tper:percentuale veri positivi
 
   """
   plt.figure('AUC')
@@ -503,11 +536,12 @@ from skimage.filters import threshold_multiotsu
 def otsu(image,n_items=2):
   """
   Funzione che implementa l'algoritmo di Otsu per la segmentazione
-    type image: numpy array
-    param fper: immagine da segmentare
+  :type image: numpy array
+  :param fper: immagine da segmentare
 
-    type n_items: intero
-    param n_items:numero di oggetti da segmentare nell'immagine
+  :type n_items: intero
+  :param n_items:numero di oggetti da segmentare nell'immagine
+  :rtype:array
 
   """
   thresholds = threshold_multiotsu(image,classes=n_items)
