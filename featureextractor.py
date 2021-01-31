@@ -40,7 +40,7 @@ def resizer(list,endpath,pattern):
     type pattern: stringa
     param pattern: pattern da trovare per dare il nome corretto alla nuova maschera. Usa regex
     """
-    logger.info(f'sto cercando di leggere come immagine {list[0]} e maschera {list[1]} da salvare in {endpath} con pattern da trovare {pattern})
+    logger.info(f'sto cercando di leggere come immagine {list[0]} e maschera {list[1]} da salvare in {endpath} con pattern da trovare {pattern}')
     a=time.perf_counter()
     try:
         image=Image.open(list[0])
@@ -57,7 +57,7 @@ def resizer(list,endpath,pattern):
     try:
 
         mask = mask.resize((image.shape))
-        logger.debug(f'ho fatto il resize di {list[1]} usando come dimensione {image.shape} di {list[0]})
+        logger.debug(f'ho fatto il resize di {list[1]} usando come dimensione {image.shape} di {list[0]}')
         b=time.perf_counter()
         match=re.findall(pattern,list[0])[0]
         logger.debug(f'il match del pattern è {match}')
@@ -119,9 +119,9 @@ if __name__ == '__main__':
 
 
     extractor = featureextractor.RadiomicsFeatureExtractor()
-    logger.info(f'inizializzato estrattore di pyradiomics)
+    logger.info(f'inizializzato estrattore di pyradiomics')
 
-
+##
     biggy=[[X_big_train[i],Y_big_train[i]] for i in range(len(X_big_train))]
     #biggy_test=[[X_big_test[i],Y_big_test[i]] for i in range(len(X_big_test))]
 
@@ -144,6 +144,10 @@ if __name__ == '__main__':
     ,path_masks_resized,benign_label,malign_label)
 
     biggy=[[X_big_train_n[i],Y_big_train_n[i]] for i in range(len(X_big_train_n))]
+
+##
+
+    nam=radiomic_dooer([['E:Mass_data_new\\Train_data\\Mass-Training_P_01152_RIGHT_MLO_BENIGN.png', 'E:Mass_data_new\\resized_masks\\Mass-Training_P_01152_RIGHT_MLO_BENIGN.png']],path_mass_tr,endpath_tr,255,extractor)
 
 ##
 

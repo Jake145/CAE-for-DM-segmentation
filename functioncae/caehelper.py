@@ -22,25 +22,27 @@ logger.addHandler(file_handler)
 
 
 def save_newext(file_name,data_path,ext1,ext2,endpath):
-  """
-  Riscrive le immagini in formato leggibile per pyradiomics
-  :type file_name: stringa
+  """Riscrive le immagini in formato leggibile per pyradiomics
+  :type file_name: str
   :param file_path: nome del file della immagine
 
-  :type data_path: stringa
+  :type data_path: str
   :param data_path: percorso della cartella dove si trova la immagine
 
-  :type ext1: stringa
+  :type ext1: str
   :param ext1: stringa identificativa dell'estenzione di partenza della immagine
 
-  :type ext2: stringa
+  :type ext2: str
   :param ext2: stringa identificativa dell'estenzione finale della immagine
 
-  :type endpath: stringa
+  :type endpath: str
   :param endpath: percorso della cartella di arrivo
+  :returns: dopo aver salvato il nuovo file, restituisce l'esito
+  :rtype: bool
 
-  :rtype:bool
+
   """
+
   if ext1==ext2:
     logger.debug(f'il file {file_name} in {data_path} ha già la estenzione {ext2}' )
   try:
@@ -55,28 +57,28 @@ def save_newext(file_name,data_path,ext1,ext2,endpath):
   return status
 
 def unit_masks(file_name,data_path,ext1,ext2, endpath):
-  """
-  Normalizza i valori dei pixel delle maschere già nei file per essere utilizzati con pyradiomics.
-  Permette inoltre di cambiare l'estenzione da .pgm a .png o qualunque altra estenzione supportata.
+  """Normalizza i valori dei pixel delle maschere già nei file per essere utilizzati con pyradiomics. Permette inoltre di cambiare l'estenzione da .pgm a .png o qualunque altra estenzione supportata.
 
-  :type file_name: stringa
+  :type file_name: str
   :param file_path: nome del file della maschera
 
-  :type data_path: stringa
+  :type data_path: str
   :param data_path: percorso della cartella dove si trova la maschera
 
-  :type ext1: stringa
+  :type ext1: str
   :param ext1: stringa identificativa dell'estenzione di partenza della maschera
 
-  :type ext2: stringa
+  :type ext2: str
   :param ext2: stringa identificativa dell'estenzione finale della maschera
 
-  :type endpath: stringa
+  :type endpath: str
   :param endpath: percorso della cartella di arrivo
 
-  :rtype:bool,array
+  :returns: dopo aver salvato il nuovo file, restituisce l'esito e l'immagine
+  :rtype: bool, array
 
   """
+
   try:
     image=plt.imread(os.path.join(data_path,file_name))
     logger.info(f'Ho letto {file_name} in {data_path}')
@@ -90,33 +92,31 @@ def unit_masks(file_name,data_path,ext1,ext2, endpath):
   return status,image
 
 def read_dataset(dataset_path,ext,benign_label,malign_label,x_id ="_resized", y_id="_mass_mask"):
-  """
-  Data la cartella con le maschere e le immagini, restituisce i vettori con le immagini, le maschere e le classi.
-  Restituisce i vettori come tensori da dare alla rete.
+  """Data la cartella con le maschere e le immagini, restituisce i vettori con le immagini, le maschere e le classi. Restituisce i vettori come tensori da dare alla rete.
 
-  :type dataset_path: stringa
+  :type dataset_path: str
   :param dataset_path: Cartella con le immagini e le relative maschere
 
-  :type data_path: stringa
+  :type data_path: str
   :param data_path: percorso della cartella dove si trova la maschera
 
-  :type ext: stringa
+  :type ext: str
   :param ext: stringa identificativa dell'estenzione delle immagini e maschere
 
-  :type x_id: stringa
+  :type x_id: str
   :param x_id: identificativo delle immagini
 
-  :type x_id: stringa
+  :type x_id: str
   :param x_id: identificativo delle maschere
 
-  :type benign_label: stringa
+  :type benign_label: str
   :param benign_label: identificativo delle masse benigne
 
-  :type malign_label: stringa
+  :type malign_label: str
   :param malign_label: identificativo delle masse maligne
 
-  :rtype:array
-
+  :returns: restituisce i vettori con le immagini, le maschere e le classi
+  :rtype: array
 
   """
 
@@ -141,26 +141,25 @@ def read_dataset(dataset_path,ext,benign_label,malign_label,x_id ="_resized", y_
   return np.array(X), np.array(Y) , np.array(class_labels)
 
 def read_dataset_big(dataset_path_mass,dataset_path_mask,benign_label,malign_label,ext='png'):
-  """
-  Versione di read_dataset per il dataset del TCIA.
-  Data la cartella con le maschere e le immagini, restituisce i vettori con i filepath delle immagini, le maschere e le classi.
+  """Versione di read_dataset per il dataset del TCIA. Data la cartella con le maschere e le immagini, restituisce i vettori con i filepath delle immagini, le maschere e le classi.
 
-  :type dataset_path_mass: stringa
+  :type dataset_path_mass: str
   :param dataset_path_mass: Cartella con le immagini
 
-  :type dataset_path_mask: stringa
+  :type dataset_path_mask: str
   :param dataset_path_mask: percorso della cartella dove si trovano le maschera
 
-  :type ext: stringa
+  :type ext: str
   :param ext: stringa identificativa dell'estenzione delle immagini e maschere
 
-  :rtype:array
 
-
+  :returns: restituisce i vettori con i path delle immagini, le maschere e le classi
+  :rtype: array
 
 
 
   """
+
   fnames  = glob.glob(os.path.join(dataset_path_mass, f"*.{ext}"))
   logger.info(f'ho analizzato {dataset_path_mass} cercando le immagini')
 
@@ -207,25 +206,25 @@ from radiomics import featureextractor
 
 def radiomic_dooer(list_test,datapath,endpath,lab,extrc):
 
-  """
-  Funzione per estrarre le feature con pyradiomics e salvarle in un dizionario.
+  """Funzione per estrarre le feature con pyradiomics e salvarle in un dizionario.
 
-  :type list_test: lista
+  :type list_test: list
   :param list_test: lista con path immagine e relativa maschera normalizzata
-
-  :type datapath: stringa
+  :type datapath: str
   :param datapath: percorso cartella dove si trova l'immagine
-
-  :type endpath: stringa
+  :type endpath: str
   :param endpath: cartella dove si salva il pickle del dizionario
+  :type lab: int
+  :param lab: label per indicare la maschera, va da 1 a 255
+  :extrc type: str
+  :extr param: classe estrattore di pyradiomics
 
-  :type lab : int
-  :param lab : label per indicare la maschera, va da 1 a 255
-
-  :rtype:string
+  :returns: dopo aver salvato il pickle, restituisce il tempo impiegato
+  :rtype: str
 
 
   """
+
   b=time.perf_counter()
   try:
     logger.debug(f'sto cercando di estrarre le feature da {list[0]} utilizzando come maschera {list[1]}')
@@ -256,13 +255,14 @@ def radiomic_dooer(list_test,datapath,endpath,lab,extrc):
   return 'time to update:{d-c}'
 
 def read_pgm_as_sitk(image_path):
-  """ Read a pgm image as sitk image
-  :type image_path: stringa
+  """Legge un .pgm come una immagine Simple ITK
+
+  :type image_path: str
   :param image_path: path dell'immagine voluta
-
-  :rtype:array
-
+  :returns: restituisce l'immagine da far leggere a pyradiomics
+  :rtype: array
   """
+
   np_array = np.asarray(PIL.Image.open(image_path))
   logger.info(f'sto leggendo {image_path}')
   sitk_image = sitk.GetImageFromArray(np_array)
@@ -272,18 +272,18 @@ def read_pgm_as_sitk(image_path):
 
 def dict_update_radiomics(data_path,dictionary):
 
-  """
-  Funzione per unire i vari dizionari creati con radiomic_dooer per poi creare il dataframe
+  """Funzione per unire i vari dizionari creati con radiomic_dooer per poi creare il dataframe
 
-  :type data_path: stringa (.pickle)
+  :type data_path: str
   :param data_path: percorso del pickle da aprire
-
-  :type dictionary: dizionario
+  :type dictionary: dict
   :param dictionary: dizionario generale del dataframe
+  :returns: restituisce il dizionario aggiornato
+  :rtype: dict
 
-  :rtype:dict
 
   """
+
   with open(data_path, 'rb') as handle:
     logger.info(f'ho aperto {data_path}')
     b = pickle.load(handle)
@@ -295,8 +295,7 @@ def dict_update_radiomics(data_path,dictionary):
   return(dictionary)
 
 def blender(img1,img2,a,b):
-  """
-  Funzione per sovraimporre due immagini con sfumatura
+  """Funzione per sovraimporre due immagini con sfumatura
 
   :type img1: array numpy
   :param img1: immagine da sovrapporre
@@ -306,10 +305,11 @@ def blender(img1,img2,a,b):
   :param a: valore di sfumatura di img1
   :type b: int or float
   :param b: valore di sfumatura di img2
-
-  :rtype:array
+  :returns: restituisce l'immagine sovrapposta
+  :rtype: array
 
   """
+
   try:
     image=cv2.addWeighted(img1,a, img2, b,0)
     logger.debug('sto cercando di sovrapporre le immagini con pesi rispettivamente {a} e {b}')
@@ -320,19 +320,17 @@ def blender(img1,img2,a,b):
   return  image
 
 def dice(pred, true, k = 1):
-  """
-  Funzione per calcolare l'indice di Dice
+  """Funzione per calcolare l'indice di Dice
 
   :type pred: array numpy
   :param pred: immagini predette dal modello
-
-  :type true : array numpy
+  :type true: array numpy
   :param true: immagini target
-
-  :type k : int
+  :type k: int
   :param k: valore pixel true della maschera
+  :returns: restituisce il valore di Dice
+  :rtype: float
 
-  :rtype:float
 
   """
 
@@ -347,18 +345,18 @@ def dice(pred, true, k = 1):
 def dice_vectorized(pred, true, k = 1):
   """
   Versione vettorizzata per calcolare il coefficiente di dice
+
   :type pred: array numpy
   :param pred: immagini predette dal modello
-
-  :type true : array numpy
+  :type true: array numpy
   :param true: immagini target
-
-  :type k : int
+  :type k: int
   :param k: valore pixel true della maschera
-
-  :rtype:float
+  :returns: restituisce il dice medio
+  :rtype: float
 
   """
+
   intersection = 2.0 *np.sum(pred * (true==k), axis=(1,2,3))
   try:
     dice = intersection / (pred.sum(axis=(1,2,3)) + true.sum(axis=(1,2,3)))
@@ -371,7 +369,7 @@ import matplotlib.pyplot as plt
 def modelviewer(model):
   """
   Funzione per visualizzare l'andamento della loss di training e validazione per l'autoencoder e per il classificatore
-  :type model:  model.fit()
+  :type model: str
   :param model: history del modello di Keras ottenuto dalla funzione
 
   """
@@ -403,15 +401,18 @@ import tensorflow as tf
 def heatmap(x,model):
   """
   Funzione che mostra la heatmap dell'ultimo layer convoluzionale prima del classificatore senza funzionalità radiomiche
+
   :type x: array numpy
   :param x: immagine da segmentare
 
-  :type model : keras model
+  :type model: str
   :param model: modello allenato
+  :returns: dopo aver plottato la heatmap sovrapposta e l'immagine a cui si riferisce, restituisce la heatmap
+  :rtype: array
 
-  :rtype:array
 
   """
+
   img_tensor =x[np.newaxis,...]
   preds = model.predict(img_tensor)[1]
   argmax = np.argmax(preds)
@@ -459,18 +460,17 @@ from tensorflow.keras import models
 def heatmap_rad(x,feature,model):
   """
   Funzione che mostra la heatmap dell'ultimo layer convoluzionale prima del classificatore con funzionalità radiomiche
+
   :type x: array numpy
   :param x: immagine da segmentare
-
   :type feature: array numpy
-  :param feature:feature estratte con pyradiomics
-
-  :type model : keras model
+  :param feature: feature estratte con pyradiomics
+  :type model: class
   :param model: modello allenato
-
-  :rtype:array
-
+  :returns: dopo aver plottato la heatmap sovrapposta e l'immagine a cui si riferisce, restituisce la heatmap
+  :rtype: array
   """
+
   img_tensor =x[np.newaxis,...]
   feature_tensor=feature[np.newaxis,...]
   preds = model.predict([img_tensor,feature_tensor])[1]
@@ -478,7 +478,6 @@ def heatmap_rad(x,feature,model):
   conv_layer = model.get_layer("last_conv")
   heatmap_model = models.Model([model.inputs], [conv_layer.output, model.output])
 
-  # Get gradient of the winner class w.r.t. the output of the (last) conv. layer
   with tf.GradientTape() as gtape:
       conv_output, predictions = heatmap_model([img_tensor,feature_tensor])
       loss = predictions[1][:, np.argmax(predictions[1])]
@@ -513,15 +512,16 @@ def heatmap_rad(x,feature,model):
   return heatmap
 
 def plot_roc_curve(fper, tper,auc):
-  """
-  Funzione che fa il plot della curva roc
+  """Funzione che fa il plot della curva roc
+
   :type fper: float
   :param fper: percentuale falsi positivi
 
   :type tper: float
-  :param tper:percentuale veri positivi
+  :param tper: percentuale veri positivi
 
   """
+
   plt.figure('AUC')
   plt.plot(fper, tper, color='orange', label='ROC')
   plt.plot([0, 1], [0, 1], color='darkblue', linestyle='--')
@@ -534,16 +534,17 @@ def plot_roc_curve(fper, tper,auc):
 from skimage.filters import threshold_multiotsu
 
 def otsu(image,n_items=2):
-  """
-  Funzione che implementa l'algoritmo di Otsu per la segmentazione
+  """Funzione che implementa l'algoritmo di Otsu per la segmentazione
+
   :type image: numpy array
   :param fper: immagine da segmentare
-
-  :type n_items: intero
-  :param n_items:numero di oggetti da segmentare nell'immagine
-  :rtype:array
+  :type n_items: int
+  :param n_items: numero di oggetti da segmentare nell'immagine
+  :returns: restituisce l'immagine binarizzata
+  :rtype: array
 
   """
+
   thresholds = threshold_multiotsu(image,classes=n_items)
   regions = np.digitize(image, bins=thresholds)
   return regions
