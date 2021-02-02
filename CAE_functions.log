@@ -1,0 +1,190 @@
+INFO:caehelper:sovrapposizione riuscita
+INFO:caehelper:calcolato correttamente il dice ottenendo 0.2797046319087044
+INFO:caehelper:calcolato correttamente il dice ottenendo 1.0
+INFO:caehelper:calcolato correttamente il dice ottenendo 0.0
+INFO:caehelper:ho aperto C:\Users\pensa\AppData\Local\Temp\tmpzptl4v4k\Pick.pickle
+INFO:caehelper:ho caricato <_io.BufferedReader name='C:\\Users\\pensa\\AppData\\Local\\Temp\\tmpzptl4v4k\\Pick.pickle'>
+INFO:caehelper:ho fatto un update a {'thispickle': 'thatpickle'}
+INFO:caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpq2vlv2x9 cercando le immagini
+INFO:caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmpq2vlv2x9, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpq2vlv2x9 cercando le immagini
+INFO:caehelper:ho analizzato C:\Mockakedirpath cercando le immagini
+INFO:caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpq2vlv2x9 cercando le immagini
+INFO:caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpy8n_r661 cercando le immagini
+INFO:caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp_zty4_d6 cercando le maschere
+INFO:caehelper:read C:\Users\pensa\AppData\Local\Temp\tmpq2vlv2x9\Only_Ones.png and changed extension from pgm to png
+INFO:caehelper:ho scritto il file Only_Ones.png in C:\Users\pensa\AppData\Local\Temp\tmpzz33mry5 come .png 
+INFO:caehelper:Ho letto Image1_benign_mass_mask.png in C:\Users\pensa\AppData\Local\Temp\tmpq2vlv2x9
+INFO:functioncae.caehelper:sovrapposizione riuscita
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.2797046319087044
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 1.0
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.0
+INFO:functioncae.caehelper:ho aperto C:\Users\pensa\AppData\Local\Temp\tmp3d2_ex8h\Pick.pickle
+INFO:functioncae.caehelper:ho caricato <_io.BufferedReader name='C:\\Users\\pensa\\AppData\\Local\\Temp\\tmp3d2_ex8h\\Pick.pickle'>
+INFO:functioncae.caehelper:ho fatto un update a {'thispickle': 'thatpickle'}
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpu0wfd0qr cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmpu0wfd0qr, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpu0wfd0qr cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Mockakedirpath cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpu0wfd0qr cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpzbr1iymb cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpqt6gd16l cercando le maschere
+INFO:functioncae.caehelper:read C:\Users\pensa\AppData\Local\Temp\tmpu0wfd0qr\Only_Ones.png and changed extension from pgm to png
+INFO:functioncae.caehelper:ho scritto il file Only_Ones.png in C:\Users\pensa\AppData\Local\Temp\tmpcr70ab1s come .png 
+INFO:functioncae.caehelper:Ho letto Image1_benign_mass_mask.png in C:\Users\pensa\AppData\Local\Temp\tmpu0wfd0qr
+INFO:functioncae.caehelper:sovrapposizione riuscita
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.2797046319087044
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 1.0
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.0
+INFO:functioncae.caehelper:ho aperto C:\Users\pensa\AppData\Local\Temp\tmpvmxhwl3w\Pick.pickle
+INFO:functioncae.caehelper:ho caricato <_io.BufferedReader name='C:\\Users\\pensa\\AppData\\Local\\Temp\\tmpvmxhwl3w\\Pick.pickle'>
+INFO:functioncae.caehelper:ho fatto un update a {'thispickle': 'thatpickle'}
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpxm3_iu7m cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmpxm3_iu7m, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpxm3_iu7m cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Mockakedirpath cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpxm3_iu7m cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp932q_bpq cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp2ckdcxgn cercando le maschere
+INFO:functioncae.caehelper:read C:\Users\pensa\AppData\Local\Temp\tmpxm3_iu7m\Only_Ones.png and changed extension from pgm to png
+INFO:functioncae.caehelper:ho scritto il file Only_Ones.png in C:\Users\pensa\AppData\Local\Temp\tmp6u2icf6d come .png 
+INFO:functioncae.caehelper:Ho letto Image1_benign_mass_mask.png in C:\Users\pensa\AppData\Local\Temp\tmpxm3_iu7m
+INFO:functioncae.caehelper:sovrapposizione riuscita
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.2797046319087044
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 1.0
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.0
+INFO:functioncae.caehelper:ho aperto C:\Users\pensa\AppData\Local\Temp\tmpysbax0qd\Pick.pickle
+INFO:functioncae.caehelper:ho caricato <_io.BufferedReader name='C:\\Users\\pensa\\AppData\\Local\\Temp\\tmpysbax0qd\\Pick.pickle'>
+INFO:functioncae.caehelper:ho fatto un update a {'thispickle': 'thatpickle'}
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpy98zf1cv cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmpy98zf1cv, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpy98zf1cv cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Mockakedirpath cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpy98zf1cv cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp83kvcfdc cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp5whheoyz cercando le maschere
+INFO:functioncae.caehelper:read C:\Users\pensa\AppData\Local\Temp\tmpy98zf1cv\Only_Ones.png and changed extension from pgm to png
+INFO:functioncae.caehelper:ho scritto il file Only_Ones.png in C:\Users\pensa\AppData\Local\Temp\tmptoyeloft come .png 
+INFO:functioncae.caehelper:Ho letto Image1_benign_mass_mask.png in C:\Users\pensa\AppData\Local\Temp\tmpy98zf1cv
+INFO:functioncae.caehelper:sovrapposizione riuscita
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.2797046319087044
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 1.0
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.0
+INFO:functioncae.caehelper:ho aperto C:\Users\pensa\AppData\Local\Temp\tmp0nxmstl4\Pick.pickle
+INFO:functioncae.caehelper:ho caricato <_io.BufferedReader name='C:\\Users\\pensa\\AppData\\Local\\Temp\\tmp0nxmstl4\\Pick.pickle'>
+INFO:functioncae.caehelper:ho fatto un update a {'thispickle': 'thatpickle'}
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp_abk4oii cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmp_abk4oii, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp_abk4oii cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Mockakedirpath cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp_abk4oii cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp6jobwfme cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpsz_0kg_k cercando le maschere
+INFO:functioncae.caehelper:read C:\Users\pensa\AppData\Local\Temp\tmp_abk4oii\Only_Ones.png and changed extension from pgm to png
+INFO:functioncae.caehelper:ho scritto il file Only_Ones.png in C:\Users\pensa\AppData\Local\Temp\tmpjefvvm0w come .png 
+INFO:functioncae.caehelper:Ho letto Image1_benign_mass_mask.png in C:\Users\pensa\AppData\Local\Temp\tmp_abk4oii
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp9731_79d cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmp9731_79d, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpck96c7aw cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmplmgfezky cercando le maschere
+INFO:functioncae.caehelper:sovrapposizione riuscita
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.2797046319087044
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 1.0
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.0
+INFO:functioncae.caehelper:ho aperto C:\Users\pensa\AppData\Local\Temp\tmp_84hbsmr\Pick.pickle
+INFO:functioncae.caehelper:ho caricato <_io.BufferedReader name='C:\\Users\\pensa\\AppData\\Local\\Temp\\tmp_84hbsmr\\Pick.pickle'>
+INFO:functioncae.caehelper:ho fatto un update a {'thispickle': 'thatpickle'}
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp9731_79d cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmp9731_79d, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp9731_79d cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Mockakedirpath cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp9731_79d cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpck96c7aw cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmplmgfezky cercando le maschere
+INFO:functioncae.caehelper:read C:\Users\pensa\AppData\Local\Temp\tmp9731_79d\Only_Ones.png and changed extension from pgm to png
+INFO:functioncae.caehelper:ho scritto il file Only_Ones.png in C:\Users\pensa\AppData\Local\Temp\tmployue9gv come .png 
+INFO:functioncae.caehelper:Ho letto Image1_benign_mass_mask.png in C:\Users\pensa\AppData\Local\Temp\tmp9731_79d
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp6z33wh4u cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmp6z33wh4u, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpumefzxi7 cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpnwsgji62 cercando le maschere
+INFO:functioncae.caehelper:sovrapposizione riuscita
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.2797046319087044
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 1.0
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.0
+INFO:functioncae.caehelper:ho aperto C:\Users\pensa\AppData\Local\Temp\tmp582hq4_n\Pick.pickle
+INFO:functioncae.caehelper:ho caricato <_io.BufferedReader name='C:\\Users\\pensa\\AppData\\Local\\Temp\\tmp582hq4_n\\Pick.pickle'>
+INFO:functioncae.caehelper:ho fatto un update a {'thispickle': 'thatpickle'}
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp6z33wh4u cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmp6z33wh4u, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp6z33wh4u cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Mockakedirpath cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp6z33wh4u cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpumefzxi7 cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpnwsgji62 cercando le maschere
+INFO:functioncae.caehelper:read C:\Users\pensa\AppData\Local\Temp\tmp6z33wh4u\Only_Ones.png and changed extension from pgm to png
+INFO:functioncae.caehelper:ho scritto il file Only_Ones.png in C:\Users\pensa\AppData\Local\Temp\tmpaoshr2i3 come .png 
+INFO:functioncae.caehelper:Ho letto Image1_benign_mass_mask.png in C:\Users\pensa\AppData\Local\Temp\tmp6z33wh4u
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpctv1sm1c cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmpctv1sm1c, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp4d__2f_b cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpesl8d8t7 cercando le maschere
+INFO:functioncae.caehelper:sovrapposizione riuscita
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.2797046319087044
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 1.0
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.0
+INFO:functioncae.caehelper:ho aperto C:\Users\pensa\AppData\Local\Temp\tmp_otrp5xf\Pick.pickle
+INFO:functioncae.caehelper:ho caricato <_io.BufferedReader name='C:\\Users\\pensa\\AppData\\Local\\Temp\\tmp_otrp5xf\\Pick.pickle'>
+INFO:functioncae.caehelper:ho fatto un update a {'thispickle': 'thatpickle'}
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpctv1sm1c cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmpctv1sm1c, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpctv1sm1c cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Mockakedirpath cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpctv1sm1c cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp4d__2f_b cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpesl8d8t7 cercando le maschere
+INFO:functioncae.caehelper:read C:\Users\pensa\AppData\Local\Temp\tmpctv1sm1c\Only_Ones.png and changed extension from pgm to png
+INFO:functioncae.caehelper:ho scritto il file Only_Ones.png in C:\Users\pensa\AppData\Local\Temp\tmp6tcbvc8l come .png 
+INFO:functioncae.caehelper:Ho letto Image1_benign_mass_mask.png in C:\Users\pensa\AppData\Local\Temp\tmpctv1sm1c
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp6biwq2ee cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmp6biwq2ee, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp48i8049h cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpas84a7zh cercando le maschere
+INFO:functioncae.caehelper:sovrapposizione riuscita
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.2797046319087044
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 1.0
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.0
+INFO:functioncae.caehelper:ho aperto C:\Users\pensa\AppData\Local\Temp\tmp_asds4da\Pick.pickle
+INFO:functioncae.caehelper:ho caricato <_io.BufferedReader name='C:\\Users\\pensa\\AppData\\Local\\Temp\\tmp_asds4da\\Pick.pickle'>
+INFO:functioncae.caehelper:ho fatto un update a {'thispickle': 'thatpickle'}
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp6biwq2ee cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmp6biwq2ee, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp6biwq2ee cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Mockakedirpath cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp6biwq2ee cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmp48i8049h cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpas84a7zh cercando le maschere
+INFO:functioncae.caehelper:read C:\Users\pensa\AppData\Local\Temp\tmp6biwq2ee\Only_Ones.png and changed extension from pgm to png
+INFO:functioncae.caehelper:ho scritto il file Only_Ones.png in C:\Users\pensa\AppData\Local\Temp\tmpg5jbmtyj come .png 
+INFO:functioncae.caehelper:Ho letto Image1_benign_mass_mask.png in C:\Users\pensa\AppData\Local\Temp\tmp6biwq2ee
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpghf477ai cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmpghf477ai, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpzhdzjt2q cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpd0_ogiob cercando le maschere
+INFO:functioncae.caehelper:sovrapposizione riuscita
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.2797046319087044
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 1.0
+INFO:functioncae.caehelper:calcolato correttamente il dice ottenendo 0.0
+INFO:functioncae.caehelper:ho aperto C:\Users\pensa\AppData\Local\Temp\tmpl9lnt_1c\Pick.pickle
+INFO:functioncae.caehelper:ho caricato <_io.BufferedReader name='C:\\Users\\pensa\\AppData\\Local\\Temp\\tmpl9lnt_1c\\Pick.pickle'>
+INFO:functioncae.caehelper:ho fatto un update a {'thispickle': 'thatpickle'}
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpghf477ai cercando le immagini
+INFO:functioncae.caehelper:ho preso le immagini e le maschere da C:\Users\pensa\AppData\Local\Temp\tmpghf477ai, ho trovato tutto e ho creato gli array delle immagini, maschere e classi
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpghf477ai cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Mockakedirpath cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpghf477ai cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpzhdzjt2q cercando le immagini
+INFO:functioncae.caehelper:ho analizzato C:\Users\pensa\AppData\Local\Temp\tmpd0_ogiob cercando le maschere
+INFO:functioncae.caehelper:read C:\Users\pensa\AppData\Local\Temp\tmpghf477ai\Only_Ones.png and changed extension from pgm to png
+INFO:functioncae.caehelper:ho scritto il file Only_Ones.png in C:\Users\pensa\AppData\Local\Temp\tmpsiw8dw6l come .png 
+INFO:functioncae.caehelper:Ho letto Image1_benign_mass_mask.png in C:\Users\pensa\AppData\Local\Temp\tmpghf477ai

@@ -222,8 +222,7 @@ batch=mass_gen_rad[6]
 
 """#Definiamo i modelli"""
 
-# Commented out IPython magic to ensure Python compatibility.
-# %load_ext tensorboard
+
 
 import tensorflow as tf
 import datetime, os
