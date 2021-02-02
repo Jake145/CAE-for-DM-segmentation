@@ -58,9 +58,13 @@ def resizer(list,endpath,pattern):
 
     try:
 
-        mask = mask.resize((image.shape))
+        mask = mask.resize(image.size)
         logger.debug(f'ho fatto il resize di {list[1]} usando come dimensione {image.shape} di {list[0]}')
-        b=time.perf_counter()
+    except:
+        warnings.warn('Non riesco a fare il resize. Sto salvando l\'immagine senza fare resize!!!')
+
+        logger.critical('Non riesco a fare il resize. Sto salvando l\'immagine senza fare resize!!!')
+    try:
         match=re.findall(pattern,list[0])[0]
         logger.debug(f'il match del pattern è {match}')
         filename=os.path.join(endpath,match+'.png')
@@ -69,10 +73,11 @@ def resizer(list,endpath,pattern):
 
     except:
         warnings.warn('Non possibile andare avanti')
-        logger.warning('Non possibile andare avanti, guarda i log precedenti per capire lo errore')
+        logger.warning('Non possibile andare avanti, non trovo il pattern o non riesco a salvare il file')
+    b=time.perf_counter()
 
     logger.info(f'time elapsed: {b-a}')
-    return f'time elapsed: {b-a}'
+    return filename
 
 
 ##

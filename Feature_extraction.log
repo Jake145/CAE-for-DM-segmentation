@@ -1,0 +1,101 @@
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpcwpuuvnq\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmpivnkvyuh\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpq680ximm con pattern da trovare Image1
+WARNING:featureextractor:Non possibile andare avanti, guarda i log precedenti per capire lo errore
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmplv5mrytl\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmpgg7ye2f1\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpb17c_fyl con pattern da trovare Image1
+WARNING:featureextractor:Non possibile andare avanti, guarda i log precedenti per capire lo errore
+INFO:featureextractor:time elapsed: 0.0014462000000001751
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpkr5jhv97\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmpt9cxx_03\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmprvfry_og con pattern da trovare Image1
+WARNING:featureextractor:Non possibile andare avanti, guarda i log precedenti per capire lo errore
+INFO:featureextractor:time elapsed: 0.0014473000000005953
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpdq0o7rfw\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmpbs5chasr\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmphla79csn con pattern da trovare Image1
+WARNING:featureextractor:Non possibile andare avanti, guarda i log precedenti per capire lo errore
+INFO:featureextractor:time elapsed: 0.0013902999999997334
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpwqkemwbu\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmpuf0jx21n\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpxj_fs4ih con pattern da trovare Image1
+WARNING:featureextractor:Non possibile andare avanti, guarda i log precedenti per capire lo errore
+INFO:featureextractor:time elapsed: 0.0014057999999996795
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmp4fbzhf1f\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmprl2t1p_c\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpqvy7izz6 con pattern da trovare Image1
+WARNING:featureextractor:Non possibile andare avanti, guarda i log precedenti per capire lo errore
+INFO:featureextractor:time elapsed: 0.0020207999999994897
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmp5oqk4_xr\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmp9d6wjjqo\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpf2zme585 con pattern da trovare Image1
+WARNING:featureextractor:Non possibile andare avanti, guarda i log precedenti per capire lo errore
+INFO:featureextractor:time elapsed: 0.0014348000000001804
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpcli080z9\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmpmmmw8bfn\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpy5lahetq con pattern da trovare Image1_benign
+WARNING:featureextractor:Non possibile andare avanti, guarda i log precedenti per capire lo errore
+INFO:featureextractor:time elapsed: 0.0014503000000001265
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpncppbo5d\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmp45t9t53i\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpotms9qh9 con pattern da trovare Image1_benign
+WARNING:featureextractor:Non possibile andare avanti, guarda i log precedenti per capire lo errore
+INFO:featureextractor:time elapsed: 0.0014837000000005318
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmp887arlaf\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmpohbbhwnc\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpv_8vqjwy con pattern da trovare Image1_benign
+CRITICAL:featureextractor:Non riesco a fare il resize
+DEBUG:featureextractor:il match del pattern è Image1_benign
+INFO:featureextractor:salvata la nuova maschera in {filename}
+INFO:featureextractor:time elapsed: 0.1004290000000001
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmp1uyy4lnp\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmp0dp5wdy9\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmp3fjglkyy con pattern da trovare Image1_benign
+CRITICAL:featureextractor:Non riesco a fare il resize
+DEBUG:featureextractor:il match del pattern è Image1_benign
+INFO:featureextractor:salvata la nuova maschera in {filename}
+INFO:featureextractor:time elapsed: 0.11098539999999968
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpi6movh7u\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmps9cfoc00\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmp6hts4gaj con pattern da trovare Image1_benign
+CRITICAL:featureextractor:Non riesco a fare il resize. Sto salvando l'immagine senza fare resize!!!
+DEBUG:featureextractor:il match del pattern è Image1_benign
+INFO:featureextractor:salvata la nuova maschera in {filename}
+INFO:featureextractor:time elapsed: 0.11077779999999926
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmp0744hvxy\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmp2uy4c0mz\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmp2_a57gf3 con pattern da trovare Image1_benign
+CRITICAL:featureextractor:Non riesco a fare il resize. Sto salvando l'immagine senza fare resize!!!
+DEBUG:featureextractor:il match del pattern è Image1_benign
+INFO:featureextractor:salvata la nuova maschera in {filename}
+INFO:featureextractor:time elapsed: 0.10893819999999987
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpab8a8e6h\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmpwslxwoql\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpgzzegniq con pattern da trovare Image1_benign
+CRITICAL:featureextractor:Non riesco a fare il resize. Sto salvando l'immagine senza fare resize!!!
+DEBUG:featureextractor:il match del pattern è Image1_benign
+INFO:featureextractor:salvata la nuova maschera in {filename}
+INFO:featureextractor:time elapsed: 0.11035940000000011
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmp2abx7yf1\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmpsegi0vl3\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpzwu2gux4 con pattern da trovare Image1_benign
+CRITICAL:featureextractor:Non riesco a fare il resize. Sto salvando l'immagine senza fare resize!!!
+DEBUG:featureextractor:il match del pattern è Image1_benign
+INFO:featureextractor:salvata la nuova maschera in {filename}
+INFO:featureextractor:time elapsed: 0.10880069999999975
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpniuuqk4c\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmp2h_j3oi1\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpaiu6wyzd con pattern da trovare Image1_benign
+CRITICAL:featureextractor:Non riesco a fare il resize. Sto salvando l'immagine senza fare resize!!!
+DEBUG:featureextractor:il match del pattern è Image1_benign
+INFO:featureextractor:salvata la nuova maschera in {filename}
+INFO:featureextractor:time elapsed: 0.035910400000000564
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpniuuqk4c\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmp2h_j3oi1\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpaiu6wyzd con pattern da trovare wrongpattern
+CRITICAL:featureextractor:Non riesco a fare il resize. Sto salvando l'immagine senza fare resize!!!
+WARNING:featureextractor:Non possibile andare avanti, non trovo il pattern o non riesco a salvare il file
+INFO:featureextractor:time elapsed: 0.03360099999999999
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpniuuqk4c\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmp2h_j3oi1\Image1_benign.png da salvare in Image2_malign.png con pattern da trovare Image1
+CRITICAL:featureextractor:Non riesco a fare il resize. Sto salvando l'immagine senza fare resize!!!
+DEBUG:featureextractor:il match del pattern è Image1
+WARNING:featureextractor:Non possibile andare avanti, non trovo il pattern o non riesco a salvare il file
+INFO:featureextractor:time elapsed: 0.033706600000000364
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpgmnix2ys\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmp4mmatxh0\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpqik30kew con pattern da trovare Image1_benign
+CRITICAL:featureextractor:Non riesco a fare il resize. Sto salvando l'immagine senza fare resize!!!
+DEBUG:featureextractor:il match del pattern è Image1_benign
+INFO:featureextractor:salvata la nuova maschera in {filename}
+INFO:featureextractor:time elapsed: 0.03602699999999981
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpgmnix2ys\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmp4mmatxh0\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpqik30kew con pattern da trovare wrongpattern
+CRITICAL:featureextractor:Non riesco a fare il resize. Sto salvando l'immagine senza fare resize!!!
+WARNING:featureextractor:Non possibile andare avanti, non trovo il pattern o non riesco a salvare il file
+INFO:featureextractor:time elapsed: 0.03362070000000017
+INFO:featureextractor:sto cercando di leggere come immagine C:\Users\pensa\AppData\Local\Temp\tmpgmnix2ys\Image1_benign_resized.png e maschera C:\Users\pensa\AppData\Local\Temp\tmp4mmatxh0\Image1_benign.png da salvare in C:\Users\pensa\AppData\Local\Temp\tmpqik30kew con pattern da trovare Image2
+CRITICAL:featureextractor:Non riesco a fare il resize. Sto salvando l'immagine senza fare resize!!!
+WARNING:featureextractor:Non possibile andare avanti, non trovo il pattern o non riesco a salvare il file
+INFO:featureextractor:time elapsed: 0.03339189999999981
+INFO:featureextractor:sto cercando di leggere come immagine wrongpath e maschera wrongpathmask da salvare in C:\Users\pensa\AppData\Local\Temp\tmpqik30kew con pattern da trovare Image1
+ERROR:featureextractor:Immagine wrongpath mancante o corrotta, non riesco a leggerla
+Traceback (most recent call last):
+  File "C:\Users\pensa\Desktop\CAE-for-DM-segmentation\featureextractor.py", line 48, in resizer
+    image=Image.open(list[0])
+  File "C:\Users\pensa\Anaconda3\envs\tensorflow\lib\site-packages\PIL\Image.py", line 2904, in open
+    fp = builtins.open(filename, "rb")
+FileNotFoundError: [Errno 2] No such file or directory: 'wrongpath'
+ERROR:featureextractor:maschera wrongpathmask mancante o corrotta, non riesco a leggerla
+Traceback (most recent call last):
+  File "C:\Users\pensa\Desktop\CAE-for-DM-segmentation\featureextractor.py", line 54, in resizer
+    mask=Image.open(list[1])
+  File "C:\Users\pensa\Anaconda3\envs\tensorflow\lib\site-packages\PIL\Image.py", line 2904, in open
+    fp = builtins.open(filename, "rb")
+FileNotFoundError: [Errno 2] No such file or directory: 'wrongpathmask'
+CRITICAL:featureextractor:Non riesco a fare il resize. Sto salvando l'immagine senza fare resize!!!
+WARNING:featureextractor:Non possibile andare avanti, non trovo il pattern o non riesco a salvare il file
+INFO:featureextractor:time elapsed: 0.007627600000000179

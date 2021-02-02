@@ -10,7 +10,9 @@ import pickle
 import shutil
 from PIL import Image
 from skimage.io import imread
-
+import datetime
+import pydicom
+from pydicom.dataset import Dataset, FileDataset
 import keras
 from keras.preprocessing.image import ImageDataGenerator
 from sklearn.utils import shuffle
@@ -18,6 +20,7 @@ from sklearn.utils import shuffle
 #sys.path.append('C:/Users/pensa/Desktop/CAE-for-DM-segmentation/functioncae')
 from functioncae import caehelper,ClassesCAE
 import dycomdatagen
+import featureextractor
 import logging
 
 logger = logging.getLogger(__name__)
@@ -127,6 +130,32 @@ class Test_CAE(unittest.TestCase):
         cls.pickle_path=os.path.join(cls.pickles.name,cls.pickle_filename)
         with open(cls.pickle_path,'wb') as handle:
             pickle.dump(cls.pickle, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        #dicom
+        '''
+        cls.dicomsfiles=tempfile.TemporaryDirectory()
+
+        csl.dicom1name='mass.dcm'
+        cls.file_meta = Dataset()
+        cls.file_meta.MediaStorageSOPClassUID = '1.2.840.10008.5.1.4.1.1.2'
+        cls.file_meta.MediaStorageSOPInstanceUID = "1.2.3"
+        cls.file_meta.ImplementationClassUID = "1.2.3.4"
+        cls.ds = FileDataset(dicom1name, {},
+                        cls.file_meta=cls.file_meta, preamble=b"\0" * 128)
+        cls.ds.SeriesDescription = "Mass"
+        cls.ds.Image = cls.image_ones
+
+        csl.dicom2name='mask.dcm'
+        cls.file_meta = Dataset()
+        cls.file_meta.MediaStorageSOPClassUID = '1.2.840.10008.5.1.4.1.1.2'
+        cls.file_meta.MediaStorageSOPInstanceUID = "1.2.3"
+        cls.file_meta.ImplementationClassUID = "1.2.3.4"
+        cls.ds = FileDataset(dicom1name, {},
+                        cls.file_meta=cls.file_meta, preamble=b"\0" * 128)
+        cls.ds.SeriesDescription = "Mass"
+        cls.ds.Image = cls.image_ones
+        '''
+
+
 
     @classmethod
     def tearDownClass(cls):
@@ -217,10 +246,11 @@ class Test_CAE(unittest.TestCase):
         np.testing.assert_array_equal(masked,self.image_square)
 
     def test_MassesSEQ(self):
-        train_datagen = ImageDataGenerator(horizontal_flip=True,fill_mode='reflect')
 
+        train_datagen = ImageDataGenerator(horizontal_flip=True,fill_mode='reflect')
         transform = train_datagen.get_random_transform((124,124))
         feats=[1,2,3]
+
         X,Y,CLASS=caehelper.read_dataset(self.temp_dir.name,'png',
         'benign','malign',x_id ="_resized", y_id="_mass_mask")
 
@@ -260,6 +290,17 @@ class Test_CAE(unittest.TestCase):
         self.assertEqual(self.gen3.batch_size,1)
         self.assertEqual(len(self.gen3),2)
 
+    def test_resizer(self):
+        self.list_test=[self.path_1,self.path_3_big]
+        fname=featureextractor.resizer(self.list_test,self.endpath.name,'Image1_benign')
+        np.testing.assert_array_equal(imread(fname).shape,self.image_ones.shape)
+        with self.assertRaises(Exception):
+            fname=featureextractor.resizer(self.list_test,self.endpath.name,'wrongpattern')
+        with self.assertRaises(Exception):
+            fname=featureextractor.resizer(self.list_test,self.endpath.name,'Image2')
+        with self.assertRaises(Exception):
+            self.list_testw=['wrongpath','wrongpathmask']
+            fname=featureextractor.resizer(self.list_testw,self.endpath.name,'Image1')
 
 
 
