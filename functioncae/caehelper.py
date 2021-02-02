@@ -362,7 +362,7 @@ def dice_vectorized(pred, true, k = 1):
     dice = intersection / (pred.sum(axis=(1,2,3)) + true.sum(axis=(1,2,3)))
   except ZeroDivisionError:
     logger.exception('provato a dividere per zero!')
-  logger(f'calcolato correttamente il dice medio ottenendo {dice}')
+  logger.info(f'calcolato correttamente il dice medio ottenendo {dice}')
   return dice
 
 import matplotlib.pyplot as plt
