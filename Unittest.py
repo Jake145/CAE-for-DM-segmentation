@@ -2,7 +2,6 @@ import unittest
 import mock
 import sys
 import numpy as np
-import unittest
 import tempfile
 import os
 import mock

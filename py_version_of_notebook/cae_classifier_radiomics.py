@@ -58,6 +58,14 @@ fnames = glob.glob(os.path.join(datapath, f"*{x_id}.{ext}"))
 fnamesmask = glob.glob(os.path.join(datapath, f"*{y_id}.{ext}"))
 
 extractor = featureextractor.RadiomicsFeatureExtractor()
+extractor.disableAllFeatures()
+extractor.enableFeatureClassByName('gldm')
+extractor.enableFeatureClassByName('glcm')
+extractor.enableFeatureClassByName('shape2D')
+extractor.enableFeatureClassByName('firstorder')
+extractor.enableFeatureClassByName('glrlm')
+extractor.enableFeatureClassByName('glszm')
+extractor.enableFeatureClassByName('ngtdm')
 
 dataframe={f.replace(datapath,''):extractor.execute(read_pgm_as_sitk(f), read_pgm_as_sitk(f.replace(x_id,y_id)),label=255) for f in fnames}
 
