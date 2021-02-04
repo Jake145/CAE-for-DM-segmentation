@@ -10,8 +10,6 @@ import shutil
 from PIL import Image
 from skimage.io import imread
 import datetime
-import pydicom
-from pydicom.dataset import Dataset, FileDataset
 import keras
 from keras.preprocessing.image import ImageDataGenerator
 from sklearn.utils import shuffle

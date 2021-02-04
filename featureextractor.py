@@ -14,9 +14,10 @@ import concurrent.futures
 from functools import partial
 import radiomics
 from radiomics import featureextractor
-sys.path.append('C:/Users/pensa/Desktop/CAE-for-DM-segmentation/functioncae')
-from caehelper import *
+#sys.path.append('C:/Users/pensa/Desktop/CAE-for-DM-segmentation/functioncae')
+from functioncae import caehelper,ClassesCAE
 import warnings
+import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
