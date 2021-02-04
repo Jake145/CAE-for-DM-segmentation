@@ -192,7 +192,7 @@ class Test_CAE(unittest.TestCase):
         'benign','malign',x_id ="_resized", y_id="_mass_mask")
         self.assertEqual(len(X),len(Y))
         self.assertEqual(len(X),len(CLASS))
-        self.assertEqual(list(CLASS),[0,1])
+        self.assertEqual(list(CLASS),[1,0])
         with self.assertRaises(Exception):
             X,Y,CLASS=caehelper.read_dataset(self.temp_dir.name,'jpg',
                     'benign','malign',x_id ="_resized", y_id="_mass_mask")
