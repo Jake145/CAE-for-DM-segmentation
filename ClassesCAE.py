@@ -120,7 +120,7 @@ class MassesSequence_radiomics(keras.utils.Sequence):
             Features.append(feature)
 
 
-        return [np.array(X),np.array(Features)], [np.array(Y) ,np.array(Classes)]
+        return [np.asarray(X,np.float64),np.asarray(Features,np.float64)], [np.asarray(Y,np.float64) ,np.asarray(Classes,np.float)]
 
 
 class MassesSequence_radiomics_big(keras.utils.Sequence):
