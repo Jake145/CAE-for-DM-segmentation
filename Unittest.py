@@ -193,6 +193,8 @@ class Test_CAE(unittest.TestCase):
         self.assertEqual(len(X),len(Y))
         self.assertEqual(len(X),len(CLASS))
         self.assertNotEqual(list(CLASS),[0,0])
+        self.assertNotEqual(list(CLASS),[1,1])
+
         with self.assertRaises(Exception):
             X,Y,CLASS=caehelper.read_dataset(self.temp_dir.name,'jpg',
                     'benign','malign',x_id ="_resized", y_id="_mass_mask")
@@ -209,6 +211,8 @@ class Test_CAE(unittest.TestCase):
         self.assertEqual(len(X),len(Y))
         self.assertEqual(len(X),len(CLASS))
         self.assertNotEqual(list(CLASS),[0,0])
+        self.assertNotEqual(list(CLASS),[1,1])
+
         with self.assertRaises(Exception):
             X,Y,CLASS=caehelper.read_dataset_big(self.temp_dir_big_mass.name,self.temp_dir_big_masks.name,'benign','malign',ext='jpg',resize=True)
         with self.assertRaises(Exception):
