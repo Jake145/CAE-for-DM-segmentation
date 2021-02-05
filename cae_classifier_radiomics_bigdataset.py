@@ -9,140 +9,174 @@ Original file is located at
 #In questo notebook si allena nuovamente la rete che prende in input l'immagine e le feature con pyradiomics, ma in aggiunta si utilizza un dataset molto ampio di immagini DICOM le cui dimensioni delle singole immagini sono molto grandi. Dopo aver preparato i dati grazie ai codici allegati, si adottano strategie per non esaurire la ram disponibile. Per il fatto che colab hai dei limiti sulla memoria allocabile durante il training, le immagini vengono anche riscalate nel generatore.
 """
 
-import os
 import glob
-import numpy as np
-import matplotlib.pyplot as plt
-from PIL import Image
+import os
 import sys
-sys.path.append('C:/Users/pensa/Desktop/CAE-for-DM-segmentation/package')
+
+import matplotlib.pyplot as plt
+import numpy as np
+from PIL import Image
+
+sys.path.append("C:/Users/pensa/Desktop/CAE-for-DM-segmentation/package")
 import caehelper
+
 ##
-datapath='E:'
-maindir='Mass_data'
-mass_train='Train_data'
-mass_test='Test_data'
-mask_train='Train_data_masks'
-mask_test='Test_data_masks'
-benign_label='BENIGN'
-malign_label='MALIGNANT'
-features_path='feats'
+datapath = "E:"
+maindir = "Mass_data"
+mass_train = "Train_data"
+mass_test = "Test_data"
+mask_train = "Train_data_masks"
+mask_test = "Test_data_masks"
+benign_label = "BENIGN"
+malign_label = "MALIGNANT"
+features_path = "feats"
 
-path_mass_tr=os.path.join(datapath,maindir,mass_train)
-path_masks_tr=os.path.join(datapath,maindir,mask_train)
-
-
+path_mass_tr = os.path.join(datapath, maindir, mass_train)
+path_masks_tr = os.path.join(datapath, maindir, mask_train)
 
 
-X_big_train,Y_big_train,Class_big_train=caehelper.read_dataset_big(path_mass_tr
-,path_masks_tr,benign_label,malign_label,resize=False)
+X_big_train, Y_big_train, Class_big_train = caehelper.read_dataset_big(
+    path_mass_tr, path_masks_tr, benign_label, malign_label, resize=False
+)
 
 
 ##
 """#Pyradiomics on big dataset"""
 
-endpath_tr=os.path.join(datapath,maindir,features_path)
+endpath_tr = os.path.join(datapath, maindir, features_path)
 if not os.path.exists(endpath_tr):
-  os.makedirs(endpath_tr)
+    os.makedirs(endpath_tr)
 ##
 
 """Questa funzione serve per estrarre le feature in multiprocessing e aggiungerle a un dizionario"""
 
 
-import time
 import pickle
+import time
 from functools import partial
+
 import radiomics
-from radiomics import featureextractor  
-
-
+from radiomics import featureextractor
 
 extractor = featureextractor.RadiomicsFeatureExtractor()
 
 
-biggy=[[X_big_train[i],Y_big_train[i]] for i in range(len(X_big_train))] 
-#biggy_test=[[X_big_test[i],Y_big_test[i]] for i in range(len(X_big_test))] 
+biggy = [[X_big_train[i], Y_big_train[i]] for i in range(len(X_big_train))]
+# biggy_test=[[X_big_test[i],Y_big_test[i]] for i in range(len(X_big_test))]
 
-radiomic_dooer=partial(caehelper.radiomic_dooer,datapath=path_mass_tr,endpath=endpath_tr,label=255,extrc=extractor)
+radiomic_dooer = partial(
+    caehelper.radiomic_dooer,
+    datapath=path_mass_tr,
+    endpath=endpath_tr,
+    label=255,
+    extrc=extractor,
+)
 ##
 
-#nam=radiomic_dooer(biggy[2],path_mass_tr,endpath_tr,255,extractor)
+# nam=radiomic_dooer(biggy[2],path_mass_tr,endpath_tr,255,extractor)
 
 ##
 
-#this is the filename list for the multiprocessing
+# this is the filename list for the multiprocessing
 
 import concurrent.futures
 
-
-
-a1=time.perf_counter()
+a1 = time.perf_counter()
 
 with concurrent.futures.ThreadPoolExecutor() as executor:
-  executor.map(radiomic_dooer, biggy)
-  
-  
-b1=time.perf_counter()
-print(f'time spent:{b1-a1}')#logging
+    executor.map(radiomic_dooer, biggy)
 
+
+b1 = time.perf_counter()
+print(f"time spent:{b1-a1}")  # logging
 
 
 ##
-dataframe_big_train={}
+dataframe_big_train = {}
 
-def dict_update_radiomics(data_path,remove_string,dictionary):
-  with open(data_path, 'rb') as handle:
-    b = pickle.load(handle)
-    dictionary.update(b)
-    del(b)
 
-for f in glob.glob('/content/drive/MyDrive/radiomic_feats_big/*.pickle'):
-  dict_update_radiomics(f,'/content/drive/MyDrive/radiomic_feats_big',dataframe_big_train)
+def dict_update_radiomics(data_path, remove_string, dictionary):
+    with open(data_path, "rb") as handle:
+        b = pickle.load(handle)
+        dictionary.update(b)
+        del b
+
+
+for f in glob.glob("/content/drive/MyDrive/radiomic_feats_big/*.pickle"):
+    dict_update_radiomics(
+        f, "/content/drive/MyDrive/radiomic_feats_big", dataframe_big_train
+    )
 
 dataframe_big_train
 
 import pandas as pd
 
-Pandata_big=pd.DataFrame(dataframe_big_train)
+Pandata_big = pd.DataFrame(dataframe_big_train)
 
 Pandata_big.index
 
-for i,name in enumerate(Pandata_big.index):
-  if 'diagnostics' in Pandata_big.index[i]:
-    print(i)  
-  else:
-    pass
+for i, name in enumerate(Pandata_big.index):
+    if "diagnostics" in Pandata_big.index[i]:
+        print(i)
+    else:
+        pass
 
-Pandatabigframe=Pandata_big.drop(Pandata_big.index[0:22]).T
+Pandatabigframe = Pandata_big.drop(Pandata_big.index[0:22]).T
 
 Pandatabigframe
 
 """le seguenti tre celle servono per fare in modo che tutti i vettori hanno le stesse dimensioni perché nel dataset mancavo delle immagini"""
 
-filesinfeat=next(os.walk('/content/drive/MyDrive/radiomic_feats_big'))[2]
+filesinfeat = next(os.walk("/content/drive/MyDrive/radiomic_feats_big"))[2]
 
-filesnew_train=[]
-masknew_train=[]
+filesnew_train = []
+masknew_train = []
 for f in filesinfeat:
-  f=f.replace('feats_','')
-  filesnew_train.append(os.path.join('/content/drive/MyDrive/Mass_data_New/TRAINING/Train_data',f.replace('pickle','png')))
-  masknew_train.append(os.path.join('/content/drive/MyDrive/Mass_data_New/TRAINING/mask_tr_V2',f.replace('pickle','png')))
+    f = f.replace("feats_", "")
+    filesnew_train.append(
+        os.path.join(
+            "/content/drive/MyDrive/Mass_data_New/TRAINING/Train_data",
+            f.replace("pickle", "png"),
+        )
+    )
+    masknew_train.append(
+        os.path.join(
+            "/content/drive/MyDrive/Mass_data_New/TRAINING/mask_tr_V2",
+            f.replace("pickle", "png"),
+        )
+    )
 
-X_big_train=np.asarray(X_big_train)[np.in1d(X_big_train, filesnew_train)]
-Y_big_train=np.asarray(Y_big_train)[np.in1d(Y_big_train, masknew_train)]
+X_big_train = np.asarray(X_big_train)[np.in1d(X_big_train, filesnew_train)]
+Y_big_train = np.asarray(Y_big_train)[np.in1d(Y_big_train, masknew_train)]
 
-Class_big_train=[]
+Class_big_train = []
 for fname in X_big_train:
-  if benign_label in fname:
-    Class_big_train.append(0)
-  elif malign_label in fname:
-    Class_big_train.append(1)
-  else:
-    print('no image')
+    if benign_label in fname:
+        Class_big_train.append(0)
+    elif malign_label in fname:
+        Class_big_train.append(1)
+    else:
+        print("no image")
 
 len(Class_big_train)
 
-X_train_rad_big, X_test_rad_big, Y_train_rad_big, Y_test_rad_big,class_train_rad_big,class_test_rad_big,feature_train_big,feature_test_big = train_test_split(X_big_train, Y_big_train,Class_big_train,Pandatabigframe, test_size=0.2, random_state=42)
+(
+    X_train_rad_big,
+    X_test_rad_big,
+    Y_train_rad_big,
+    Y_test_rad_big,
+    class_train_rad_big,
+    class_test_rad_big,
+    feature_train_big,
+    feature_test_big,
+) = train_test_split(
+    X_big_train,
+    Y_big_train,
+    Class_big_train,
+    Pandatabigframe,
+    test_size=0.2,
+    random_state=42,
+)
 
 """Ora che abbiamo tutte le feature, facciamo la pca"""
 
@@ -161,25 +195,27 @@ explained_variance_big = pca.explained_variance_ratio_
 
 explained_variance_big
 
-percentage_var_explained = pca.explained_variance_ratio_;  
-cum_var_explained=np.cumsum(percentage_var_explained)
-#plot spettro dell pca   
-plt.figure(1,figsize=(6,4))
-plt.clf()  
-plt.plot(cum_var_explained,linewidth=2)  
-plt.axis('tight')  
-plt.grid() 
-plt.xlabel('n_components') 
-plt.ylabel('Cumulative_Variance_explained')  
+percentage_var_explained = pca.explained_variance_ratio_
+cum_var_explained = np.cumsum(percentage_var_explained)
+# plot spettro dell pca
+plt.figure(1, figsize=(6, 4))
+plt.clf()
+plt.plot(cum_var_explained, linewidth=2)
+plt.axis("tight")
+plt.grid()
+plt.xlabel("n_components")
+plt.ylabel("Cumulative_Variance_explained")
 plt.show()
 
-exp_var_cumsum=pd.Series(np.round(pca.explained_variance_ratio_.cumsum(),4)*100)  
-for index,var in enumerate(exp_var_cumsum):  
-    print('if n_components= %d,   variance=%f' %(index,np.round(var,3)))
+exp_var_cumsum = pd.Series(np.round(pca.explained_variance_ratio_.cumsum(), 4) * 100)
+for index, var in enumerate(exp_var_cumsum):
+    print("if n_components= %d,   variance=%f" % (index, np.round(var, 3)))
 
 from sklearn.decomposition import PCA
 
-pca = PCA(n_components=3) #voglio che il numero di componenti descriva il 95% della varianza
+pca = PCA(
+    n_components=3
+)  # voglio che il numero di componenti descriva il 95% della varianza
 feature_train_bigg = pca.fit_transform(feature_train_bigg)
 feature_test_bigg = pca.transform(feature_test_bigg)
 
@@ -189,24 +225,27 @@ from keras.preprocessing.image import ImageDataGenerator
 from sklearn.utils import shuffle
 
 train_datagen = ImageDataGenerator(
-        rotation_range=40,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.2,
-        zoom_range=0.2,
-        horizontal_flip=True,
-        vertical_flip= True,
-        fill_mode='reflect')
+    rotation_range=40,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    vertical_flip=True,
+    fill_mode="reflect",
+)
 
 import keras
 from skimage.transform import resize
 
+
 class MassesSequence_radiomics_big(keras.utils.Sequence):
     """ Classe per data augmentation per CAE con grandi dati """
-    
 
-    def __init__(self, x, y,label_array,features, img_gen, batch_size=5, shape=(2048, 1536)):
-        """ Inizializza la sequenza
+    def __init__(
+        self, x, y, label_array, features, img_gen, batch_size=5, shape=(2048, 1536)
+    ):
+        """Inizializza la sequenza
 
         Parametri:
 
@@ -219,56 +258,88 @@ class MassesSequence_radiomics_big(keras.utils.Sequence):
         shape (tuple): shape dell'immagine. Di Default è (2048, 1536) per il limite di colab, per la Unet invece è metà di queste.
 
         """
-        self.x, self.y,self.label_array,self.features = x, y,label_array,features
+        self.x, self.y, self.label_array, self.features = x, y, label_array, features
         self.shape = shape
         self.img_gen = img_gen
         self.batch_size = batch_size
-
 
     def __len__(self):
         return len(self.x) // self.batch_size
 
     def on_epoch_end(self):
         """Shuffle the dataset at the end of each epoch."""
-        self.x, self.y ,self.label_array,self.features= shuffle(self.x, self.y,
-                                                                self.label_array,self.features)
+        self.x, self.y, self.label_array, self.features = shuffle(
+            self.x, self.y, self.label_array, self.features
+        )
 
     def process(self, img, transform):
         """ Apply a transformation to an image """
         img = self.img_gen.apply_transform(img, transform)
         return img
-            
-    def __getitem__(self, idx):
-        batch_x = self.x[idx * self.batch_size:(idx + 1) * self.batch_size]
-        batch_y = self.y[idx * self.batch_size:(idx + 1) * self.batch_size]
-        batch_label_array = self.label_array[idx * self.batch_size:(idx + 1) * self.batch_size]
-        batch_features = self.features[idx * self.batch_size:(idx + 1) * self.batch_size]
 
-        X=[];
-        Y=[];
-        Classes=[];
-        Features=[]
-        
-        for image, mask,label,feature in zip(batch_x, batch_y,batch_label_array,batch_features):          
+    def __getitem__(self, idx):
+        batch_x = self.x[idx * self.batch_size : (idx + 1) * self.batch_size]
+        batch_y = self.y[idx * self.batch_size : (idx + 1) * self.batch_size]
+        batch_label_array = self.label_array[
+            idx * self.batch_size : (idx + 1) * self.batch_size
+        ]
+        batch_features = self.features[
+            idx * self.batch_size : (idx + 1) * self.batch_size
+        ]
+
+        X = []
+        Y = []
+        Classes = []
+        Features = []
+
+        for image, mask, label, feature in zip(
+            batch_x, batch_y, batch_label_array, batch_features
+        ):
             transform = self.img_gen.get_random_transform(self.shape)
-            X_el=resize(imread( str(image)), (1024, 768, 1))
-            Y_el=resize(imread( str(mask)), (1024, 768, 1))
+            X_el = resize(imread(str(image)), (1024, 768, 1))
+            Y_el = resize(imread(str(mask)), (1024, 768, 1))
             X.append(self.process(X_el, transform))
-            del(X_el)
+            del X_el
             Y.append(self.process(Y_el, transform))
-            del(Y_el)
+            del Y_el
             Classes.append(label)
             Features.append(feature)
-       
-        return [np.array(X)/255,np.asarray(Features,np.float64)], [np.array(Y) ,np.asarray(Classes,np.float)]
 
-X_train_rad_big_tr, X_train_rad_big_val, Y_train_rad_big_tr, Y_train_rad_big_val,class_train_rad_big_tr,class_train_rad_big_val,feature_train_big_tr,feature_train_big_val = train_test_split(X_train_rad_big, Y_train_rad_big, to_categorical(class_train_rad_big,2),feature_train_bigg, test_size=0.2, random_state=24)
+        return [np.array(X) / 255, np.asarray(Features, np.float64)], [
+            np.array(Y),
+            np.asarray(Classes, np.float),
+        ]
 
-mass_gen_rad_big = MassesSequence_radiomics_big(X_train_rad_big_tr, Y_train_rad_big_tr,class_train_rad_big_tr,feature_train_big_tr, train_datagen)
 
-batch=mass_gen_rad_big[67]
+(
+    X_train_rad_big_tr,
+    X_train_rad_big_val,
+    Y_train_rad_big_tr,
+    Y_train_rad_big_val,
+    class_train_rad_big_tr,
+    class_train_rad_big_val,
+    feature_train_big_tr,
+    feature_train_big_val,
+) = train_test_split(
+    X_train_rad_big,
+    Y_train_rad_big,
+    to_categorical(class_train_rad_big, 2),
+    feature_train_bigg,
+    test_size=0.2,
+    random_state=24,
+)
 
-del(batch)
+mass_gen_rad_big = MassesSequence_radiomics_big(
+    X_train_rad_big_tr,
+    Y_train_rad_big_tr,
+    class_train_rad_big_tr,
+    feature_train_big_tr,
+    train_datagen,
+)
+
+batch = mass_gen_rad_big[67]
+
+del batch
 
 batch[0][0].shape
 
@@ -276,10 +347,10 @@ plt.imshow(batch[1][0][1].squeeze())
 
 """Stavolta ci serve anche un generatore per i dati di validazione"""
 
-class Validator_Generator(keras.utils.Sequence) :
-  
-    def __init__(self, x, y,label_array,features, batch_size=5, shape=(2048, 1536)):
-        """ Inizializza la sequenza
+
+class Validator_Generator(keras.utils.Sequence):
+    def __init__(self, x, y, label_array, features, batch_size=5, shape=(2048, 1536)):
+        """Inizializza la sequenza
 
         Parametri:
 
@@ -292,39 +363,53 @@ class Validator_Generator(keras.utils.Sequence) :
         shape (tuple): shape dell'immagine. Di Default è (2048, 1536) per il limite di colab, per la Unet invece è metà di queste.
 
         """
-        self.x, self.y,self.label_array,self.features = x, y,label_array,features
+        self.x, self.y, self.label_array, self.features = x, y, label_array, features
         self.shape = shape
         self.batch_size = batch_size
-    
+
     def __len__(self):
-      return len(self.x) // self.batch_size
+        return len(self.x) // self.batch_size
 
-  
     def __getitem__(self, idx):
-        batch_x = self.x[idx * self.batch_size:(idx + 1) * self.batch_size]
-        batch_y = self.y[idx * self.batch_size:(idx + 1) * self.batch_size]
-        batch_label_array = self.label_array[idx * self.batch_size:(idx + 1) * self.batch_size]
-        batch_features = self.features[idx * self.batch_size:(idx + 1) * self.batch_size]
+        batch_x = self.x[idx * self.batch_size : (idx + 1) * self.batch_size]
+        batch_y = self.y[idx * self.batch_size : (idx + 1) * self.batch_size]
+        batch_label_array = self.label_array[
+            idx * self.batch_size : (idx + 1) * self.batch_size
+        ]
+        batch_features = self.features[
+            idx * self.batch_size : (idx + 1) * self.batch_size
+        ]
 
-        X=[];
-        Y=[];
-        Classes=[];
-        Features=[]
-        
-        for image, mask,label,feature in zip(batch_x, batch_y,batch_label_array,batch_features):          
-            
-            X_el=resize(imread( str(image)), (2048, 1536, 1))
-            Y_el=resize(imread( str(mask)), (2048, 1536, 1))
+        X = []
+        Y = []
+        Classes = []
+        Features = []
+
+        for image, mask, label, feature in zip(
+            batch_x, batch_y, batch_label_array, batch_features
+        ):
+
+            X_el = resize(imread(str(image)), (2048, 1536, 1))
+            Y_el = resize(imread(str(mask)), (2048, 1536, 1))
             X.append(X_el)
-            del(X_el)
+            del X_el
             Y.append(Y_el)
-            del(Y_el)
+            del Y_el
             Classes.append(label)
             Features.append(feature)
-       
-        return [np.array(X)/255,np.asarray(Features,np.float64)], [np.array(Y) ,np.asarray(Classes,np.float)]
 
-Validation_data=Validator_Generator(X_train_rad_big_val, Y_train_rad_big_val,class_train_rad_big_val,feature_train_big_val)
+        return [np.array(X) / 255, np.asarray(Features, np.float64)], [
+            np.array(Y),
+            np.asarray(Classes, np.float),
+        ]
+
+
+Validation_data = Validator_Generator(
+    X_train_rad_big_val,
+    Y_train_rad_big_val,
+    class_train_rad_big_val,
+    feature_train_big_val,
+)
 
 """#Define the models with radiomics and bigger dataset"""
 
@@ -332,36 +417,56 @@ Validation_data=Validator_Generator(X_train_rad_big_val, Y_train_rad_big_val,cla
 # Load the TensorBoard notebook extension
 # %load_ext tensorboard
 
-import tensorflow as tf
-import datetime, os
+import datetime
+import os
 
-from keras.layers import Conv2D, Conv2DTranspose, Input, Dropout,MaxPooling2D, UpSampling2D, Dense, Flatten
-from keras.models import Model, load_model
+import tensorflow as tf
+from keras.layers import (
+    Conv2D,
+    Conv2DTranspose,
+    Dense,
+    Dropout,
+    Flatten,
+    Input,
+    MaxPooling2D,
+    UpSampling2D,
+)
 from keras.layers.experimental.preprocessing import Resizing
 from keras.layers.merge import concatenate
+from keras.models import Model, load_model
 
-import tensorflow as tf
-model_rad = make_model_rad_BIG_UNET() 
+model_rad = make_model_rad_BIG_UNET()
 model_rad.summary()
 
 logdir = os.path.join("logs", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
 tensorboard_callback = tf.keras.callbacks.TensorBoard(logdir, histogram_freq=1)
 
-checkpoint_filepath = 'big_weights.{epoch:02d}-{val_loss:.2f}.h5'
+checkpoint_filepath = "big_weights.{epoch:02d}-{val_loss:.2f}.h5"
 model_checkpoint_callback = keras.callbacks.ModelCheckpoint(
     filepath=checkpoint_filepath,
-    monitor='val_classification_output_auc',
-    mode='max',
-    save_best_only=True)
+    monitor="val_classification_output_auc",
+    mode="max",
+    save_best_only=True,
+)
 
-model_rad.compile(optimizer='adam', loss={'decoder_output':'binary_crossentropy','classification_output':'categorical_crossentropy'},
-                  metrics={'decoder_output':'MAE','classification_output':tf.keras.metrics.AUC()})
+model_rad.compile(
+    optimizer="adam",
+    loss={
+        "decoder_output": "binary_crossentropy",
+        "classification_output": "categorical_crossentropy",
+    },
+    metrics={"decoder_output": "MAE", "classification_output": tf.keras.metrics.AUC()},
+)
 
-epoch_number= 10
+epoch_number = 10
 
-history_rad = model_rad.fit(mass_gen_rad_big, steps_per_epoch=10, epochs=epoch_number, 
-                        validation_data=Validation_data,
-                        callbacks=[tensorboard_callback,model_checkpoint_callback])
+history_rad = model_rad.fit(
+    mass_gen_rad_big,
+    steps_per_epoch=10,
+    epochs=epoch_number,
+    validation_data=Validation_data,
+    callbacks=[tensorboard_callback, model_checkpoint_callback],
+)
 
 """View on tensorboard"""
 
@@ -372,6 +477,6 @@ history_rad = model_rad.fit(mass_gen_rad_big, steps_per_epoch=10, epochs=epoch_n
 
 modelviewer(history_rad)
 
-model_rad = keras.models.load_model('/content/drive/MyDrive/weights.35-0.47.h5')
+model_rad = keras.models.load_model("/content/drive/MyDrive/weights.35-0.47.h5")
 
 """Per fare il resto posso fare cose col multiprocessing per caricare le immagini e calcolare il dice medio ecc"""

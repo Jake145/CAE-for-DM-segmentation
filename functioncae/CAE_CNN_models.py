@@ -1,11 +1,14 @@
-import tensorflow as tf
-import datetime, os
+import datetime
+import logging
+import os
 
-from keras.layers import Conv2D, Conv2DTranspose, Input, Dropout,MaxPooling2D, UpSampling2D, Dense, Flatten
-from keras.models import Model, load_model
+import tensorflow as tf
+from keras.layers import (Conv2D, Conv2DTranspose, Dense, Dropout, Flatten,
+                          Input, MaxPooling2D, UpSampling2D)
 from keras.layers.experimental.preprocessing import Resizing
 from keras.layers.merge import concatenate
-import logging
+from keras.models import Model, load_model
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -76,6 +79,7 @@ def make_model_rad(shape_tensor=(124,124,1),feature_dim=(3,)):
     return model
 
 from tensorflow.keras import regularizers
+
 ##
 
 def make_model_rad_UNET(shape_tensor=(124,124,1),feature_dim=(3,)):
@@ -229,7 +233,7 @@ Image Segmentation. I added a resizing layer to adapt it for our image size
 
 """
 
-from keras.constraints import unit_norm,min_max_norm,max_norm
+from keras.constraints import max_norm, min_max_norm, unit_norm
 from tensorflow.keras import regularizers
 
 

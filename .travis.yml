@@ -11,3 +11,5 @@ notifications:
        - jakeharold.pensavalle@gmail.com
      on_success: never
      on_failure: always
+ - black .
+ - isort .

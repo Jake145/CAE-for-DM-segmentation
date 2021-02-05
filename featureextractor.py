@@ -1,23 +1,23 @@
-import os
-import glob
-import numpy as np
-import matplotlib.pyplot as plt
-from PIL import Image
-import sys
-import pickle
-import SimpleITK as sitk
-import radiomics
-import re
-import time
-import pickle
 import concurrent.futures
-from functools import partial
-import radiomics
-from radiomics import featureextractor
-#sys.path.append('C:/Users/pensa/Desktop/CAE-for-DM-segmentation/functioncae')
-from functioncae import caehelper,ClassesCAE
-import warnings
+import glob
 import logging
+import os
+import pickle
+import re
+import sys
+import time
+import warnings
+from functools import partial
+
+import matplotlib.pyplot as plt
+import numpy as np
+import radiomics
+import SimpleITK as sitk
+from PIL import Image
+from radiomics import featureextractor
+
+#sys.path.append('C:/Users/pensa/Desktop/CAE-for-DM-segmentation/functioncae')
+from functioncae import ClassesCAE, caehelper
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -188,7 +188,7 @@ if __name__ == '__main__':
     end=time.perf_counter()
 
     logger.info(f'Elapsed time for MT:{end-start}')
-##
+
     import pandas as pd
 
     Pandata_big=pd.DataFrame(diz)
@@ -205,7 +205,7 @@ if __name__ == '__main__':
     gfg_csv_data = Pandatabigframe.to_csv('C:/Users/pensa/Desktop/CAE-for-DM-segmentation/Pandatabigframe.csv', index = True)
 
 
-##PCA
+A
     from sklearn.model_selection import train_test_split
 
 
@@ -247,11 +247,10 @@ if __name__ == '__main__':
     pca = PCA(n_components=3)
     feature_train_bigg = pca.fit_transform(feature_train_bigg)
     feature_test_bigg = pca.transform(feature_test_bigg)
-##
-    import keras
-    from skimage.transform import resize
 
+    import keras
     from keras.preprocessing.image import ImageDataGenerator
+    from skimage.transform import resize
     from sklearn.utils import shuffle
 
     train_datagen = ImageDataGenerator(
@@ -396,15 +395,16 @@ if __name__ == '__main__':
 
 ##
 
-    import tensorflow as tf
-    import datetime, os
+    import datetime
+    import os
 
-    from keras.layers import Conv2D, Conv2DTranspose, Input, Dropout,MaxPooling2D, UpSampling2D, Dense, Flatten
-    from keras.models import Model, load_model
+    import tensorflow as tf
+    from keras.layers import (
+        Conv2D, Conv2DTranspose, Dense, Dropout, Flatten, Input, MaxPooling2D,
+        UpSampling2D)
     from keras.layers.experimental.preprocessing import Resizing
     from keras.layers.merge import concatenate
-
-    import tensorflow as tf
+    from keras.models import Model, load_model
 
 
     def make_model_rad_BIG_REGULIZER(shape_tensor=(4096,3072,1),feature_dim=feature_train_big_tr.shape[1:]):
