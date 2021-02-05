@@ -4,6 +4,8 @@ python:
 install:
  - pip install -r requirements.txt
 script:
+ - black .
+ - isort .
  - python Unittest.py
 notifications:
    email:
@@ -11,5 +13,3 @@ notifications:
        - jakeharold.pensavalle@gmail.com
      on_success: never
      on_failure: always
- - black .
- - isort .
