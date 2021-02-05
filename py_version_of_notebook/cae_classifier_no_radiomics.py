@@ -1,4 +1,4 @@
-"""#Helper Functions
+"""Cae classifier no radiomics
 
 """
 
@@ -13,8 +13,6 @@ import time
 import cv2
 import matplotlib.pyplot as plt
 
-# In questo file sono riportate tutte le funzioni helper per il software. Farò in un altro i codici per i modelli
-##
 import numpy as np
 import PIL
 from keras.utils import to_categorical
@@ -23,9 +21,7 @@ from skimage import io, transform
 from skimage.io import imread
 from sklearn.model_selection import train_test_split
 
-# import sys
-# sys.path.append('/CAE-for-DM-segmentation/package/')
-importlib.import_module("package")
+
 ##
 imagepath = (
     "/CAE-for-DM-segmentation/large_sample_Im_segmented_ref/0003s1_1_1_1_resized.pgm"

@@ -1,25 +1,20 @@
-import datetime
+"""docstring"""
+
 import logging
 import os
 import pickle
-import shutil
-import sys
 import tempfile
 import unittest
 
-import keras
-import mock
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 from PIL import Image
 from skimage.io import imread
-from sklearn.utils import shuffle
 
-import dycomdatagen
+# import dycomdatagen
 import featureextractor
 
-# sys.path
-# sys.path.append('C:/Users/pensa/Desktop/CAE-for-DM-segmentation/functioncae')
+
 from functioncae import ClassesCAE, caehelper
 
 logger = logging.getLogger(__name__)
@@ -39,12 +34,12 @@ logger.addHandler(stream_handler)
 
 
 class Test_CAE(unittest.TestCase):
+    """Unit test class"""
 
-    # setup i metodi setup e teardown
     @classmethod
     def setUpClass(cls):
+        """Metodo di set up per tutti i test fatto all'inizio"""
 
-        # setup per il dataset piccolo
         cls.shape_im = (124, 124)
         cls.image_ones = np.ones(cls.shape_im)
         cls.image_zeros = np.zeros(cls.shape_im)
@@ -155,18 +150,24 @@ class Test_CAE(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        """Metodo di tear down per tutti i test fatto all'inizio"""
         cls.temp_dir.cleanup()
         cls.temp_dir_big_mass.cleanup()
         cls.temp_dir_big_masks.cleanup()
         cls.pickles.cleanup()
 
     def setUp(self):
+        """Metodo di set up per tutti i test fatto all'inizio di ogni singolo test"""
         self.endpath = tempfile.TemporaryDirectory()
 
     def tearDown(self):
+        """Metodo di tear down per tutti i test fatto all'inizio di ogni singolo test"""
+
         self.endpath.cleanup()
 
     def test_save_newext(self):
+        """test per la funzione che salva un'immagine in una nuova estensione"""
+
         stat = caehelper.save_newext(
             self.filename5, self.temp_dir.name, "pgm", "png", self.endpath.name
         )
@@ -178,21 +179,20 @@ class Test_CAE(unittest.TestCase):
             )
 
     def test_unit_mask(self):
+        """test per la funzione che normalizza una maschera/immagine"""
         stat, image = caehelper.unit_masks(
             self.filename4, self.temp_dir.name, "png", "pgm", self.endpath.name
         )
         self.assertTrue(stat)
-        np.testing.assert_allclose(
-            np.round(image), self.image_zeros
-        )  # qui entra in gioco dei problemi con arrotondamento
+        np.testing.assert_allclose(np.round(image), self.image_zeros)
         with self.assertRaises(Exception):
             caehelper.unit_masks(
                 "failfile.pgm", self.temp_dir.name, "pgm", "png", self.endpath.name
             )
 
-    # @mock.patch('caehelper.os.listdir') using mock is good to use for the heatmap and modelviewer maybe
     def test_read_dataset(self):
-        X, Y, CLASS = caehelper.read_dataset(
+        """test per la funzione che legge un dataset e restituisce i vettori delle immagini, delle maschere e delle classi"""
+        x, y, class_ = caehelper.read_dataset(
             self.temp_dir.name,
             "png",
             "benign",
@@ -200,13 +200,13 @@ class Test_CAE(unittest.TestCase):
             x_id="_resized",
             y_id="_mass_mask",
         )
-        self.assertEqual(len(X), len(Y))
-        self.assertEqual(len(X), len(CLASS))
-        self.assertNotEqual(list(CLASS), [0, 0])
-        self.assertNotEqual(list(CLASS), [1, 1])
+        self.assertEqual(len(x), len(y))
+        self.assertEqual(len(x), len(class_))
+        self.assertNotEqual(list(class_), [0, 0])
+        self.assertNotEqual(list(class_), [1, 1])
 
         with self.assertRaises(Exception):
-            X, Y, CLASS = caehelper.read_dataset(
+            x, y, class_ = caehelper.read_dataset(
                 self.temp_dir.name,
                 "jpg",
                 "benign",
@@ -215,8 +215,8 @@ class Test_CAE(unittest.TestCase):
                 y_id="_mass_mask",
             )
         with self.assertRaises(Exception):
-            X, Y, CLASS = caehelper.read_dataset(
-                "C:\Mock\fakedirpath",
+            x, y, class_ = caehelper.read_dataset(
+                "C:/Mock/fakedirpath",
                 "png",
                 "benign",
                 "malign",
@@ -224,7 +224,7 @@ class Test_CAE(unittest.TestCase):
                 y_id="_mass_mask",
             )
         with self.assertRaises(Exception):
-            X, Y, CLASS = caehelper.read_dataset(
+            x, y, class_ = caehelper.read_dataset(
                 self.temp_dir.name,
                 "png",
                 "benign",
@@ -234,50 +234,51 @@ class Test_CAE(unittest.TestCase):
             )
 
     def test_read_dataset_big(self):
-
-        X, Y, CLASS = caehelper.read_dataset_big(
+        """test per la funzione che legge un dataset e restituisce i vettori dei path delle immagini e delle maschere e le classi"""
+        x, y, class_ = caehelper.read_dataset_big(
             self.temp_dir_big_mass.name,
             self.temp_dir_big_masks.name,
             "benign",
             "malign",
             ext="png",
         )
-        self.assertEqual(len(X), len(Y))
-        self.assertEqual(len(X), len(CLASS))
-        self.assertNotEqual(list(CLASS), [0, 0])
-        self.assertNotEqual(list(CLASS), [1, 1])
+        self.assertEqual(len(x), len(y))
+        self.assertEqual(len(x), len(class_))
+        self.assertNotEqual(list(class_), [0, 0])
+        self.assertNotEqual(list(class_), [1, 1])
 
         with self.assertRaises(Exception):
-            X, Y, CLASS = caehelper.read_dataset_big(
+            x, y, class_ = caehelper.read_dataset_big(
                 self.temp_dir_big_mass.name,
                 self.temp_dir_big_masks.name,
                 "benign",
                 "malign",
                 ext="jpg",
-                resize=True,
             )
         with self.assertRaises(Exception):
-            X, Y, CLASS = caehelper.read_dataset_big(
-                "C:\Mock\fakedirpath",
-                "C:\Mock\fakedirpath2",
+            x, y, class_ = caehelper.read_dataset_big(
+                "C:/Mock/fakedirpath",
+                "C:/Mock/fakedirpath2",
                 "benign",
                 "malign",
                 ext="png",
-                resize=True,
             )
 
     def test_dict_update_radiomics(self):
+        """test per la funzione che aggiorna un dizionario esistente leggendo un file .pickle"""
         mockdict = {}
         diz = caehelper.dict_update_radiomics(self.pickle_path, mockdict)
         self.assertEqual(len(diz), 1)
 
     def test_blender(self):
+        """test per la funzione che sovrappone due immagini"""
         image = caehelper.blender(self.image_ones, self.image_ones, 1, 1)
         np.testing.assert_array_equal(image, np.full(self.shape_im, 2))
         with self.assertRaises(Exception):
             caehelper.blender("fake.png", "string.txt", "really wrong", "oh noes")
 
     def test_dice(self):
+        """test per il calcolo del dice per singola immagine"""
         dix = caehelper.dice(self.image_ones, self.image_square)
         dix_1 = caehelper.dice(self.image_ones, self.image_ones)
         dix_0 = caehelper.dice(self.image_zeros, self.image_ones)
@@ -286,20 +287,22 @@ class Test_CAE(unittest.TestCase):
         self.assertEqual(np.round(dix_0), 0)
 
     def test_modelviewer(self):
+        """test per la funzione che plotta le loss del modello appena allenato"""
         with self.assertRaises(Exception):
             caehelper.modelviewer("nothing")
 
     def test_otsu(self):
+        """test per la funzione che fa la segmentazione di otsu"""
         masked = caehelper.otsu(0.5 * self.image_square)
         np.testing.assert_array_equal(masked, self.image_square)
 
     def test_MassesSEQ(self):
-
+        """test per la classe che restituisce i vettori dei dati in ingresso in batch con data augmentation"""
         train_datagen = ImageDataGenerator(horizontal_flip=True, fill_mode="reflect")
         transform = train_datagen.get_random_transform((124, 124))
         feats = [1, 2, 3]
 
-        X, Y, CLASS = caehelper.read_dataset(
+        x, y, class_ = caehelper.read_dataset(
             self.temp_dir.name,
             "png",
             "benign",
@@ -308,7 +311,7 @@ class Test_CAE(unittest.TestCase):
             y_id="_mass_mask",
         )
 
-        X_big, Y_big, CLASS_big = caehelper.read_dataset_big(
+        x_big, y_big, class_big = caehelper.read_dataset_big(
             self.temp_dir_big_mass.name,
             self.temp_dir_big_masks.name,
             "benign",
@@ -317,33 +320,33 @@ class Test_CAE(unittest.TestCase):
         )
 
         self.gen1 = ClassesCAE.MassesSequence(
-            X, Y, CLASS, train_datagen, batch_size=1, shape=(124, 124)
+            x, y, class_, train_datagen, batch_size=1, shape=(124, 124)
         )
-        np.testing.assert_array_equal(self.gen1.x, X)
-        np.testing.assert_array_equal(self.gen1.y, Y)
-        np.testing.assert_array_equal(self.gen1.label_array, CLASS)
+        np.testing.assert_array_equal(self.gen1.x, x)
+        np.testing.assert_array_equal(self.gen1.y, y)
+        np.testing.assert_array_equal(self.gen1.label_array, class_)
         np.testing.assert_array_equal(self.gen1.shape, (124, 124))
-        np.testing.assert_array_equal(self.gen1.process(X[0], transform), X[0])
+        np.testing.assert_array_equal(self.gen1.process(x[0], transform), x[0])
         self.assertEqual(self.gen1.batch_size, 1)
         self.assertEqual(len(self.gen1), 2)
 
         self.gen2 = ClassesCAE.MassesSequence_radiomics(
-            X, Y, CLASS, feats, train_datagen, batch_size=1, shape=(124, 124)
+            x, y, class_, feats, train_datagen, batch_size=1, shape=(124, 124)
         )
-        np.testing.assert_array_equal(self.gen2.x, X)
-        np.testing.assert_array_equal(self.gen2.y, Y)
-        np.testing.assert_array_equal(self.gen2.label_array, CLASS)
+        np.testing.assert_array_equal(self.gen2.x, x)
+        np.testing.assert_array_equal(self.gen2.y, y)
+        np.testing.assert_array_equal(self.gen2.label_array, class_)
         np.testing.assert_array_equal(self.gen2.shape, (124, 124))
         np.testing.assert_array_equal(self.gen2.features, feats)
 
-        np.testing.assert_array_equal(self.gen2.process(X[0], transform), X[0])
+        np.testing.assert_array_equal(self.gen2.process(x[0], transform), x[0])
         self.assertEqual(self.gen2.batch_size, 1)
         self.assertEqual(len(self.gen2), 2)
 
         self.gen3 = ClassesCAE.MassesSequence_radiomics_big(
-            X_big,
-            Y_big,
-            CLASS_big,
+            x_big,
+            y_big,
+            class_big,
             feats,
             train_datagen,
             batch_size=1,
@@ -351,20 +354,21 @@ class Test_CAE(unittest.TestCase):
             shape_tensor=(2048, 1536, 1),
         )
 
-        np.testing.assert_array_equal(self.gen3.x, X_big)
-        np.testing.assert_array_equal(self.gen3.y, Y_big)
-        np.testing.assert_array_equal(self.gen3.label_array, CLASS_big)
+        np.testing.assert_array_equal(self.gen3.x, x_big)
+        np.testing.assert_array_equal(self.gen3.y, y_big)
+        np.testing.assert_array_equal(self.gen3.label_array, class_big)
         np.testing.assert_array_equal(self.gen3.shape, (2048, 1536))
         np.testing.assert_array_equal(self.gen3.shape_tensor, (2048, 1536, 1))
         np.testing.assert_array_equal(self.gen3.features, feats)
 
         np.testing.assert_array_equal(
-            self.gen3.process(imread(X_big[0]), transform), imread(X_big[0])
+            self.gen3.process(imread(x_big[0]), transform), imread(x_big[0])
         )
         self.assertEqual(self.gen3.batch_size, 1)
         self.assertEqual(len(self.gen3), 2)
 
     def test_resizer(self):
+        """test per la funzione parallelizzabile che salva la maschera normalizzata corrispondente a una immagine (Multi-Threading)"""
         self.list_test = [self.path_1, self.path_3_big]
         fname = featureextractor.resizer(
             self.list_test, self.endpath.name, "Image1_benign"

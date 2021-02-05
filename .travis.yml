@@ -6,7 +6,7 @@ install:
 script:
  - black .
  - isort .
- - python Unittest.py
+ - python test_cae.py
 notifications:
    email:
      recipients:

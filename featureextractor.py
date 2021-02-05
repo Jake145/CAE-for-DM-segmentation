@@ -16,7 +16,7 @@ import SimpleITK as sitk
 from PIL import Image
 from radiomics import featureextractor
 
-# sys.path.append('C:/Users/pensa/Desktop/CAE-for-DM-segmentation/functioncae')
+
 from functioncae import ClassesCAE, caehelper
 
 logger = logging.getLogger(__name__)
