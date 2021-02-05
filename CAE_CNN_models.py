@@ -331,12 +331,7 @@ def make_modelUNET(shape_tensor=(124, 124, 1)):
 
     c3 = Dropout(0.2)(c3)
     c3 = Conv2D(
-        64,
-        (3, 3),
-        activation="relu",
-        kernel_initializer="he_normal",
-        padding="same",
-        name="last_conv",
+        64, (3, 3), activation="relu", kernel_initializer="he_normal", padding="same"
     )(c3)
     p3 = MaxPooling2D((2, 2))(c3)
     p3 = Resizing(16, 16, interpolation="nearest")(p3)
@@ -356,11 +351,16 @@ def make_modelUNET(shape_tensor=(124, 124, 1)):
 
     c5 = Dropout(0.2)(c5)
     c5 = Conv2D(
-        256, (3, 3), activation="relu", kernel_initializer="he_normal", padding="same"
+        256,
+        (3, 3),
+        activation="relu",
+        kernel_initializer="he_normal",
+        padding="same",
+        name="last_conv",
     )(c5)
     # fc layers
 
-    flat = Flatten()(c3)
+    flat = Flatten()(c5)
     den = Dense(16, activation="relu")(flat)
     classification_output = Dense(
         2, activation="sigmoid", name="classification_output"
