@@ -12,7 +12,7 @@ from PIL import Image
 from skimage.io import imread
 
 # import dycomdatagen
-import featureextractor
+import feature_extraction
 
 
 from functioncae import classes_cae, caehelper
