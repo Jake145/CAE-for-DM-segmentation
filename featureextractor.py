@@ -17,7 +17,7 @@ from PIL import Image
 from radiomics import featureextractor
 
 
-from functioncae import ClassesCAE, caehelper
+from functioncae import classes_cae, caehelper
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
