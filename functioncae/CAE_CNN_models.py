@@ -1,8 +1,6 @@
-import datetime
+"""docstring"""
 import logging
-import os
 
-import tensorflow as tf
 from keras.layers import (
     Conv2D,
     Conv2DTranspose,
@@ -15,7 +13,7 @@ from keras.layers import (
 )
 from keras.layers.experimental.preprocessing import Resizing
 from keras.layers.merge import concatenate
-from keras.models import Model, load_model
+from keras.models import Model
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -28,11 +26,23 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 
-def make_model_rad_REGULIZER(shape_tensor=(124, 124, 1), feature_dim=(3,)):
+def make_model_rad_regulizer(shape_tensor=(124, 124, 1), feature_dim=(3,)):     #pylint: disable=R0915
+    """Modello CAE tratto da Liu et al, ma modificato con dropout, maxpooling e upsampling.
+    Permette inoltre la classificazione delle masse grazie a layer fc.
+    type shape_tensor: array
+    param shape_tensor: dimensione dell'immagine in ingresso
+
+    type feature_dim: array
+    param feature_dim: dimensione dell'array delle feature
+
+    :returns: restituisce il modello
+    :rtype: keras model
+
+    """
     input_tensor = Input(shape=shape_tensor, name="tensor_input")
-    logger.debug(f"dimensione input immagine:{shape_tensor}")
+    logger.debug(f"dimensione input immagine:{shape_tensor}")   #pylint: disable=W1203
     input_vector = Input(shape=feature_dim)
-    logger.debug(f"dimensione input feature:{feature_dim}")
+    logger.debug(f"dimensione input feature:{feature_dim}")     #pylint: disable=W1203
 
     x = Conv2D(32, (5, 5), strides=2, padding="same", activation="relu")(input_tensor)
     x = Dropout(
@@ -71,11 +81,23 @@ def make_model_rad_REGULIZER(shape_tensor=(124, 124, 1), feature_dim=(3,)):
     return model
 
 
-def make_model_rad(shape_tensor=(124, 124, 1), feature_dim=(3,)):
+def make_model_rad(shape_tensor=(124, 124, 1), feature_dim=(3,)):       #pylint: disable=R0915
+    """Modello CAE tratto da Liu et al.
+    Permette inoltre la classificazione delle masse grazie a layer fc.
+    type shape_tensor: array
+    param shape_tensor: dimensione dell'immagine in ingresso
+
+    type feature_dim: array
+    param feature_dim: dimensione dell'array delle feature
+
+    :returns: restituisce il modello
+    :rtype: keras model
+
+    """
     input_tensor = Input(shape=shape_tensor, name="tensor_input")
-    logger.debug(f"dimensione input immagine:{shape_tensor}")
+    logger.debug(f"dimensione input immagine:{shape_tensor}")       #pylint: disable=W1203
     input_vector = Input(shape=feature_dim)
-    logger.debug(f"dimensione input feature:{feature_dim}")
+    logger.debug(f"dimensione input feature:{feature_dim}")     #pylint: disable=W1203
 
     x = Conv2D(32, (5, 5), strides=2, padding="same", activation="relu")(input_tensor)
 
@@ -91,7 +113,7 @@ def make_model_rad(shape_tensor=(124, 124, 1), feature_dim=(3,)):
 
     classification_output = Dense(
         2, activation="sigmoid", name="classification_output"
-    )(flat)
+    )(den)
 
     x = Conv2DTranspose(64, (3, 3), strides=2, padding="same", activation="relu")(x)
     x = Conv2DTranspose(32, (3, 3), strides=2, padding="same", activation="relu")(x)
@@ -104,16 +126,23 @@ def make_model_rad(shape_tensor=(124, 124, 1), feature_dim=(3,)):
     return model
 
 
-from tensorflow.keras import regularizers
+def make_model_rad_unet(shape_tensor=(124, 124, 1), feature_dim=(3,)):      #pylint: disable=R0915
+    """Modello UNET modificato con layer di resize.
+    Permette inoltre la classificazione delle masse grazie a layer fc
+    type shape_tensor: array
+    param shape_tensor: dimensione dell'immagine in ingresso
 
-##
+    type feature_dim: array
+    param feature_dim: dimensione dell'array delle feature
 
+    :returns: restituisce il modello
+    :rtype: keras model
 
-def make_model_rad_UNET(shape_tensor=(124, 124, 1), feature_dim=(3,)):
+    """
     input_tensor = Input(shape=shape_tensor, name="tensor_input")
-    logger.debug(f"dimensione input immagine:{shape_tensor}")
+    logger.debug(f"dimensione input immagine:{shape_tensor}")       #pylint: disable=W1203
     input_vector = Input(shape=feature_dim)
-    logger.debug(f"dimensione input feature:{feature_dim}")
+    logger.debug(f"dimensione input feature:{feature_dim}")     #pylint: disable=W1203
 
     c1 = Conv2D(
         16, (3, 3), activation="relu", kernel_initializer="he_normal", padding="same"
@@ -173,7 +202,7 @@ def make_model_rad_UNET(shape_tensor=(124, 124, 1), feature_dim=(3,)):
 
     classification_output = Dense(
         2, activation="softmax", name="classification_output"
-    )(flat)
+    )(den)
 
     u6 = Conv2DTranspose(128, (2, 2), strides=(2, 2), padding="same")(c5)
 
@@ -226,9 +255,20 @@ def make_model_rad_UNET(shape_tensor=(124, 124, 1), feature_dim=(3,)):
     return model
 
 
-def make_model(shape_tensor=(124, 124, 1)):
+def make_model(shape_tensor=(124, 124, 1)):     #pylint: disable=R0915
+    """Modello CAE tratto da Liu et al.
+    Permette inoltre la classificazione delle masse grazie a layer fc.
+    type shape_tensor: array
+    param shape_tensor: dimensione dell'immagine in ingresso
+
+
+    :returns: restituisce il modello
+    :rtype: keras model
+
+    """
+
     input_tensor = Input(shape=shape_tensor, name="tensor_input")
-    logger.debug(f"dimensione input immagine:{shape_tensor}")
+    logger.debug(f"dimensione input immagine:{shape_tensor}")       #pylint: disable=W1203
 
     x = Conv2D(32, (5, 5), strides=2, padding="same", activation="relu")(input_tensor)
     x = Conv2D(64, (3, 3), strides=2, padding="same", activation="relu")(x)
@@ -240,7 +280,7 @@ def make_model(shape_tensor=(124, 124, 1)):
     den = Dense(16, activation="relu")(flat)
     classification_output = Dense(
         2, activation="sigmoid", name="classification_output"
-    )(flat)
+    )(den)
 
     x = Conv2DTranspose(64, (3, 3), strides=2, padding="same", activation="relu")(x)
     x = Conv2DTranspose(32, (3, 3), strides=2, padding="same", activation="relu")(x)
@@ -253,15 +293,19 @@ def make_model(shape_tensor=(124, 124, 1)):
     return model
 
 
-"""Model 2 is the same but with added regularization (dropout layers) and maxpooling
+def make_model_regulizer(shape_tensor=(124, 124, 1)):       #pylint: disable=R0915
+    """Modello CAE tratto da Liu et al, ma modificato con dropout, maxpooling e upsampling.
+    Permette inoltre la classificazione delle masse grazie a layer fc.
+    type shape_tensor: array
+    param shape_tensor: dimensione dell'immagine in ingresso
 
 
-"""
+    :returns: restituisce il modello
+    :rtype: keras model
 
-
-def make_modelREGULIZER(shape_tensor=(124, 124, 1)):
+    """
     input_tensor = Input(shape=shape_tensor, name="tensor_input")
-    logger.debug(f"dimensione input immagine:{shape_tensor}")
+    logger.debug(f"dimensione input immagine:{shape_tensor}")       #pylint: disable=W1203
     x = Conv2D(32, (5, 5), strides=2, padding="same", activation="relu")(input_tensor)
     x = Dropout(
         0.2,
@@ -279,7 +323,7 @@ def make_modelREGULIZER(shape_tensor=(124, 124, 1)):
     den = Dense(16, activation="relu")(flat)
     classification_output = Dense(
         2, activation="sigmoid", name="classification_output"
-    )(flat)
+    )(den)
 
     x = Conv2DTranspose(64, (3, 3), strides=2, padding="same", activation="relu")(x)
     x = Dropout(
@@ -296,18 +340,19 @@ def make_modelREGULIZER(shape_tensor=(124, 124, 1)):
     return model
 
 
-"""This model is the Unet from Ronneberger e al, U-Net: Convolutional Networks for Biomedical
-Image Segmentation. I added a resizing layer to adapt it for our image size
-
-"""
-
-from keras.constraints import max_norm, min_max_norm, unit_norm
-from tensorflow.keras import regularizers
+def make_model_unet(shape_tensor=(124, 124, 1)):        #pylint: disable=R0915
+    """Modello Unet modificato con layer di resize.
+    Permette inoltre la classificazione delle masse grazie a layer fc.
+    type shape_tensor: array
+    param shape_tensor: dimensione dell'immagine in ingresso
 
 
-def make_modelUNET(shape_tensor=(124, 124, 1)):
+    :returns: restituisce il modello
+    :rtype: keras model
+
+    """
     input_tensor = Input(shape=shape_tensor, name="tensor_input")
-    logger.debug(f"dimensione input immagine:{shape_tensor}")
+    logger.debug(f"dimensione input immagine:{shape_tensor}")       #pylint: disable=W1203
     c1 = Conv2D(
         16, (3, 3), activation="relu", kernel_initializer="he_normal", padding="same"
     )(input_tensor)
@@ -364,7 +409,7 @@ def make_modelUNET(shape_tensor=(124, 124, 1)):
     den = Dense(16, activation="relu")(flat)
     classification_output = Dense(
         2, activation="sigmoid", name="classification_output"
-    )(flat)
+    )(den)
 
     u6 = Conv2DTranspose(128, (2, 2), strides=(2, 2), padding="same")(c5)
 
@@ -417,86 +462,23 @@ def make_modelUNET(shape_tensor=(124, 124, 1)):
     return model
 
 
-def make_model_rad_BIG_REGULIZER(shape_tensor=(4096, 3072, 1), feature_dim=(3,)):
+def make_model_rad_big_unet(shape_tensor=(4096, 3072, 1), feature_dim=(3,)):        #pylint: disable=R0915
+    """Modello Unet.
+    Permette inoltre la classificazione delle masse grazie a layer fc.
+    type shape_tensor: array
+    param shape_tensor: dimensione dell'immagine in ingresso
+
+    type feature_dim: array
+    param feature_dim: dimensione dell'array delle feature
+
+    :returns: restituisce il modello
+    :rtype: keras model
+
+    """
     input_tensor = Input(shape=shape_tensor, name="tensor_input")
-    logger.debug(f"dimensione input immagine:{shape_tensor}")
+    logger.debug(f"dimensione input immagine:{shape_tensor}")       #pylint: disable=W1203
     input_vector = Input(shape=feature_dim)
-    logger.debug(f"dimensione input feature:{feature_dim}")
-    x = Conv2D(32, (5, 5), strides=2, padding="same", activation="relu")(input_tensor)
-    x = Dropout(
-        0.2,
-    )(x)
-    x = MaxPooling2D((2, 2), strides=(2, 2), padding="same")(x)
-    x = Conv2D(64, (3, 3), strides=2, padding="same", activation="relu")(x)
-    x = Dropout(
-        0.2,
-    )(x)
-    x = Conv2D(
-        128, (3, 3), strides=2, padding="same", activation="relu", name="last_conv"
-    )(x)
-
-    flat = Flatten()(x)
-    flat = concatenate([flat, input_vector])
-    den = Dense(16, activation="relu")(flat)
-    # den= Dropout(.1,)(den)
-
-    classification_output = Dense(
-        2, activation="sigmoid", name="classification_output"
-    )(den)
-
-    x = Conv2DTranspose(64, (3, 3), strides=2, padding="same", activation="relu")(x)
-    x = Dropout(
-        0.2,
-    )(x)
-    x = UpSampling2D((2, 2))(x)
-    x = Conv2DTranspose(32, (3, 3), strides=2, padding="same", activation="relu")(x)
-    x = Conv2DTranspose(32, (3, 3), strides=2, padding="same", activation="relu")(x)
-    decoder_out = Conv2D(
-        1, (5, 5), padding="valid", activation="sigmoid", name="decoder_output"
-    )(x)
-    model = Model([input_tensor, input_vector], [decoder_out, classification_output])
-    return model
-
-
-def make_model_rad_BIG(shape_tensor=(4096, 3072, 1), feature_dim=(3,)):
-    input_tensor = Input(shape=shape_tensor, name="tensor_input")
-    logger.debug(f"dimensione input immagine:{shape_tensor}")
-    input_vector = Input(shape=feature_dim)
-    logger.debug(f"dimensione input feature:{feature_dim}")
-
-    x = Conv2D(32, (5, 5), strides=2, padding="same", activation="relu")(input_tensor)
-    # x = Dropout(.2)(x)
-    x = Conv2D(64, (3, 3), strides=2, padding="same", activation="relu")(x)
-    # x = Dropout(.2)(x)
-    x = Conv2D(
-        128, (3, 3), strides=2, padding="same", activation="relu", name="last_conv"
-    )(x)
-
-    flat = Flatten()(x)
-    flat = concatenate([flat, input_vector])
-    den = Dense(16, activation="relu")(flat)
-    # den = Dropout(.2)(den)
-
-    classification_output = Dense(
-        2, activation="sigmoid", name="classification_output"
-    )(flat)
-
-    x = Conv2DTranspose(64, (3, 3), strides=2, padding="same", activation="relu")(x)
-    x = Conv2DTranspose(32, (3, 3), strides=2, padding="same", activation="relu")(x)
-    x = Conv2DTranspose(32, (3, 3), strides=2, padding="same", activation="relu")(x)
-    decoder_out = Conv2D(
-        1, (1, 1), padding="valid", activation="sigmoid", name="decoder_output"
-    )(x)
-    model = Model([input_tensor, input_vector], [decoder_out, classification_output])
-
-    return model
-
-
-def make_model_rad_BIG_UNET(shape_tensor=(4096, 3072, 1), feature_dim=(3,)):
-    input_tensor = Input(shape=shape_tensor, name="tensor_input")
-    logger.debug(f"dimensione input immagine:{shape_tensor}")
-    input_vector = Input(shape=feature_dim)
-    logger.debug(f"dimensione input feature:{feature_dim}")
+    logger.debug(f"dimensione input feature:{feature_dim}")     #pylint: disable=W1203
 
     c1 = Conv2D(
         16, (3, 3), activation="relu", kernel_initializer="he_normal", padding="same"
@@ -514,22 +496,15 @@ def make_model_rad_BIG_UNET(shape_tensor=(4096, 3072, 1), feature_dim=(3,)):
         32, (3, 3), activation="relu", kernel_initializer="he_normal", padding="same"
     )(c2)
     p2 = MaxPooling2D((2, 2))(c2)
-    # p2 = Resizing(32,32,interpolation='nearest')(p2)
     c3 = Conv2D(
         64, (3, 3), activation="relu", kernel_initializer="he_normal", padding="same"
     )(p2)
 
     c3 = Dropout(0.2)(c3)
     c3 = Conv2D(
-        64,
-        (3, 3),
-        activation="relu",
-        kernel_initializer="he_normal",
-        padding="same",
-        name="last_conv",
+        64, (3, 3), activation="relu", kernel_initializer="he_normal", padding="same"
     )(c3)
     p3 = MaxPooling2D((2, 2))(c3)
-    # p3 = Resizing(16,16,interpolation='nearest')(p3)
     c4 = Conv2D(
         128, (3, 3), activation="relu", kernel_initializer="he_normal", padding="same"
     )(p3)
@@ -546,21 +521,25 @@ def make_model_rad_BIG_UNET(shape_tensor=(4096, 3072, 1), feature_dim=(3,)):
 
     c5 = Dropout(0.2)(c5)
     c5 = Conv2D(
-        256, (3, 3), activation="relu", kernel_initializer="he_normal", padding="same"
+        256,
+        (3, 3),
+        activation="relu",
+        kernel_initializer="he_normal",
+        padding="same",
+        name="last_conv",
     )(c5)
     # fc layers
 
-    flat = Flatten()(c3)
+    flat = Flatten()(c5)
     flat = concatenate([flat, input_vector])
     den = Dense(16, activation="relu")(flat)
 
     classification_output = Dense(
         2, activation="softmax", name="classification_output"
-    )(flat)
+    )(den)
 
     u6 = Conv2DTranspose(128, (2, 2), strides=(2, 2), padding="same")(c5)
 
-    # c4 = Resizing(14,14,interpolation='nearest')(c4)
     u6 = concatenate([u6, c4])
     c6 = Conv2D(
         128, (3, 3), activation="relu", kernel_initializer="he_normal", padding="same"
@@ -571,7 +550,6 @@ def make_model_rad_BIG_UNET(shape_tensor=(4096, 3072, 1), feature_dim=(3,)):
     )(c6)
 
     u7 = Conv2DTranspose(64, (2, 2), strides=(2, 2), padding="same")(c6)
-    # c3= Resizing(28,28,interpolation='nearest')(c3)
 
     u7 = concatenate([u7, c3])
     c7 = Conv2D(
@@ -583,7 +561,6 @@ def make_model_rad_BIG_UNET(shape_tensor=(4096, 3072, 1), feature_dim=(3,)):
     )(c7)
 
     u8 = Conv2DTranspose(32, (2, 2), strides=(2, 2), padding="same")(c7)
-    # u8 = Resizing(62,62,interpolation='nearest')(c2)
 
     u8 = concatenate([u8, c2])
     c8 = Conv2D(
@@ -595,7 +572,6 @@ def make_model_rad_BIG_UNET(shape_tensor=(4096, 3072, 1), feature_dim=(3,)):
     )(c8)
 
     u9 = Conv2DTranspose(16, (2, 2), strides=(2, 2), padding="same")(c8)
-    # c1= Resizing(112,112,interpolation='nearest')(c1)
 
     u9 = concatenate([u9, c1], axis=3)
     c9 = Conv2D(

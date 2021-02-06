@@ -176,7 +176,7 @@ transform = train_datagen.get_random_transform((124, 124))
 import keras
 
 
-class MassesSequence_radiomics(keras.utils.Sequence):
+class MassesSequenceRadiomics(keras.utils.Sequence):
     """ Classe per il data augmentation per CAE con feature radiomiche """
 
     def __init__(
@@ -262,7 +262,7 @@ class MassesSequence_radiomics(keras.utils.Sequence):
     random_state=24,
 )
 
-mass_gen_rad = MassesSequence_radiomics(
+mass_gen_rad = MassesSequenceRadiomics(
     X_train_rad_tr, Y_train_rad_tr, class_train_rad_tr, feature_train_tr, train_datagen
 )
 

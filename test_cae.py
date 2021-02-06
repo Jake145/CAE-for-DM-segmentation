@@ -15,7 +15,7 @@ from skimage.io import imread
 import featureextractor
 
 
-from functioncae import ClassesCAE, caehelper
+from functioncae import classes_cae, caehelper
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -319,7 +319,7 @@ class Test_CAE(unittest.TestCase):
             ext="png",
         )
 
-        self.gen1 = ClassesCAE.MassesSequence(
+        self.gen1 = classes_cae.MassesSequence(
             x, y, class_, train_datagen, batch_size=1, shape=(124, 124)
         )
         np.testing.assert_array_equal(self.gen1.x, x)
@@ -330,7 +330,7 @@ class Test_CAE(unittest.TestCase):
         self.assertEqual(self.gen1.batch_size, 1)
         self.assertEqual(len(self.gen1), 2)
 
-        self.gen2 = ClassesCAE.MassesSequence_radiomics(
+        self.gen2 = classes_cae.MassesSequenceRadiomics(
             x, y, class_, feats, train_datagen, batch_size=1, shape=(124, 124)
         )
         np.testing.assert_array_equal(self.gen2.x, x)
@@ -343,7 +343,7 @@ class Test_CAE(unittest.TestCase):
         self.assertEqual(self.gen2.batch_size, 1)
         self.assertEqual(len(self.gen2), 2)
 
-        self.gen3 = ClassesCAE.MassesSequence_radiomics_big(
+        self.gen3 = classes_cae.MassesSequenceRadiomicsBig(
             x_big,
             y_big,
             class_big,

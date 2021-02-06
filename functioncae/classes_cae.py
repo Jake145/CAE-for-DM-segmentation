@@ -1,14 +1,19 @@
+"""docstring"""
+
 import logging
 
 import keras
 import numpy as np
+from skimage.io import imread
+from skimage.transform import resize
+from sklearn.utils import shuffle
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
 
-file_handler = logging.FileHandler("Classes.log")
+file_handler = logging.FileHandler("classes_.log")
 file_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
@@ -17,7 +22,7 @@ logger.addHandler(file_handler)
 class MassesSequence(keras.utils.Sequence):
     """ Classe per fare data augmentation per CAE """
 
-    def __init__(self, x, y, label_array, img_gen, batch_size=10, shape=(124, 124)):
+    def __init__(self, x, y, label_array, img_gen, batch_size=10, shape=(124, 124)): #pylint: disable=R0913
         """
 
         Parametri:
@@ -48,32 +53,32 @@ class MassesSequence(keras.utils.Sequence):
         return img
 
     def __getitem__(self, idx):
-        batch_x = self.x[idx * self.batch_size : (idx + 1) * self.batch_size]
-        batch_y = self.y[idx * self.batch_size : (idx + 1) * self.batch_size]
-        batch_label_array = self.label_array[
+        batch_x = self.x[idx * self.batch_size : (idx + 1) * self.batch_size] #pylint: disable=W0612
+        batch_y = self.y[idx * self.batch_size : (idx + 1) * self.batch_size] #pylint: disable=W0612
+        batch_label_array = self.label_array[                                 #pylint: disable=W0612
             idx * self.batch_size : (idx + 1) * self.batch_size
         ]
 
-        X = []
-        Y = []
-        Classes = []
+        x_list = []
+        y_list = []
+        classes_ = []
 
         for image, mask, label in zip(self.x, self.y, self.label_array):
             transform = self.img_gen.get_random_transform(self.shape)
-            X.append(self.process(image, transform))
-            Y.append(self.process(mask, transform) > 0.2)
-            Classes.append(label)
+            x_list.append(self.process(image, transform))
+            y_list.append(self.process(mask, transform) > 0.2)
+            classes_.append(label)
 
-        return np.asarray(X, np.float64), [
-            np.asarray(Y, np.float64),
-            np.asarray(Classes, np.float),
+        return np.asarray(x_list, np.float64), [
+            np.asarray(y_list, np.float64),
+            np.asarray(classes_, np.float),
         ]
 
 
-class MassesSequence_radiomics(keras.utils.Sequence):
+class MassesSequenceRadiomics(keras.utils.Sequence):
     """ Classe per il data augmentation per CAE con feature radiomiche """
 
-    def __init__(
+    def __init__(                                                                   #pylint: disable=R0913
         self, x, y, label_array, features, img_gen, batch_size=10, shape=(124, 124)
     ):
         """Inizializza la sequenza
@@ -109,39 +114,39 @@ class MassesSequence_radiomics(keras.utils.Sequence):
         return img
 
     def __getitem__(self, idx):
-        batch_x = self.x[idx * self.batch_size : (idx + 1) * self.batch_size]
-        batch_y = self.y[idx * self.batch_size : (idx + 1) * self.batch_size]
-        batch_label_array = self.label_array[
+        batch_x = self.x[idx * self.batch_size : (idx + 1) * self.batch_size] #pylint: disable=W0612
+        batch_y = self.y[idx * self.batch_size : (idx + 1) * self.batch_size] #pylint: disable=W0612
+        batch_label_array = self.label_array[                                 #pylint: disable=W0612
             idx * self.batch_size : (idx + 1) * self.batch_size
         ]
-        batch_features = self.features[
+        batch_features = self.features[                                       #pylint: disable=W0612
             idx * self.batch_size : (idx + 1) * self.batch_size
         ]
 
-        X = []
-        Y = []
-        Classes = []
-        Features = []
+        x_list = []
+        y_list = []
+        classes_ = []
+        features_ = []
 
         for image, mask, label, feature in zip(
             self.x, self.y, self.label_array, self.features
         ):
             transform = self.img_gen.get_random_transform(self.shape)
-            X.append(self.process(image, transform))
-            Y.append(self.process(mask, transform) > 0.2)
-            Classes.append(label)
-            Features.append(feature)
+            x_list.append(self.process(image, transform))
+            y_list.append(self.process(mask, transform) > 0.2)
+            classes_.append(label)
+            features_.append(feature)
 
-        return [np.asarray(X, np.float64), np.asarray(Features, np.float64)], [
-            np.asarray(Y, np.float64),
-            np.asarray(Classes, np.float),
+        return [np.asarray(x_list, np.float64), np.asarray(features_, np.float64)], [
+            np.asarray(y_list, np.float64),
+            np.asarray(classes_, np.float),
         ]
 
 
-class MassesSequence_radiomics_big(keras.utils.Sequence):
+class MassesSequenceRadiomicsBig(keras.utils.Sequence):             #pylint: disable=R0902
     """ Classe per data augmentation per CAE con grandi dati """
 
-    def __init__(
+    def __init__(           #pylint: disable=R0913
         self,
         x,
         y,
@@ -162,7 +167,7 @@ class MassesSequence_radiomics_big(keras.utils.Sequence):
         features (np.array): array di feature dopo la pca
         batch_size (int): dimensione della batch
         img_gen (ImageDatagenerator): Una istanza della classe ImageDatagenerator
-        shape (tuple): shape dell'immagine. Di Default è (2048, 1536) per il limite di colab, per la Unet invece è metà di queste.
+        shape (tuple): shape dell'immagine.
 
         """
         self.x, self.y, self.label_array, self.features = x, y, label_array, features
@@ -185,35 +190,35 @@ class MassesSequence_radiomics_big(keras.utils.Sequence):
         img = self.img_gen.apply_transform(img, transform)
         return img
 
-    def __getitem__(self, idx):
-        batch_x = self.x[idx * self.batch_size : (idx + 1) * self.batch_size]
-        batch_y = self.y[idx * self.batch_size : (idx + 1) * self.batch_size]
-        batch_label_array = self.label_array[
+    def __getitem__(self, idx):             #pylint: disable=R0914
+        batch_x = self.x[idx * self.batch_size : (idx + 1) * self.batch_size] #pylint: disable=W0612
+        batch_y = self.y[idx * self.batch_size : (idx + 1) * self.batch_size] #pylint: disable=W0612
+        batch_label_array = self.label_array[                                 #pylint: disable=W0612
             idx * self.batch_size : (idx + 1) * self.batch_size
         ]
-        batch_features = self.features[
+        batch_features = self.features[                                       #pylint: disable=W0612
             idx * self.batch_size : (idx + 1) * self.batch_size
         ]
 
-        X = []
-        Y = []
-        Classes = []
-        Features = []
+        x_list = []
+        y_list = []
+        classes_ = []
+        features_ = []
 
         for image, mask, label, feature in zip(
             batch_x, batch_y, batch_label_array, batch_features
         ):
             transform = self.img_gen.get_random_transform(self.shape)
-            X_el = resize(imread(str(image)), self.shape_tensor)
-            Y_el = resize(imread(str(mask)), self.shape_tensor)
-            X.append(self.process(X_el, transform))
-            del X_el
-            Y.append(self.process(Y_el, transform))
-            del Y_el
-            Classes.append(label)
-            Features.append(feature)
+            x_el = resize(imread(str(image)), self.shape_tensor)
+            y_el = resize(imread(str(mask)), self.shape_tensor)
+            x_list.append(self.process(x_el, transform))
+            del x_el
+            y_list.append(self.process(y_el, transform))
+            del y_el
+            classes_.append(label)
+            features_.append(feature)
 
-        return [np.array(X) / 255, np.asarray(Features, np.float64)], [
-            np.array(Y) / 255,
-            np.asarray(Classes, np.float),
+        return [np.array(x_list) / 255, np.asarray(features_, np.float64)], [
+            np.array(y_list) / 255,
+            np.asarray(classes_, np.float),
         ]

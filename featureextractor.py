@@ -292,7 +292,7 @@ if __name__ == "__main__":
         fill_mode="reflect",
     )
 
-    class MassesSequence_radiomics_big(keras.utils.Sequence):
+    class MassesSequenceRadiomicsBig(keras.utils.Sequence):
         """ Classe per data augmentation per CAE con grandi dati """
 
         def __init__(
@@ -363,10 +363,10 @@ if __name__ == "__main__":
                 batch_x, batch_y, batch_label_array, batch_features
             ):
                 transform = self.img_gen.get_random_transform(self.shape)
-                X_el = resize(imread(str(image)), self.shape_tensor)
+                x_el = resize(imread(str(image)), self.shape_tensor)
                 Y_el = resize(imread(str(mask)), self.shape_tensor)
-                X.append(self.process(X_el, transform))
-                del X_el
+                X.append(self.process(x_el, transform))
+                del x_el
                 Y.append(self.process(Y_el, transform))
                 del Y_el
                 Classes.append(label)
@@ -399,7 +399,7 @@ if __name__ == "__main__":
         random_state=24,
     )
 
-    mass_gen_rad_big = MassesSequence_radiomics_big(
+    mass_gen_rad_big = MassesSequenceRadiomicsBig(
         X_train_rad_big_tr,
         Y_train_rad_big_tr,
         class_train_rad_big_tr,
@@ -469,10 +469,10 @@ if __name__ == "__main__":
                 batch_x, batch_y, batch_label_array, batch_features
             ):
 
-                X_el = resize(imread(str(image)), self.shape_tensor)
+                x_el = resize(imread(str(image)), self.shape_tensor)
                 Y_el = resize(imread(str(mask)), self.shape_tensor)
-                X.append(X_el)
-                del X_el
+                X.append(x_el)
+                del x_el
                 Y.append(Y_el)
                 del Y_el
                 Classes.append(label)

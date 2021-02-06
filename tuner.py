@@ -324,7 +324,7 @@ transform = train_datagen.get_random_transform((124, 124))
     random_state=24,
 )
 
-mass_gen_rad = ClassesCAE.MassesSequence_radiomics(
+mass_gen_rad = ClassesCAE.MassesSequenceRadiomics(
     X_train_rad_tr, Y_train_rad_tr, class_train_rad_tr, feature_train_tr, train_datagen
 )
 

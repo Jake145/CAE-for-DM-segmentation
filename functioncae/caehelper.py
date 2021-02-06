@@ -11,7 +11,7 @@ import cv2
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import models
-from tensorflow.python.keras import backend as K
+from tensorflow.python.keras import backend as K  # pylint: disable=E0611
 from skimage.filters import threshold_multiotsu
 import matplotlib.pyplot as plt
 
@@ -56,23 +56,25 @@ def save_newext(file_name, data_path, ext1, ext2, endpath):
         image = plt.imread(os.path.join(data_path, file_name))
         file_name = file_name.replace(
             f".{ext1}", f".{ext2}"
-        )  # insert logging warning if ext1==ext2
+        )
         logger.info(
             "read %s and changed extension from %s to%s",
             os.path.join(data_path, file_name),
             ext1,
             ext2,
         )
-    except:
-        raise Exception("immagine o path non trovati")
-    status = cv2.imwrite(os.path.join(endpath, file_name), image)
+    except Exception as e_error:
+        raise Exception("immagine o path non trovati") from e_error
+    status = cv2.imwrite(                       # pylint: disable=E1101
+        os.path.join(endpath, file_name), image
+    )
     logger.info("ho scritto il file %s in %s come .%s ", file_name, endpath, ext2)
     return status
 
 
 def unit_masks(file_name, data_path, ext1, ext2, endpath):
-    """Normalizza i valori dei pixel delle maschere già nei file per essere utilizzati con pyradiomics.
-    Permette inoltre di cambiare l'estenzione da .pgm a .png o qualunque altra estenzione supportata.
+    """Normalizza i valori dei pixel delle maschere.
+    Permette  di cambiare l'estenzione.
 
     :type file_name: str
     :param file_path: nome del file della maschera
@@ -97,12 +99,14 @@ def unit_masks(file_name, data_path, ext1, ext2, endpath):
     try:
         image = plt.imread(os.path.join(data_path, file_name))
         logger.info("Ho letto %s in %s", file_name, data_path)
-    except:
-        raise Exception("immagine o path non trovati!")
+    except Exception as e_error:
+        raise Exception("immagine o path non trovati!") from e_error
 
     image = image / 255
     file_name = file_name.replace(f".{ext1}", f".{ext2}")
-    status = cv2.imwrite(os.path.join(endpath, file_name), image)
+    status = cv2.imwrite(                       # pylint: disable=E1101
+        os.path.join(endpath, file_name), image
+    )
     logging.info("ho scritto %s in %s con successo", file_name, endpath)
     return status, image
 
@@ -146,27 +150,28 @@ def read_dataset(
             "Niente immagini! Il path è sbagliato, magari x_id o ext sono sbagliati! "
         )
 
-    X = []
-    Y = []
+    images_ = []
+    masks_ = []
     class_labels = []
     for fname in fnames:
-        X.append(plt.imread(fname)[1:, 1:, np.newaxis])
-        Y.append(plt.imread(fname.replace(x_id, y_id))[1:, 1:, np.newaxis])
+        images_.append(plt.imread(fname)[1:, 1:, np.newaxis])
+        masks_.append(plt.imread(fname.replace(x_id, y_id))[1:, 1:, np.newaxis])
         if benign_label in fname:
             class_labels.append(0)
         elif malign_label in fname:
             class_labels.append(1)
     logger.info(
-        "ho preso le immagini e le maschere da %s, ho trovato tutto e ho creato gli array delle immagini, maschere e classi",
+        "ho preso immagini e maschere da %s, ho creato gli array delle immagini, maschere e classi",
         dataset_path,
     )
-    return np.array(X), np.array(Y), np.array(class_labels)
+    return np.array(images_), np.array(masks_), np.array(class_labels)
 
 
 def read_dataset_big(
     dataset_path_mass, dataset_path_mask, benign_label, malign_label, ext="png"
 ):
-    """Versione di read_dataset per il dataset del TCIA. Data la cartella con le maschere e le immagini,
+    """Versione di read_dataset per il dataset del TCIA.
+    Data la cartella con le maschere e le immagini,
     restituisce i vettori con i filepath delle immagini, le maschere e le classi.
 
     :type dataset_path_mass: str
@@ -200,15 +205,15 @@ def read_dataset_big(
     if masknames == []:
         raise Exception("Immagini o path non trovati!")
 
-    X = []
-    Y = []
+    images_ = []
+    masks_ = []
     class_labels = []
     for fname in fnames:
         try:
             assert fname.replace(dataset_path_mass, dataset_path_mask) in masknames
             logger.debug("sto verificando che %s sia in %s", fname, dataset_path_mask)
-            Y.append(fname.replace(dataset_path_mass, dataset_path_mask))
-            X.append(fname)
+            masks_.append(fname.replace(dataset_path_mass, dataset_path_mask))
+            images_.append(fname)
 
             if benign_label in fname:
                 class_labels.append(0)
@@ -216,26 +221,24 @@ def read_dataset_big(
                 class_labels.append(1)
         except:
             warnings.warn(
-                f"Attenzione, per {fname} non vi è corrispondenza in {dataset_path_mask}, controlla che l'immagine non sia corrotta o non sia mancante"
+                f"{fname} non vi è corrispondenza in {dataset_path_mask},forse immagine mancante"
             )
             logger.warning(
-                "Attenzione, per %s non vi è corrispondenza in %s, controlla che l'immagine non sia corrotta o non sia mancante",
+                "%s non vi è corrispondenza in %s, possibile immagine mancante",
                 fname,
                 dataset_path_mask,
             )
             pass
 
-    return np.array(X), np.array(Y), np.array(class_labels)
+    return np.array(images_), np.array(masks_), np.array(class_labels)
 
 
-def radiomic_dooer(list_test, datapath, endpath, lab, extrc):
+def radiomic_dooer(list_test, endpath, lab, extrc):
 
     """Funzione per estrarre le feature con pyradiomics e salvarle in un dizionario.
 
     :type list_test: list
     :param list_test: lista con path immagine e relativa maschera normalizzata
-    :type datapath: str
-    :param datapath: percorso cartella dove si trova l'immagine
     :type endpath: str
     :param endpath: cartella dove si salva il pickle del dizionario
     :type lab: int
@@ -253,20 +256,20 @@ def radiomic_dooer(list_test, datapath, endpath, lab, extrc):
     try:
         logger.debug(
             "sto cercando di estrarre le feature da %s utilizzando come maschera %s",
-            list[0],
-            list[1],
+            list[0],  # pylint: disable=E1136
+            list[1],  # pylint: disable=E1136
         )
         info = extrc.execute(list_test[0], list_test[1], lab)
 
-    except:
+    except Exception as e_error:
         raise Exception(
-            "Problema con pyradiomics: forse vi è un problema col label o i path. Controlla che pyradiomics sia installato e che da radiomics sia importato featureextractor"
-        )
+            "Pyradiomics: problema di label o path, o non c'è featureextractor"
+        ) from e_error
 
     extr_end = time.perf_counter()
     logging.info("time to extract: %d", extr_end - extr_start)
     updt_start = time.perf_counter()
-    pattern = re.compile("[M][\w-]*[0-9]*[\w]{13}")
+    pattern = re.compile(r"[M][\w-]*[0-9]*[\w]{13}")
     logging.debug("in regex il pattern è %s", pattern)
     name = re.findall(pattern, list_test[0])
     logging.debug("il patter che sto cercando è %s", name)
@@ -276,10 +279,8 @@ def radiomic_dooer(list_test, datapath, endpath, lab, extrc):
         with open(os.path.join(endpath, f"feats_{name[0]}.pickle"), "wb") as handle:
             pickle.dump(dict_r, handle, protocol=pickle.HIGHEST_PROTOCOL)
             logging.info("salvato il pickle feats_%s.pickle in %s", name[0], endpath)
-    except:
-        raise Exception(
-            f"Qualcosa è andato male nel definire il path di arrivo {datapath}, controlla che {endpath} sia un endpath giusto"
-        )
+    except Exception as e_error:
+        raise Exception(f"Controlla che {endpath} sia giusto") from e_error
 
     del dict_r
     updt_end = time.perf_counter()
@@ -297,7 +298,7 @@ def read_pgm_as_sitk(image_path):
     :rtype: array
     """
 
-    np_array = np.asarray(Image.open(image_path))
+    np_array = np.asarray(Image.open(image_path)) # pylint: disable=E0602
     logger.info("sto leggendo %s", image_path)
     sitk_image = sitk.GetImageFromArray(np_array)
     logger.info("sto convertendo %s", image_path)
@@ -329,33 +330,35 @@ def dict_update_radiomics(data_path, dictionary):
     return dictionary
 
 
-def blender(img1, img2, a, b):
+def blender(img1, img2, weight_1, weight_2):
     """Funzione per sovraimporre due immagini con sfumatura
 
     :type img1: array numpy
     :param img1: immagine da sovrapporre
     :type img2: array numpy
     :param img2: immagine da svrapporre
-    :type a: int or float
-    :param a: valore di sfumatura di img1
-    :type b: int or float
-    :param b: valore di sfumatura di img2
+    :type weight_1: int or float
+    :param weight_1: valore di sfumatura di img1
+    :type weight_2: int or float
+    :param weight_2: valore di sfumatura di img2
     :returns: restituisce l'immagine sovrapposta
     :rtype: array
 
     """
 
     try:
-        image = cv2.addWeighted(img1, a, img2, b, 0)
+        image = cv2.addWeighted(                        # pylint: disable=E1101
+            img1, weight_1, img2, weight_2, 0
+        )
         logger.debug(
             "sto cercando di sovrapporre le immagini con pesi rispettivamente %d e %d",
-            a,
-            b,
+            weight_1,
+            weight_2,
         )
-    except:
+    except Exception as e_error:
         raise Exception(
-            "Sovrapposizione non riuscita. Controllare che le immagini siano giuste e che a e b siano numeri."
-        )
+            "Sovrapposizione non riuscita.Immagini o variabili d'ingresso non adeguate."
+        ) from e_error
 
     logger.info("sovrapposizione riuscita")
     return image
@@ -413,7 +416,8 @@ def dice_vectorized(pred, true, k=1):
 
 def modelviewer(model):
     """
-    Funzione per visualizzare l'andamento della loss di training e validazione per l'autoencoder e per il classificatore
+    Funzione per visualizzare l'andamento della loss di training
+     e validazione per l'autoencoder e per il classificatore
     :type model: str
     :param model: history del modello di Keras ottenuto dalla funzione
 
@@ -425,10 +429,10 @@ def modelviewer(model):
     try:
         plt.plot(model.history["decoder_output_loss"])
         plt.plot(model.history["val_decoder_output_loss"])
-    except:
+    except Exception as e_error:
         raise Exception(
-            "Attenzione, o model non è un modello Keras o il modello non ha i campi decoder_output_loss o val_decoder_output_loss"
-        )
+            "Model non ha i campi decoder_output_loss o val_decoder_output_loss"
+        ) from e_error
 
     plt.legend(["loss", "val_loss"])
     plt.subplot(2, 1, 2)
@@ -436,31 +440,32 @@ def modelviewer(model):
     try:
         plt.plot(model.history["classification_output_loss"])
         plt.plot(model.history["val_classification_output_loss"])
-    except:
+    except Exception as e_error:
         raise Exception(
-            "Attenzione, il modello non ha i campi classification_output_loss o val_classification_output_loss"
-        )
+            "Model non ha i campi classification_output_loss o val_classification_output_loss"
+        ) from e_error
 
     plt.legend(["loss", "val_loss"])
     plt.show()
 
 
-def heatmap(x, model):
+def heatmap(input_image, model):
     """
-    Funzione che mostra la heatmap dell'ultimo layer convoluzionale prima del classificatore senza funzionalità radiomiche
+    Funzione che mostra la heatmap dell'ultimo layer convoluzionale
+    prima del classificatore senza funzionalità radiomiche
 
-    :type x: array numpy
-    :param x: immagine da segmentare
+    :type input_image: array numpy
+    :param input_image: immagine da segmentare
 
     :type model: str
     :param model: modello allenato
-    :returns: dopo aver plottato la heatmap sovrapposta e l'immagine a cui si riferisce, restituisce la heatmap
+    :returns: Plotta la heatmap sovrapposta e l'immagine, restituisce la heatmap
     :rtype: array
 
 
     """
 
-    img_tensor = x[np.newaxis, ...]
+    img_tensor = input_image[np.newaxis, ...]
     preds = model.predict(img_tensor)[1]
     argmax = np.argmax(preds)
     conv_layer = model.get_layer("last_conv")
@@ -482,12 +487,14 @@ def heatmap(x, model):
     plt.matshow(heat_map.squeeze())
     plt.show()
 
-    x = np.asarray(255 * x, np.uint8)
+    input_image = np.asarray(255 * input_image, np.uint8)
     heat_map = np.asarray(255 * heat_map.squeeze(), np.uint8)
 
-    heat_map = cv2.resize(heat_map, (x.shape[1], x.shape[0]))
+    heat_map = cv2.resize(                      # pylint: disable=E1101
+        heat_map, (input_image.shape[1], input_image.shape[0])
+    )
 
-    plt.imshow(blender(x, heat_map, 1, 1))
+    plt.imshow(blender(input_image, heat_map, 1, 1))
     plt.axis("off")
     if argmax == 1:
         plt.title("the mass is malign")
@@ -497,21 +504,22 @@ def heatmap(x, model):
     return heat_map
 
 
-def heatmap_rad(x, feature, model):
+def heatmap_rad(input_image, feature, model):
     """
-    Funzione che mostra la heatmap dell'ultimo layer convoluzionale prima del classificatore con funzionalità radiomiche
+    Funzione che mostra la heatmap dell'ultimo layer convoluzionale
+    prima del classificatore con funzionalità radiomiche
 
-    :type x: array numpy
-    :param x: immagine da segmentare
+    :type input_image: array numpy
+    :param input_image: immagine da segmentare
     :type feature: array numpy
     :param feature: feature estratte con pyradiomics
     :type model: class
     :param model: modello allenato
-    :returns: dopo aver plottato la heatmap sovrapposta e l'immagine a cui si riferisce, restituisce la heatmap
+    :returns: Plotta la heatmap sovrapposta e l'immagine, restituisce la heatmap
     :rtype: array
     """
 
-    img_tensor = x[np.newaxis, ...]
+    img_tensor = input_image[np.newaxis, ...]
     feature_tensor = feature[np.newaxis, ...]
     preds = model.predict([img_tensor, feature_tensor])[1]
     argmax = np.argmax(preds)
@@ -535,13 +543,15 @@ def heatmap_rad(x, feature, model):
     plt.matshow(heat_map.squeeze())
     plt.show()
 
-    x = np.asarray(255 * x, np.uint8)
+    input_image = np.asarray(255 * input_image, np.uint8)
     heat_map = np.asarray(255 * heat_map.squeeze(), np.uint8)
 
-    heat_map = cv2.resize(heat_map, (x.shape[1], x.shape[0]))
+    heat_map = cv2.resize(                      # pylint: disable=E1101
+        heat_map, (input_image.shape[1], input_image.shape[0])
+    )
 
     plt.figure("Heatactivation")
-    plt.imshow(blender(x, heat_map, 1, 1))
+    plt.imshow(blender(input_image, heat_map, 1, 1))
     plt.axis("off")
     if argmax == 1:
         plt.title("the mass is malign")
