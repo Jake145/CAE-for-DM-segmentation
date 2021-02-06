@@ -14,7 +14,7 @@ from tensorflow.keras import models
 from tensorflow.python.keras import backend as K  # pylint: disable=E0611
 from skimage.filters import threshold_multiotsu
 import matplotlib.pyplot as plt
-
+from PIL import Image
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -111,7 +111,7 @@ def unit_masks(file_name, data_path, ext1, ext2, endpath):
     return status, image
 
 
-def read_dataset(
+def read_dataset(        # pylint: disable=R0913
     dataset_path, ext, benign_label, malign_label, x_id="_resized", y_id="_mass_mask"
 ):
     """Data la cartella con le maschere e le immagini, restituisce i vettori con le immagini,

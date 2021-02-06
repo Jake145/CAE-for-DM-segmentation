@@ -222,3 +222,52 @@ class MassesSequenceRadiomicsBig(keras.utils.Sequence):             #pylint: dis
             np.array(y_list) / 255,
             np.asarray(classes_, np.float),
         ]
+class ValidatorGenerator(keras.utils.Sequence) :
+
+    def __init__(self, x, y,label_array,features,batch_size=5,shape=(1024, 768),shape_tensor=(1024, 768, 1)):
+        """ Inizializza la sequenza
+
+        Parametri:
+
+        x (np.array): path delle immagini
+        y (np.array): path delle maschere
+        label_array (np.array): label di classificazione
+        features (np.array): array di feature dopo la pca
+        batch_size (int): dimensione della batch
+        img_gen (ImageDatagenerator): Una istanza della classe ImageDatagenerator
+        shape (tuple): shape dell'immagine.
+
+        """
+        self.x, self.y,self.label_array,self.features = x, y,label_array,features
+        self.shape = shape
+        self.batch_size = batch_size
+        self.shape_tensor=shape_tensor
+
+    def __len__(self):
+      return len(self.x) // self.batch_size
+
+
+
+    def __getitem__(self, idx):
+        batch_x = self.x[idx * self.batch_size:(idx + 1) * self.batch_size]
+        batch_y = self.y[idx * self.batch_size:(idx + 1) * self.batch_size]
+        batch_label_array = self.label_array[idx * self.batch_size:(idx + 1) * self.batch_size]
+        batch_features = self.features[idx * self.batch_size:(idx + 1) * self.batch_size]
+
+        x_list = []
+        y_list = []
+        classes_ = []
+        features_ = []
+
+        for image, mask,label,feature in zip(batch_x, batch_y,batch_label_array,batch_features):
+
+            x_el=resize(imread( str(image)), self.shape_tensor)
+            x_el=resize(imread( str(mask)), self.shape_tensor)
+            x_list.append(x_el)
+            del(x_el)
+            y_list.append(y_el)
+            del(y_el)
+            classes_.append(label)
+            features_.append(feature)
+
+        return [np.array(x_list)/255,np.asarray(features_,np.float64)], [np.array(y_list)/255 ,np.asarray(classes_,np.float)]
