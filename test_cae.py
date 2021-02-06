@@ -370,21 +370,21 @@ class Test_CAE(unittest.TestCase):
     def test_resizer(self):
         """test per la funzione parallelizzabile che salva la maschera normalizzata corrispondente a una immagine (Multi-Threading)"""
         self.list_test = [self.path_1, self.path_3_big]
-        fname = featureextractor.resizer(
+        fname = feature_extraction.resizer(
             self.list_test, self.endpath.name, "Image1_benign"
         )
         np.testing.assert_array_equal(imread(fname).shape, self.image_ones.shape)
         with self.assertRaises(Exception):
-            fname = featureextractor.resizer(
+            fname = feature_extraction.resizer(
                 self.list_test, self.endpath.name, "wrongpattern"
             )
         with self.assertRaises(Exception):
-            fname = featureextractor.resizer(
+            fname = feature_extraction.resizer(
                 self.list_test, self.endpath.name, "Image2"
             )
         with self.assertRaises(Exception):
             self.list_testw = ["wrongpath", "wrongpathmask"]
-            fname = featureextractor.resizer(
+            fname = feature_extraction.resizer(
                 self.list_testw, self.endpath.name, "Image1"
             )
 
