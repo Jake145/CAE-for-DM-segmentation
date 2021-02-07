@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>classes_cae module &#8212; CAE 1.0 documentazione</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Indice" href="../genindex.html" />
+    <link rel="search" title="Cerca" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-classes_cae">
+<span id="classes-cae-module"></span><h1>classes_cae module<a class="headerlink" href="#module-classes_cae" title="Link a questa intestazione">¶</a></h1>
+<p>docstring</p>
+<dl class="py class">
+<dt id="classes_cae.MassesSequence">
+<em class="property">class </em><code class="sig-prename descclassname">classes_cae.</code><code class="sig-name descname">MassesSequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">label_array</span></em>, <em class="sig-param"><span class="n">img_gen</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">(124, 124)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequence" title="Link a questa definizione">¶</a></dt>
+<dd><blockquote>
+<div><p>Basi: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.utils.data_utils.Sequence</span></code></p>
+</div></blockquote>
+<p>Classe per fare data augmentation per CAE</p>
+<dl class="py method">
+<dt id="classes_cae.MassesSequence.on_epoch_end">
+<code class="sig-name descname">on_epoch_end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequence.on_epoch_end" title="Link a questa definizione">¶</a></dt>
+<dd><p>Shuffle the dataset at the end of each epoch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="classes_cae.MassesSequence.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span></em>, <em class="sig-param"><span class="n">transform</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequence.process" title="Link a questa definizione">¶</a></dt>
+<dd><p>Apply a transformation to an image</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="classes_cae.MassesSequenceRadiomics">
+<em class="property">class </em><code class="sig-prename descclassname">classes_cae.</code><code class="sig-name descname">MassesSequenceRadiomics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">label_array</span></em>, <em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">img_gen</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">(124, 124)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomics" title="Link a questa definizione">¶</a></dt>
+<dd><blockquote>
+<div><p>Basi: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.utils.data_utils.Sequence</span></code></p>
+</div></blockquote>
+<p>Classe per il data augmentation per CAE con feature radiomiche</p>
+<dl class="py method">
+<dt id="classes_cae.MassesSequenceRadiomics.on_epoch_end">
+<code class="sig-name descname">on_epoch_end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomics.on_epoch_end" title="Link a questa definizione">¶</a></dt>
+<dd><p>Shuffle the dataset at the end of each epoch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="classes_cae.MassesSequenceRadiomics.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span></em>, <em class="sig-param"><span class="n">transform</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomics.process" title="Link a questa definizione">¶</a></dt>
+<dd><p>Apply a transformation to an image</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="classes_cae.MassesSequenceRadiomicsBig">
+<em class="property">class </em><code class="sig-prename descclassname">classes_cae.</code><code class="sig-name descname">MassesSequenceRadiomicsBig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">label_array</span></em>, <em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">img_gen</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">(2048, 1536)</span></em>, <em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(2048, 1536, 1)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomicsBig" title="Link a questa definizione">¶</a></dt>
+<dd><blockquote>
+<div><p>Basi: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.utils.data_utils.Sequence</span></code></p>
+</div></blockquote>
+<p>Classe per data augmentation per CAE con grandi dati</p>
+<dl class="py method">
+<dt id="classes_cae.MassesSequenceRadiomicsBig.on_epoch_end">
+<code class="sig-name descname">on_epoch_end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomicsBig.on_epoch_end" title="Link a questa definizione">¶</a></dt>
+<dd><p>Shuffle the dataset at the end of each epoch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="classes_cae.MassesSequenceRadiomicsBig.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span></em>, <em class="sig-param"><span class="n">transform</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomicsBig.process" title="Link a questa definizione">¶</a></dt>
+<dd><p>Apply a transformation to an image</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="classes_cae.ValidatorGenerator">
+<em class="property">class </em><code class="sig-prename descclassname">classes_cae.</code><code class="sig-name descname">ValidatorGenerator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">label_array</span></em>, <em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">(1024, 768)</span></em>, <em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(1024, 768, 1)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.ValidatorGenerator" title="Link a questa definizione">¶</a></dt>
+<dd><blockquote>
+<div><p>Basi: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.utils.data_utils.Sequence</span></code></p>
+</div></blockquote>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">CAE</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigazione</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Ricerca veloce</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Vai" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Jake Harold Pensavalle.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/rst/classes_cae.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

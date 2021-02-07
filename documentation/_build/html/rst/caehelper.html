@@ -33,17 +33,18 @@
             
   <div class="section" id="module-caehelper">
 <span id="caehelper-module"></span><h1>caehelper module<a class="headerlink" href="#module-caehelper" title="Link a questa intestazione">¶</a></h1>
+<p>docstring</p>
 <dl class="py function">
 <dt id="caehelper.blender">
-<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">blender</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img1</span></em>, <em class="sig-param"><span class="n">img2</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.blender" title="Link a questa definizione">¶</a></dt>
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">blender</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img1</span></em>, <em class="sig-param"><span class="n">img2</span></em>, <em class="sig-param"><span class="n">weight_1</span></em>, <em class="sig-param"><span class="n">weight_2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.blender" title="Link a questa definizione">¶</a></dt>
 <dd><p>Funzione per sovraimporre due immagini con sfumatura</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parametri</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>img1</strong> (<em>array numpy</em>) – immagine da sovrapporre</p></li>
 <li><p><strong>img2</strong> (<em>array numpy</em>) – immagine da svrapporre</p></li>
-<li><p><strong>a</strong> (<em>int</em><em> or </em><em>float</em>) – valore di sfumatura di img1</p></li>
-<li><p><strong>b</strong> (<em>int</em><em> or </em><em>float</em>) – valore di sfumatura di img2</p></li>
+<li><p><strong>weight_1</strong> (<em>int</em><em> or </em><em>float</em>) – valore di sfumatura di img1</p></li>
+<li><p><strong>weight_2</strong> (<em>int</em><em> or </em><em>float</em>) – valore di sfumatura di img2</p></li>
 </ul>
 </dd>
 <dt class="field-even">Ritorna</dt>
@@ -119,17 +120,18 @@
 
 <dl class="py function">
 <dt id="caehelper.heatmap">
-<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">heatmap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.heatmap" title="Link a questa definizione">¶</a></dt>
-<dd><p>Funzione che mostra la heatmap dell’ultimo layer convoluzionale prima del classificatore senza funzionalità radiomiche</p>
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">heatmap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_image</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">show</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.heatmap" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione che mostra la heatmap dell’ultimo layer convoluzionale
+prima del classificatore senza funzionalità radiomiche</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parametri</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>array numpy</em>) – immagine da segmentare</p></li>
+<li><p><strong>input_image</strong> (<em>array numpy</em>) – immagine da segmentare</p></li>
 <li><p><strong>model</strong> (<em>str</em>) – modello allenato</p></li>
 </ul>
 </dd>
 <dt class="field-even">Ritorna</dt>
-<dd class="field-even"><p>dopo aver plottato la heatmap sovrapposta e l’immagine a cui si riferisce, restituisce la heatmap</p>
+<dd class="field-even"><p>Plotta la heatmap sovrapposta e l’immagine, restituisce la heatmap</p>
 </dd>
 <dt class="field-odd">Tipo di ritorno</dt>
 <dd class="field-odd"><p>array</p>
@@ -139,18 +141,19 @@
 
 <dl class="py function">
 <dt id="caehelper.heatmap_rad">
-<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">heatmap_rad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">feature</span></em>, <em class="sig-param"><span class="n">model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.heatmap_rad" title="Link a questa definizione">¶</a></dt>
-<dd><p>Funzione che mostra la heatmap dell’ultimo layer convoluzionale prima del classificatore con funzionalità radiomiche</p>
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">heatmap_rad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_image</span></em>, <em class="sig-param"><span class="n">feature</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">show</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.heatmap_rad" title="Link a questa definizione">¶</a></dt>
+<dd><p>Funzione che mostra la heatmap dell’ultimo layer convoluzionale
+prima del classificatore con funzionalità radiomiche</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parametri</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>array numpy</em>) – immagine da segmentare</p></li>
+<li><p><strong>input_image</strong> (<em>array numpy</em>) – immagine da segmentare</p></li>
 <li><p><strong>feature</strong> (<em>array numpy</em>) – feature estratte con pyradiomics</p></li>
 <li><p><strong>model</strong> (<em>class</em>) – modello allenato</p></li>
 </ul>
 </dd>
 <dt class="field-even">Ritorna</dt>
-<dd class="field-even"><p>dopo aver plottato la heatmap sovrapposta e l’immagine a cui si riferisce, restituisce la heatmap</p>
+<dd class="field-even"><p>Plotta la heatmap sovrapposta e l’immagine, restituisce la heatmap</p>
 </dd>
 <dt class="field-odd">Tipo di ritorno</dt>
 <dd class="field-odd"><p>array</p>
@@ -161,7 +164,8 @@
 <dl class="py function">
 <dt id="caehelper.modelviewer">
 <code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">modelviewer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.modelviewer" title="Link a questa definizione">¶</a></dt>
-<dd><p>Funzione per visualizzare l’andamento della loss di training e validazione per l’autoencoder e per il classificatore
+<dd><p>Funzione per visualizzare l’andamento della loss di training
+e validazione per l’autoencoder e per il classificatore
 :type model: str
 :param model: history del modello di Keras ottenuto dalla funzione</p>
 </dd></dl>
@@ -202,13 +206,12 @@
 
 <dl class="py function">
 <dt id="caehelper.radiomic_dooer">
-<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">radiomic_dooer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">list_test</span></em>, <em class="sig-param"><span class="n">datapath</span></em>, <em class="sig-param"><span class="n">endpath</span></em>, <em class="sig-param"><span class="n">lab</span></em>, <em class="sig-param"><span class="n">extrc</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.radiomic_dooer" title="Link a questa definizione">¶</a></dt>
+<code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">radiomic_dooer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">list_test</span></em>, <em class="sig-param"><span class="n">endpath</span></em>, <em class="sig-param"><span class="n">lab</span></em>, <em class="sig-param"><span class="n">extrc</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.radiomic_dooer" title="Link a questa definizione">¶</a></dt>
 <dd><p>Funzione per estrarre le feature con pyradiomics e salvarle in un dizionario.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parametri</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>list_test</strong> (<em>list</em>) – lista con path immagine e relativa maschera normalizzata</p></li>
-<li><p><strong>datapath</strong> (<em>str</em>) – percorso cartella dove si trova l’immagine</p></li>
 <li><p><strong>endpath</strong> (<em>str</em>) – cartella dove si salva il pickle del dizionario</p></li>
 <li><p><strong>lab</strong> (<em>int</em>) – label per indicare la maschera, va da 1 a 255</p></li>
 </ul>
@@ -231,7 +234,8 @@
 <dl class="py function">
 <dt id="caehelper.read_dataset">
 <code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">read_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset_path</span></em>, <em class="sig-param"><span class="n">ext</span></em>, <em class="sig-param"><span class="n">benign_label</span></em>, <em class="sig-param"><span class="n">malign_label</span></em>, <em class="sig-param"><span class="n">x_id</span><span class="o">=</span><span class="default_value">'_resized'</span></em>, <em class="sig-param"><span class="n">y_id</span><span class="o">=</span><span class="default_value">'_mass_mask'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.read_dataset" title="Link a questa definizione">¶</a></dt>
-<dd><p>Data la cartella con le maschere e le immagini, restituisce i vettori con le immagini, le maschere e le classi. Restituisce i vettori come tensori da dare alla rete.</p>
+<dd><p>Data la cartella con le maschere e le immagini, restituisce i vettori con le immagini,
+le maschere e le classi. Restituisce i vettori come tensori da dare alla rete.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parametri</dt>
 <dd class="field-odd"><ul class="simple">
@@ -256,7 +260,9 @@
 <dl class="py function">
 <dt id="caehelper.read_dataset_big">
 <code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">read_dataset_big</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset_path_mass</span></em>, <em class="sig-param"><span class="n">dataset_path_mask</span></em>, <em class="sig-param"><span class="n">benign_label</span></em>, <em class="sig-param"><span class="n">malign_label</span></em>, <em class="sig-param"><span class="n">ext</span><span class="o">=</span><span class="default_value">'png'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.read_dataset_big" title="Link a questa definizione">¶</a></dt>
-<dd><p>Versione di read_dataset per il dataset del TCIA. Data la cartella con le maschere e le immagini, restituisce i vettori con i filepath delle immagini, le maschere e le classi.</p>
+<dd><p>Versione di read_dataset per il dataset del TCIA.
+Data la cartella con le maschere e le immagini,
+restituisce i vettori con i filepath delle immagini, le maschere e le classi.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parametri</dt>
 <dd class="field-odd"><ul class="simple">
@@ -318,7 +324,8 @@
 <dl class="py function">
 <dt id="caehelper.unit_masks">
 <code class="sig-prename descclassname">caehelper.</code><code class="sig-name descname">unit_masks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_name</span></em>, <em class="sig-param"><span class="n">data_path</span></em>, <em class="sig-param"><span class="n">ext1</span></em>, <em class="sig-param"><span class="n">ext2</span></em>, <em class="sig-param"><span class="n">endpath</span></em><span class="sig-paren">)</span><a class="headerlink" href="#caehelper.unit_masks" title="Link a questa definizione">¶</a></dt>
-<dd><p>Normalizza i valori dei pixel delle maschere già nei file per essere utilizzati con pyradiomics. Permette inoltre di cambiare l’estenzione da .pgm a .png o qualunque altra estenzione supportata.</p>
+<dd><p>Normalizza i valori dei pixel delle maschere.
+Permette  di cambiare l’estenzione.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parametri</dt>
 <dd class="field-odd"><ul class="simple">

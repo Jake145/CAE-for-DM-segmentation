@@ -1,4 +1,5 @@
 """docstring"""
+import argparse
 import concurrent.futures
 import logging
 import os
@@ -29,7 +30,7 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 
-def dice_big(       # pylint: disable=R0913
+def dice_big(  # pylint: disable=R0913
     list_, k=1, mod=model_rad, shape=(1024, 768, 1), alpha=0.1, lists=dices
 ):
     """calcola il dice di una singola immagine
@@ -70,7 +71,7 @@ def dice_big(       # pylint: disable=R0913
     return dice
 
 
-def ypred_creator(           # pylint: disable=R0913
+def ypred_creator(  # pylint: disable=R0913
     list_, mod=model_rad, list_app=ypred, shape=(1024, 768, 1)
 ):
     """calcola le predizioni di classificazione
@@ -90,23 +91,71 @@ def ypred_creator(           # pylint: disable=R0913
 
 
     """
-    x = resize(imread(str(list_[0])), shape)  # pylint: disable=C0103
-    y = mod.predict([x[np.newaxis, ...], list_[1][np.newaxis, ...]])[1][    # pylint: disable=C0103
+    input_ = resize(imread(str(list_[0])), shape)
+    output_ = mod.predict([input_[np.newaxis, ...], list_[1][np.newaxis, ...]])[
+        1
+    ][
         0
     ]
-    list_app.append(y)  # pylint: disable=C0103
-    return y
+    list_app.append(output_)
+    return output_
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Allena la rete con classificazione radiomica e grande dataset. "
+    )
+    parser.add_argument(
+        "-dp",
+        "--datapath",
+        metavar="",
+        help="percorso della cartella dove vi sono le cartelle con le immagini e le maschere",
+        default="E:",
+    )
+    parser.add_argument(
+        "-cp",
+        "--checkpoint",
+        metavar="",
+        help="percorso della cartella dove si vuole salvare i checkpoint",
+        default="models",
+    )
+    parser.add_argument(
+        "-ep",
+        "--epocs",
+        metavar="",
+        type=int,
+        help="epoche dell'allenamento",
+        default=10,
+    )
+    parser.add_argument(
+        "-stp",
+        "--steps",
+        metavar="",
+        type=int,
+        help="step per epoca",
+        default=10,
+    )
+    parser.add_argument(
+        "-df",
+        "--dataframe",
+        metavar="",
+        help="percorso dove si trova il .csv con le feature",
+        default="Pandatabigframe.csv",
+    )
+    parser.add_argument(
+        "-s",
+        "--save",
+        action="store_true",
+        help="salva il modello al fine dell'allenamento'",
+    )
+    args = parser.parse_args()
 
-    DATAPATH = "E:"
+    DATAPATH = args.datapath
     MAINDIR = "Mass_data_new"
     MASSTRAIN = "Train_data"
     MASKTRAINRES = "resized_masks"
     BENIGN_LABEL = "BENIGN"
     MALIGN_LABEK = "MALIGNANT"
-    FEATURESPATH = "feats"
 
     path_mass_tr = os.path.join(DATAPATH, MAINDIR, MASSTRAIN)
     path_masks_resized = os.path.join(DATAPATH, MAINDIR, MASKTRAINRES)
@@ -115,9 +164,7 @@ if __name__ == "__main__":
         path_mass_tr, path_masks_resized, BENIGN_LABEL, MALIGN_LABEK
     )
 
-    Pandatabigframe = pd.read_csv(
-        "/content/drive/MyDrive/Mass_data_new/Pandatabigframe.csv"
-    )
+    Pandatabigframe = pd.read_csv(args.dataframe)
 
     Pandatabigframe = Pandatabigframe.iloc[:, 1:]
 
@@ -220,10 +267,11 @@ if __name__ == "__main__":
 
     model_rad = cae_cnn_models.make_model_rad_big_unet(shape_tensor=(1024, 768, 1))
     model_rad.summary()
-
-    CHECKPOINT_FILEPATH = "big_weights.{epoch:02d}-{val_loss:.2f}.h5"
+    MAINPATH = args.checkpoint
+    FILENAME = "big_weights.{epoch:02d}-{val_loss:.2f}.h5"
+    checkpoint_filepath = os.path.join(MAINPATH, FILENAME)
     model_checkpoint_callback = keras.callbacks.ModelCheckpoint(
-        filepath=CHECKPOINT_FILEPATH,
+        filepath=checkpoint_filepath,
         monitor="val_classification_output_auc",
         mode="max",
         save_best_only=True,
@@ -241,21 +289,18 @@ if __name__ == "__main__":
         },
     )
 
-    EPOCH_NUMBER = 10
-
     HISTORY_RAD = model_rad.fit(
         mass_gen_rad_big,
-        steps_per_epoch=10,
-        epochs=EPOCH_NUMBER,
+        steps_per_epoch=args.steps,
+        epochs=args.epocs,
         validation_data=Validation_data,
         callbacks=[model_checkpoint_callback],
     )
 
-    # model_rad.save('/content/drive/MyDrive/BIGUNET')
+    if args.save:
+        model_rad.save("model_big_radiomics")
 
     caehelper.modelviewer(HISTORY_RAD)
-
-    # model_rad = keras.models.load_model('/content/drive/MyDrive/BIGUNET')
 
     dices = []
 

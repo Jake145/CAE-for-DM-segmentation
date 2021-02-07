@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cae_cnn_models module &#8212; CAE 1.0 documentazione</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Indice" href="../genindex.html" />
+    <link rel="search" title="Cerca" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-cae_cnn_models">
+<span id="cae-cnn-models-module"></span><h1>cae_cnn_models module<a class="headerlink" href="#module-cae_cnn_models" title="Link a questa intestazione">¶</a></h1>
+<p>docstring</p>
+<dl class="py function">
+<dt id="cae_cnn_models.make_model">
+<code class="sig-prename descclassname">cae_cnn_models.</code><code class="sig-name descname">make_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(124, 124, 1)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cae_cnn_models.make_model" title="Link a questa definizione">¶</a></dt>
+<dd><p>Modello CAE tratto da Liu et al.
+Permette inoltre la classificazione delle masse grazie a layer fc.
+type shape_tensor: array
+param shape_tensor: dimensione dell’immagine in ingresso</p>
+<dl class="field-list simple">
+<dt class="field-odd">Ritorna</dt>
+<dd class="field-odd"><p>restituisce il modello</p>
+</dd>
+<dt class="field-even">Tipo di ritorno</dt>
+<dd class="field-even"><p>keras model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cae_cnn_models.make_model_rad">
+<code class="sig-prename descclassname">cae_cnn_models.</code><code class="sig-name descname">make_model_rad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(124, 124, 1)</span></em>, <em class="sig-param"><span class="n">feature_dim</span><span class="o">=</span><span class="default_value">(3)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cae_cnn_models.make_model_rad" title="Link a questa definizione">¶</a></dt>
+<dd><p>Modello CAE tratto da Liu et al.
+Permette inoltre la classificazione delle masse grazie a layer fc.
+type shape_tensor: array
+param shape_tensor: dimensione dell’immagine in ingresso</p>
+<p>type feature_dim: array
+param feature_dim: dimensione dell’array delle feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Ritorna</dt>
+<dd class="field-odd"><p>restituisce il modello</p>
+</dd>
+<dt class="field-even">Tipo di ritorno</dt>
+<dd class="field-even"><p>keras model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cae_cnn_models.make_model_rad_big_unet">
+<code class="sig-prename descclassname">cae_cnn_models.</code><code class="sig-name descname">make_model_rad_big_unet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(4096, 3072, 1)</span></em>, <em class="sig-param"><span class="n">feature_dim</span><span class="o">=</span><span class="default_value">(3)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cae_cnn_models.make_model_rad_big_unet" title="Link a questa definizione">¶</a></dt>
+<dd><p>Modello Unet.
+Permette inoltre la classificazione delle masse grazie a layer fc.
+type shape_tensor: array
+param shape_tensor: dimensione dell’immagine in ingresso</p>
+<p>type feature_dim: array
+param feature_dim: dimensione dell’array delle feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Ritorna</dt>
+<dd class="field-odd"><p>restituisce il modello</p>
+</dd>
+<dt class="field-even">Tipo di ritorno</dt>
+<dd class="field-even"><p>keras model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cae_cnn_models.make_model_rad_regulizer">
+<code class="sig-prename descclassname">cae_cnn_models.</code><code class="sig-name descname">make_model_rad_regulizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(124, 124, 1)</span></em>, <em class="sig-param"><span class="n">feature_dim</span><span class="o">=</span><span class="default_value">(3)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cae_cnn_models.make_model_rad_regulizer" title="Link a questa definizione">¶</a></dt>
+<dd><p>Modello CAE tratto da Liu et al, ma modificato con dropout, maxpooling e upsampling.
+Permette inoltre la classificazione delle masse grazie a layer fc.
+type shape_tensor: array
+param shape_tensor: dimensione dell’immagine in ingresso</p>
+<p>type feature_dim: array
+param feature_dim: dimensione dell’array delle feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Ritorna</dt>
+<dd class="field-odd"><p>restituisce il modello</p>
+</dd>
+<dt class="field-even">Tipo di ritorno</dt>
+<dd class="field-even"><p>keras model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cae_cnn_models.make_model_rad_unet">
+<code class="sig-prename descclassname">cae_cnn_models.</code><code class="sig-name descname">make_model_rad_unet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(124, 124, 1)</span></em>, <em class="sig-param"><span class="n">feature_dim</span><span class="o">=</span><span class="default_value">(3)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cae_cnn_models.make_model_rad_unet" title="Link a questa definizione">¶</a></dt>
+<dd><p>Modello UNET modificato con layer di resize.
+Permette inoltre la classificazione delle masse grazie a layer fc
+type shape_tensor: array
+param shape_tensor: dimensione dell’immagine in ingresso</p>
+<p>type feature_dim: array
+param feature_dim: dimensione dell’array delle feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Ritorna</dt>
+<dd class="field-odd"><p>restituisce il modello</p>
+</dd>
+<dt class="field-even">Tipo di ritorno</dt>
+<dd class="field-even"><p>keras model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cae_cnn_models.make_model_regulizer">
+<code class="sig-prename descclassname">cae_cnn_models.</code><code class="sig-name descname">make_model_regulizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(124, 124, 1)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cae_cnn_models.make_model_regulizer" title="Link a questa definizione">¶</a></dt>
+<dd><p>Modello CAE tratto da Liu et al, ma modificato con dropout, maxpooling e upsampling.
+Permette inoltre la classificazione delle masse grazie a layer fc.
+type shape_tensor: array
+param shape_tensor: dimensione dell’immagine in ingresso</p>
+<dl class="field-list simple">
+<dt class="field-odd">Ritorna</dt>
+<dd class="field-odd"><p>restituisce il modello</p>
+</dd>
+<dt class="field-even">Tipo di ritorno</dt>
+<dd class="field-even"><p>keras model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cae_cnn_models.make_model_unet">
+<code class="sig-prename descclassname">cae_cnn_models.</code><code class="sig-name descname">make_model_unet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(124, 124, 1)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cae_cnn_models.make_model_unet" title="Link a questa definizione">¶</a></dt>
+<dd><p>Modello Unet modificato con layer di resize.
+Permette inoltre la classificazione delle masse grazie a layer fc.
+type shape_tensor: array
+param shape_tensor: dimensione dell’immagine in ingresso</p>
+<dl class="field-list simple">
+<dt class="field-odd">Ritorna</dt>
+<dd class="field-odd"><p>restituisce il modello</p>
+</dd>
+<dt class="field-even">Tipo di ritorno</dt>
+<dd class="field-even"><p>keras model</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">CAE</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigazione</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Ricerca veloce</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Vai" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Jake Harold Pensavalle.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/rst/cae_cnn_models.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

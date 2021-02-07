@@ -414,7 +414,7 @@ def dice_vectorized(pred, true, k=1):
         )
     except ZeroDivisionError:
         logger.exception("provato a dividere per zero!")
-    logger.info("calcolato correttamente il dice medio ottenendo %d", dice_value)
+    logger.info("calcolato correttamente il dice medio ottenendo %d", dice_value.mean())
     return dice_value
 
 

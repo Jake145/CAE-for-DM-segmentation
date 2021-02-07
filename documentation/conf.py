@@ -14,7 +14,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath("."))
-sys.path.append("C:/Users/pensa/Desktop/CAE-for-DM-segmentation/documentation/source")
+sys.path.append("source")
 
 # -- Project information -----------------------------------------------------
 
