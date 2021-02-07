@@ -228,7 +228,6 @@ def read_dataset_big(
                 fname,
                 dataset_path_mask,
             )
-            pass
 
     return np.array(images_), np.array(masks_), np.array(class_labels)
 
@@ -280,7 +279,7 @@ def radiomic_dooer(list_test, endpath, lab, extrc):
             pickle.dump(dict_r, handle, protocol=pickle.HIGHEST_PROTOCOL)
             logging.info("salvato il pickle feats_%s.pickle in %s", name[0], endpath)
     except Exception as e_error:
-        raise Exception("Controlla che %s sia giusto",endpath) from e_error
+        raise Exception("Controlla che %s sia giusto"%endpath) from e_error
 
     del dict_r
     updt_end = time.perf_counter()
@@ -300,12 +299,12 @@ def read_pgm_as_sitk(image_path):
     try:
         np_array = np.asarray(Image.open(image_path))
     except Exception as e_error:
-        raise Exception('impossibile leggere %s',image_path) from e_error
+        raise Exception('impossibile leggere %s'%image_path) from e_error
     logger.info("sto leggendo %s", image_path)
     try:
         sitk_image = sitk.GetImageFromArray(np_array)
     except Exception as e_error:
-        raise Exception('impossibile convertire %s in ITK',image_path) from e_error
+        raise Exception('impossibile convertire %s in ITK'%image_path) from e_error
     logger.info("sto convertendo %s", image_path)
 
     return sitk_image
@@ -454,7 +453,7 @@ def modelviewer(model):
     plt.show()
 
 
-def heatmap(input_image, model):
+def heatmap(input_image, model,show=True):
     """
     Funzione che mostra la heatmap dell'ultimo layer convoluzionale
     prima del classificatore senza funzionalità radiomiche
@@ -489,27 +488,32 @@ def heatmap(input_image, model):
         max_heat = 1e-10
     heat_map /= max_heat
 
-    plt.matshow(heat_map.squeeze())
-    plt.show()
+    if show:
+        input_image = np.asarray(255 * input_image, np.uint8)
+        heat_map = np.asarray(255 * heat_map.squeeze(), np.uint8)
 
-    input_image = np.asarray(255 * input_image, np.uint8)
-    heat_map = np.asarray(255 * heat_map.squeeze(), np.uint8)
+        heat_map_res = cv2.resize(                      # pylint: disable=E1101
+            heat_map, (input_image.shape[1], input_image.shape[0])
+        )
 
-    heat_map = cv2.resize(                      # pylint: disable=E1101
-        heat_map, (input_image.shape[1], input_image.shape[0])
-    )
-
-    plt.imshow(blender(input_image, heat_map, 1, 1))
-    plt.axis("off")
-    if argmax == 1:
-        plt.title("the mass is malign")
-    else:
-        plt.title("the mass is benign")
-
+        plt.figure("Heatactivation")
+        plt.subplot(1,3,1)
+        plt.imshow(input_image)
+        plt.title('image')
+        plt.subplot(1,3,2)
+        plt.imshow(heat_map)
+        plt.title('heatmap')
+        plt.subplot(1,3,3)
+        plt.imshow(blender(input_image, heat_map_res, 1, 1))
+        if argmax == 1:
+            plt.title("the mass is malign")
+        else:
+            plt.title("the mass is benign")
+        plt.show()
     return heat_map
 
 
-def heatmap_rad(input_image, feature, model):
+def heatmap_rad(input_image, feature, model,show=True):
     """
     Funzione che mostra la heatmap dell'ultimo layer convoluzionale
     prima del classificatore con funzionalità radiomiche
@@ -543,26 +547,28 @@ def heatmap_rad(input_image, feature, model):
     if max_heat == 0:
         max_heat = 1e-10
     heat_map /= max_heat
+    if show:
+        input_image = np.asarray(255 * input_image, np.uint8)
+        heat_map = np.asarray(255 * heat_map.squeeze(), np.uint8)
 
-    plt.figure("heatmap")
-    plt.matshow(heat_map.squeeze())
-    plt.show()
+        heat_map_res = cv2.resize(                      # pylint: disable=E1101
+            heat_map, (input_image.shape[1], input_image.shape[0])
+        )
 
-    input_image = np.asarray(255 * input_image, np.uint8)
-    heat_map = np.asarray(255 * heat_map.squeeze(), np.uint8)
-
-    heat_map = cv2.resize(                      # pylint: disable=E1101
-        heat_map, (input_image.shape[1], input_image.shape[0])
-    )
-
-    plt.figure("Heatactivation")
-    plt.imshow(blender(input_image, heat_map, 1, 1))
-    plt.axis("off")
-    if argmax == 1:
-        plt.title("the mass is malign")
-    else:
-        plt.title("the mass is benign")
-    plt.show()
+        plt.figure("Heatactivation")
+        plt.subplot(1,3,1)
+        plt.imshow(input_image)
+        plt.title('image')
+        plt.subplot(1,3,2)
+        plt.imshow(heat_map)
+        plt.title('heatmap')
+        plt.subplot(1,3,3)
+        plt.imshow(blender(input_image, heat_map_res, 1, 1))
+        if argmax == 1:
+            plt.title("the mass is malign")
+        else:
+            plt.title("the mass is benign")
+        plt.show()
     return heat_map
 
 
