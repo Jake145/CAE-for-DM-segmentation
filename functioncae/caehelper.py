@@ -256,8 +256,8 @@ def radiomic_dooer(list_test, endpath, lab, extrc):
     try:
         logger.debug(
             "sto cercando di estrarre le feature da %s utilizzando come maschera %s",
-            list[0],  # pylint: disable=E1136
-            list[1],  # pylint: disable=E1136
+            list_test[0],
+            list_test[1],
         )
         info = extrc.execute(list_test[0], list_test[1], lab)
 
@@ -267,7 +267,7 @@ def radiomic_dooer(list_test, endpath, lab, extrc):
         ) from e_error
 
     extr_end = time.perf_counter()
-    logging.info("time to extract: %d", extr_end - extr_start)
+    logging.info("tempo di estrazione: %d", extr_end - extr_start)
     updt_start = time.perf_counter()
     pattern = re.compile(r"[M][\w-]*[0-9]*[\w]{13}")
     logging.debug("in regex il pattern è %s", pattern)
@@ -280,7 +280,7 @@ def radiomic_dooer(list_test, endpath, lab, extrc):
             pickle.dump(dict_r, handle, protocol=pickle.HIGHEST_PROTOCOL)
             logging.info("salvato il pickle feats_%s.pickle in %s", name[0], endpath)
     except Exception as e_error:
-        raise Exception(f"Controlla che {endpath} sia giusto") from e_error
+        raise Exception("Controlla che %s sia giusto",endpath) from e_error
 
     del dict_r
     updt_end = time.perf_counter()
@@ -297,10 +297,15 @@ def read_pgm_as_sitk(image_path):
     :returns: restituisce l'immagine da far leggere a pyradiomics
     :rtype: array
     """
-
-    np_array = np.asarray(Image.open(image_path)) # pylint: disable=E0602
+    try:
+        np_array = np.asarray(Image.open(image_path))
+    except Exception as e_error:
+        raise Exception('impossibile leggere %s',image_path) from e_error
     logger.info("sto leggendo %s", image_path)
-    sitk_image = sitk.GetImageFromArray(np_array)
+    try:
+        sitk_image = sitk.GetImageFromArray(np_array)
+    except Exception as e_error:
+        raise Exception('impossibile convertire %s in ITK',image_path) from e_error
     logger.info("sto convertendo %s", image_path)
 
     return sitk_image
