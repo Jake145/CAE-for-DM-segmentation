@@ -339,8 +339,8 @@ class TestCAE(unittest.TestCase):  # pylint:disable=R0902
         gen1 = classes_cae.MassesSequence(
             images_, masks_, class_, train_datagen, batch_size=1, shape=(124, 124)
         )
-        np.testing.assert_array_equal(gen1.x, images_)
-        np.testing.assert_array_equal(gen1.y, masks_)
+        np.testing.assert_array_equal(gen1.images, images_)
+        np.testing.assert_array_equal(gen1.masks, masks_)
         np.testing.assert_array_equal(gen1.label_array, class_)
         np.testing.assert_array_equal(gen1.shape, (124, 124))
         np.testing.assert_array_equal(gen1.process(images_[0], transform), images_[0])
@@ -356,8 +356,8 @@ class TestCAE(unittest.TestCase):  # pylint:disable=R0902
             batch_size=1,
             shape=(124, 124),
         )
-        np.testing.assert_array_equal(gen2.x, images_)
-        np.testing.assert_array_equal(gen2.y, masks_)
+        np.testing.assert_array_equal(gen2.images, images_)
+        np.testing.assert_array_equal(gen2.masks, masks_)
         np.testing.assert_array_equal(gen2.label_array, class_)
         np.testing.assert_array_equal(gen2.shape, (124, 124))
         np.testing.assert_array_equal(gen2.features, feats)
@@ -377,8 +377,8 @@ class TestCAE(unittest.TestCase):  # pylint:disable=R0902
             shape_tensor=(2048, 1536, 1),
         )
 
-        np.testing.assert_array_equal(gen3.x, images_big)
-        np.testing.assert_array_equal(gen3.y, masks_big)
+        np.testing.assert_array_equal(gen3.images, images_big)
+        np.testing.assert_array_equal(gen3.masks, masks_big)
         np.testing.assert_array_equal(gen3.label_array, class_big)
         np.testing.assert_array_equal(gen3.shape, (2048, 1536))
         np.testing.assert_array_equal(gen3.shape_tensor, (2048, 1536, 1))
@@ -400,8 +400,8 @@ class TestCAE(unittest.TestCase):  # pylint:disable=R0902
             shape_tensor=(2048, 1536, 1),
         )
 
-        np.testing.assert_array_equal(gen_val.x, images_big)
-        np.testing.assert_array_equal(gen_val.y, masks_big)
+        np.testing.assert_array_equal(gen_val.images, images_big)
+        np.testing.assert_array_equal(gen_val.masks, masks_big)
         np.testing.assert_array_equal(gen_val.label_array, class_big)
         np.testing.assert_array_equal(gen_val.shape, (2048, 1536))
         np.testing.assert_array_equal(gen_val.shape_tensor, (2048, 1536, 1))

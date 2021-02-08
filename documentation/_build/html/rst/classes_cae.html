@@ -36,7 +36,7 @@
 <p>docstring</p>
 <dl class="py class">
 <dt id="classes_cae.MassesSequence">
-<em class="property">class </em><code class="sig-prename descclassname">classes_cae.</code><code class="sig-name descname">MassesSequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">label_array</span></em>, <em class="sig-param"><span class="n">img_gen</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">(124, 124)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequence" title="Link a questa definizione">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">classes_cae.</code><code class="sig-name descname">MassesSequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">images</span></em>, <em class="sig-param"><span class="n">masks</span></em>, <em class="sig-param"><span class="n">label_array</span></em>, <em class="sig-param"><span class="n">img_gen</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">(124, 124)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequence" title="Link a questa definizione">¶</a></dt>
 <dd><blockquote>
 <div><p>Basi: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.utils.data_utils.Sequence</span></code></p>
 </div></blockquote>
@@ -44,20 +44,20 @@
 <dl class="py method">
 <dt id="classes_cae.MassesSequence.on_epoch_end">
 <code class="sig-name descname">on_epoch_end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequence.on_epoch_end" title="Link a questa definizione">¶</a></dt>
-<dd><p>Shuffle the dataset at the end of each epoch.</p>
+<dd><p>Mischia il dataset a fine epoca.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="classes_cae.MassesSequence.process">
 <code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span></em>, <em class="sig-param"><span class="n">transform</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequence.process" title="Link a questa definizione">¶</a></dt>
-<dd><p>Apply a transformation to an image</p>
+<dd><p>Applica una trasformazione random all’immagine</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="classes_cae.MassesSequenceRadiomics">
-<em class="property">class </em><code class="sig-prename descclassname">classes_cae.</code><code class="sig-name descname">MassesSequenceRadiomics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">label_array</span></em>, <em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">img_gen</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">(124, 124)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomics" title="Link a questa definizione">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">classes_cae.</code><code class="sig-name descname">MassesSequenceRadiomics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">images</span></em>, <em class="sig-param"><span class="n">masks</span></em>, <em class="sig-param"><span class="n">label_array</span></em>, <em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">img_gen</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">(124, 124)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomics" title="Link a questa definizione">¶</a></dt>
 <dd><blockquote>
 <div><p>Basi: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.utils.data_utils.Sequence</span></code></p>
 </div></blockquote>
@@ -65,44 +65,45 @@
 <dl class="py method">
 <dt id="classes_cae.MassesSequenceRadiomics.on_epoch_end">
 <code class="sig-name descname">on_epoch_end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomics.on_epoch_end" title="Link a questa definizione">¶</a></dt>
-<dd><p>Shuffle the dataset at the end of each epoch.</p>
+<dd><p>Mischia il dataset a fine epoca.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="classes_cae.MassesSequenceRadiomics.process">
 <code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span></em>, <em class="sig-param"><span class="n">transform</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomics.process" title="Link a questa definizione">¶</a></dt>
-<dd><p>Apply a transformation to an image</p>
+<dd><p>Applica una trasformazione random all’immagine</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="classes_cae.MassesSequenceRadiomicsBig">
-<em class="property">class </em><code class="sig-prename descclassname">classes_cae.</code><code class="sig-name descname">MassesSequenceRadiomicsBig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">label_array</span></em>, <em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">img_gen</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">(2048, 1536)</span></em>, <em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(2048, 1536, 1)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomicsBig" title="Link a questa definizione">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">classes_cae.</code><code class="sig-name descname">MassesSequenceRadiomicsBig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">images</span></em>, <em class="sig-param"><span class="n">masks</span></em>, <em class="sig-param"><span class="n">label_array</span></em>, <em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">img_gen</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">(2048, 1536)</span></em>, <em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(2048, 1536, 1)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomicsBig" title="Link a questa definizione">¶</a></dt>
 <dd><blockquote>
 <div><p>Basi: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.utils.data_utils.Sequence</span></code></p>
 </div></blockquote>
-<p>Classe per data augmentation per CAE con grandi dati</p>
+<p>Classe per data augmentation per CAE con grande dataset</p>
 <dl class="py method">
 <dt id="classes_cae.MassesSequenceRadiomicsBig.on_epoch_end">
 <code class="sig-name descname">on_epoch_end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomicsBig.on_epoch_end" title="Link a questa definizione">¶</a></dt>
-<dd><p>Shuffle the dataset at the end of each epoch.</p>
+<dd><p>Mischia il dataset a fine epoca.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="classes_cae.MassesSequenceRadiomicsBig.process">
 <code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span></em>, <em class="sig-param"><span class="n">transform</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.MassesSequenceRadiomicsBig.process" title="Link a questa definizione">¶</a></dt>
-<dd><p>Apply a transformation to an image</p>
+<dd><p>Applica una trasformazione random all’immagine</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="classes_cae.ValidatorGenerator">
-<em class="property">class </em><code class="sig-prename descclassname">classes_cae.</code><code class="sig-name descname">ValidatorGenerator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">label_array</span></em>, <em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">(1024, 768)</span></em>, <em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(1024, 768, 1)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.ValidatorGenerator" title="Link a questa definizione">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">classes_cae.</code><code class="sig-name descname">ValidatorGenerator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">images</span></em>, <em class="sig-param"><span class="n">masks</span></em>, <em class="sig-param"><span class="n">label_array</span></em>, <em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">(1024, 768)</span></em>, <em class="sig-param"><span class="n">shape_tensor</span><span class="o">=</span><span class="default_value">(1024, 768, 1)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#classes_cae.ValidatorGenerator" title="Link a questa definizione">¶</a></dt>
 <dd><blockquote>
 <div><p>Basi: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.utils.data_utils.Sequence</span></code></p>
 </div></blockquote>
+<p>Classe per generare i dati di validazione in batch per il dataset grande</p>
 </dd></dl>
 
 </div>
