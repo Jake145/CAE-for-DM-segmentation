@@ -144,7 +144,7 @@ if __name__ == "__main__":
         optimizer="adam",
         loss={
             "decoder_output": "binary_crossentropy",
-            "classification_output": "categorical_crossentropy",
+            "classification_output": "binary_crossentropy",
         },
         metrics={
             "decoder_output": "MAE",

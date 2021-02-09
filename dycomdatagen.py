@@ -1,4 +1,5 @@
 """docstring"""
+import argparse
 import concurrent.futures
 import logging
 import os
@@ -21,9 +22,12 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 
-def dycomrconverter(data, dir_mass, dir_mask, end_path_mass, end_path_mask):
+def dycomrconverter(             # pylint: disable=R0915,R0914
+    data, dir_mass, dir_mask, end_path_mass, end_path_mask
+):
 
-    """Funzione per leggere il dataframe e salvare l'immagine e la relativa maschera in .png da DICOM
+    """Funzione per leggere il dataframe e salvare l'immagine
+    e la relativa maschera in .png da DICOM
 
     :type data: dataframe.iloc
     :param data: riga del dataframe corrispondente alla maschera
@@ -49,6 +53,16 @@ def dycomrconverter(data, dir_mass, dir_mask, end_path_mass, end_path_mask):
     )
 
     def search_files(directory=".", extension=""):
+        """Funzione per cercare ogni file dentro una certa cartella,
+        anche se contiene sottocartelle
+
+        :type directory: str
+        :param directory: cartella in cui si vuole cercare i file
+        :type extension: str
+        :param extension: estensione dei file, di default sono tutti
+        :returns: lista con i path dei file
+        :rtype:list
+        """
         extension = extension.lower()
         filelist = []
         for dirpath, _, files in os.walk(directory):
@@ -60,6 +74,16 @@ def dycomrconverter(data, dir_mass, dir_mask, end_path_mass, end_path_mask):
         return filelist
 
     def dir_reader(_dir, d_c):
+        """data la directory principale, trova la directory con il nome
+        corrispondente al dicom
+
+        :type _dir: str
+        :param _dir: path principale
+        :type d_c: dataframe.iloc
+        :param d_c: riga del dataframe corrispondente al dicom
+        :returns: directory del dicom
+        :rtype:str
+        """
         pattern = re.compile(r"[\w-]+[\w]\b")
         match = re.findall(pattern, d_c)[0]
         logger.debug("trovato come nome della immagine: %s in %s", match, _dir)
@@ -68,15 +92,27 @@ def dycomrconverter(data, dir_mass, dir_mask, end_path_mass, end_path_mask):
         return dir_
 
     def dicomsaver(dcm, d_c, file_endpath):
+        """Salva il dicom in .png con  nome che riflette le caratteristiche
+        date dalla riga del dataframe
+        :type dcm: dicom
+        :param dcm: immagine in formato .dcm
+        :type d_c: dataframe.iloc
+        :param d_c: riga del dataframe corrispondente al dicom
+        :type file_endpath: str
+        :param file_endpath: cartella dove viene salvata l'immagine
+        :returns: stato del salvataggio
+        :rtype:bool
+        """
         pattern = re.compile(r"[\w-]+[\w]\b")
         match = re.findall(pattern, d_c)[0]
         image = dcm.pixel_array
         pathology = data["pathology"]
+        view=data["abnormality id"]
         apply_voi_lut(image, dcm)
-        filename = f"{match}_{pathology}.png"
+        filename = f"{match}_{pathology}_{view}.png"
         filename = os.path.join(file_endpath, filename)
         logger.debug("salvato in %s", filename)
-        status = cv2.imwrite(filename, image)
+        status = cv2.imwrite(filename, image) #pylint:disable=E1101
         logger.info("correttamente salvato %s", filename)
         return status
 
@@ -86,65 +122,116 @@ def dycomrconverter(data, dir_mass, dir_mask, end_path_mass, end_path_mask):
     try:
         assert len(files) == 1
         logger.debug("ho verificato che nella cartella vi è una sola immagine")
-        # questo va bene nel nostro caso specifico. Nel caso generale sarebbe meglio guardare il nome del file dal dycom, ma questo modo è più rapido
-    except:
+        # questo va bene nel nostro caso specifico. Nel caso generale sarebbe meglio
+        # guardare il nome del file dal dicom, ma questo modo è più rapido
+    except Exception as e_error:
         raise Exception(
-            "Nella directory %s delle singole immagini ci sono più file", dir_masses
-        )
+            "Nella directory {} delle singole immagini ci sono più file".format(dir_masses)
+        ) from e_error
 
-    f = files[0]
-    logger.info("ho letto %s", f)
-    d_s = pydicom.read_file(f)
-    logger.info("ho letto correttamente il dicom di %s", f)
+    f_images = files[0]
+    logger.info("ho letto %s", f_images)
+    d_s = pydicom.read_file(f_images)
+    logger.info("ho letto correttamente il dicom di %s", f_images)
 
     status_mass = dicomsaver(d_s, data["image file path"], end_path_mass)
 
     # ora facciamo la maschera
-    dir_masks = dir_reader(dir_mask, ["ROI mask file path"])
+    dir_masks = dir_reader(dir_mask, data["ROI mask file path"])
     files = search_files(dir_masks, ".dcm")
     logger.info("sto cercando i dicom in %s", dir_masks)
+    try:
+        assert len(files) > 0
+    except Exception as e_error:
+        raise Exception(
+            "Nella directory {} delle maschere non ci sono file".format(dir_masks)
+        ) from e_error
 
     try:
         assert len(files) <= 2
-        logger.debug("ho verificato che nella cartella vi è al più due immagini")
+        # delle volte nel TCIA mettono le roi e le maschere in cartelle separate
+        logger.debug("ho verificato che nella cartella vi sono al più due immagini")
 
-    except:
+    except Exception as e_error:
         raise Exception(
-            "Nella directory %s delle maschere ci sono più masks", dir_masks
-        )
+            "Nella directory {} delle maschere ci sono più masks".format(dir_masks)
+        ) from e_error
 
-    for f in files:
+    for f_masks in files:
 
-        d_g = pydicom.dcmread(f)
-        logger.debug("ho letto correttamente il dicom di %s", f)
+        d_g = pydicom.dcmread(f_masks)
+        logger.debug("ho letto correttamente il dicom di %s", f_masks)
         good = d_g.SeriesDescription
         if good == "ROI mask images":
 
-            d_s_mask = pydicom.read_file(f)
-            logger.debug("in %s vi è una maschera", f)
+            d_s_mask = pydicom.read_file(f_masks)
+            logger.debug("in %s vi è una maschera", f_masks)
+            dicomsaver(d_s_mask, data["image file path"], end_path_mask)
+
         elif good == "cropped images":
-            logger.debug("in %s vi è una ROI", f)
+            logger.debug("in %s vi è una ROI", f_masks)
 
         else:
-            raise Exception(f"{f} File sconosciuto!")
+            raise Exception(f"{f_masks} File sconosciuto!")
 
-    status_mask = dicomsaver(d_s_mask, data["ROI mask file path"], end_path_mask)
-
-    return status_mass, status_mask
+    return status_mass
 
 
-###
+
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Legge i DICOM CBIS-DDSM scaricati dal TCIA. "
+    )
+    parser.add_argument(
+        "-csv",
+        "--csvpath",
+        metavar="",
+        help="percorso della cartella dove si trovano i csv",
+        default="",
+    )
+    parser.add_argument(
+        "-t",
+        "--test",
+        action="store_true",
+        help="si usa il dataset di testing",
+    )
+    requiredNamed = parser.add_argument_group("Parametri obbligatori")
+    requiredNamed.add_argument(
+        "-mp",
+        "--masspath",
+        metavar="",
+        help="percorso della cartella dove si trovano i dicom delle masse",
+        required=True,
+    )
+    requiredNamed.add_argument(
+        "-msk",
+        "--maskpath",
+        metavar="",
+        help="percorso della cartella dove si trovano i dicom delle maschere",
+        required=True,
+    )
+    requiredNamed.add_argument(
+        "-ep",
+        "--endpath",
+        metavar="",
+        help="percorso della cartella dove viene salvato il nuovo dataset",
+        required=True,
+    )
+    args = parser.parse_args()
 
     # Definiamo i path e il dataframe
 
-    DATAPATH_MASK_TRAIN = "E:/massdata"  # modificare con il proprio path
-    DATAPATH_MASS_TRAIN = "E:/massdatafull"  # modificare con il proprio path
+    DATAPATH_MASK_TRAIN = args.maskpath
+    DATAPATH_MASS_TRAIN = args.masspath
     MAIN_DIRECTORY = "CBIS-DDSM"
 
-    CSV_PATH = "C:/Users/pensa/Desktop/CAE/csvs"
-    CSV_FILENAME = "mass_case_description_train_set.csv"
+    CSV_PATH = args.csvpath
+    if args.test:
+        CSV_FILENAME = "mass_case_description_test_set.csv"
+    else:
+        CSV_FILENAME = "mass_case_description_train_set.csv"
+
     df = pd.read_csv(os.path.join(CSV_PATH, CSV_FILENAME))
 
     datas = []
@@ -154,7 +241,8 @@ if __name__ == "__main__":
     DIRECTORY_MASS = os.path.join(DATAPATH_MASS_TRAIN, MAIN_DIRECTORY)
     DIRECTORY_MASK = os.path.join(DATAPATH_MASK_TRAIN, MAIN_DIRECTORY)
 
-    ENDPATH = "E:/Mass_data_new"
+    ENDPATH = args.endpath
+
     if not os.path.exists(ENDPATH):
         os.makedirs(ENDPATH)
     logger.info("creato il path %s", ENDPATH)

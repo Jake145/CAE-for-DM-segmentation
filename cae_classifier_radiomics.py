@@ -54,6 +54,14 @@ if __name__ == "__main__":
         default=100,
     )
     parser.add_argument(
+        "-pca",
+        "--principalcomponents",
+        metavar="",
+        type=int,
+        help="Numero di componenti principali",
+        default=3,
+    )
+    parser.add_argument(
         "-s",
         "--save",
         action="store_true",
@@ -147,7 +155,7 @@ if __name__ == "__main__":
     for index, var in enumerate(exp_var_cumsum):
         print("if n_components= %d,   variance=%f" % (index, np.round(var, 3)))
 
-    pca = PCA(n_components=3)
+    pca = PCA(n_components=args.principalcomponents)
     feature_train = pca.fit_transform(feature_train)
     feature_test = pca.transform(feature_test)
 
@@ -225,7 +233,7 @@ if __name__ == "__main__":
         optimizer="adam",
         loss={
             "decoder_output": "binary_crossentropy",
-            "classification_output": "categorical_crossentropy",
+            "classification_output": "binary_crossentropy",
         },
         metrics={
             "decoder_output": "MAE",
