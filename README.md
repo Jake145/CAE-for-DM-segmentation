@@ -5,10 +5,10 @@ For all the nets there is a colab notebook and specific python files.
 # Special package
 Included is a specific package with the models, classes and helper functions. These range from simple data processing and I/O operations to class activation map visualization.
 # Dataset
-The smaller dataset is included, while the TCIA dataset can be downloaded from the link above and preprocessed first with dycomdatagen.py to create .png datasets and feature_extraction.py to extract the radiomic features, which are in Pandabigframe.csv. For ease a shared google drive will be included to run the notebook version.
-In these scripts multitreading and multiprocessing is used to accelerate the operations.
+The smaller dataset is included, while the TCIA dataset can be downloaded from the link above and preprocessed first with dycomdatagen.py to create .png datasets and feature_extraction.py to extract the radiomic features, which are in Pandatabigframe.csv. For ease a shared google drive will be included to run the notebook version.
+In these scripts multithreading and multiprocessing are used to accelerate the operations.
 # Models
-There are three proposed models, a simple one, one with added regularization and finally a unet. Models can be further optimized by modifing the TUNER.ipynb notebook, in which Bayesian optimization is used.
+There are three proposed models, a simple one, one with added regularization and finally a unet. For each model, there is a version that uses just the image pixel values for discrimination and one that also takes teh extracted radiomic features. Models can be further optimized by modifing the TUNER.ipynb notebook, in which Bayesian optimization is used.
 # Build Status, Documentation and Package
 [![Build Status](https://www.travis-ci.com/Jake145/CAE-for-DM-segmentation.svg?branch=main)](https://www.travis-ci.com/Jake145/CAE-for-DM-segmentation)
 [![Documentation Status](https://readthedocs.org/projects/cae/badge/?version=latest)](https://cae.readthedocs.io/en/latest/?badge=latest)
