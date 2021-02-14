@@ -4,7 +4,7 @@ The third one is and attempt to adapt the net to ta very large dataset from TCIA
 For all the nets there is a colab notebook and specific python files.
 # Special package
 Included is a specific package with the models, classes and helper functions. These range from simple data processing and I/O operations to class activation map visualization.
-#Dataset
+# Dataset
 The smaller dataset is included, while the TCIA dataset can be downloaded from the link above and preprocessed first with dycomdatagen.py to create .png datasets and feature_extraction.py to extract the radiomic features, which are in Pandabigframe.csv. For ease a shared google drive will be included to run the notebook version.
 In these scripts multitreading and multiprocessing is used to accelerate the operations.
 # Models
