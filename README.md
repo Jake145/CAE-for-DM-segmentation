@@ -11,3 +11,4 @@ In these scripts multitreading and multiprocessing is used to accelerate the ope
 There are three proposed models, a simple one, one with added regularization and finally a unet. Models can be further optimized by modifing the TUNER.ipynb notebook, in which Bayesian optimization is used.
 [![Build Status](https://www.travis-ci.com/Jake145/CAE-for-DM-segmentation.svg?branch=main)](https://www.travis-ci.com/Jake145/CAE-for-DM-segmentation)
 [![Documentation Status](https://readthedocs.org/projects/cae/badge/?version=latest)](https://cae.readthedocs.io/en/latest/?badge=latest)
+[![PyPi version](https://pypip.in/v/$REPO/badge.png)](https://crate.io/packages/$REPO/)
