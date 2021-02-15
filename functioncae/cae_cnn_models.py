@@ -201,7 +201,7 @@ def make_model_rad_unet(shape_tensor=(124, 124, 1), feature_dim=(3,)):      #pyl
     den = Dense(16, activation="relu")(flat)
 
     classification_output = Dense(
-        2, activation="softmax", name="classification_output"
+        2, activation="sigmoid", name="classification_output"
     )(den)
 
     u6 = Conv2DTranspose(128, (2, 2), strides=(2, 2), padding="same")(c5)

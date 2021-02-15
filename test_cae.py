@@ -316,33 +316,28 @@ class TestCAE(unittest.TestCase):  # pylint:disable=R0902
         in ingresso in batch con data augmentation
         """
         train_datagen = ImageDataGenerator(horizontal_flip=True, fill_mode="reflect")
-        transform = train_datagen.get_random_transform((124, 124))
+        transform = train_datagen.get_random_transform(self.shape_im)
         feats = [1, 2, 3]
 
-        images_, masks_, class_ = caehelper.read_dataset(
-            self.temp_dir.name,
-            "png",
-            "benign",
-            "malign",
-            x_id="_resized",
-            y_id="_mass_mask",
+        images_, masks_, class_ = (
+            np.array([self.image_ones, self.image_zeros]),
+            np.array([self.image_mask, self.image_square]),
+            np.array([0, 1]),
         )
 
-        images_big, masks_big, class_big = caehelper.read_dataset_big(
-            self.temp_dir_big_mass.name,
-            self.temp_dir_big_masks.name,
-            "benign",
-            "malign",
-            ext="png",
+        images_big, masks_big, class_big = (
+            np.array([self.path_1_big, self.path_2_big]),
+            np.array([self.path_3_big, self.path_4_big]),
+            np.array([0, 1]),
         )
 
         gen1 = classes_cae.MassesSequence(
-            images_, masks_, class_, train_datagen, batch_size=1, shape=(124, 124)
+            images_, masks_, class_, train_datagen, batch_size=1, shape=self.shape_im
         )
         np.testing.assert_array_equal(gen1.images, images_)
         np.testing.assert_array_equal(gen1.masks, masks_)
         np.testing.assert_array_equal(gen1.label_array, class_)
-        np.testing.assert_array_equal(gen1.shape, (124, 124))
+        np.testing.assert_array_equal(gen1.shape, self.shape_im)
         np.testing.assert_array_equal(gen1.process(images_[0], transform), images_[0])
         self.assertEqual(gen1.batch_size, 1)
         self.assertEqual(len(gen1), 2)
@@ -354,12 +349,12 @@ class TestCAE(unittest.TestCase):  # pylint:disable=R0902
             feats,
             train_datagen,
             batch_size=1,
-            shape=(124, 124),
+            shape=self.shape_im,
         )
         np.testing.assert_array_equal(gen2.images, images_)
         np.testing.assert_array_equal(gen2.masks, masks_)
         np.testing.assert_array_equal(gen2.label_array, class_)
-        np.testing.assert_array_equal(gen2.shape, (124, 124))
+        np.testing.assert_array_equal(gen2.shape, self.shape_im)
         np.testing.assert_array_equal(gen2.features, feats)
 
         np.testing.assert_array_equal(gen2.process(images_[0], transform), images_[0])
