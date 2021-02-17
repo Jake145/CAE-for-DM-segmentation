@@ -166,6 +166,8 @@ if __name__ == "__main__":
 
     Pandatabigframe = pd.read_csv(args.dataframe)
 
+    Pandatabigframe.sort_values(by='Unnamed: 0')
+
     Pandatabigframe = Pandatabigframe.iloc[:, 1:]
 
     (

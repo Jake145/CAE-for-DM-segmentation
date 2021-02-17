@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='CAE-Jake_HP_145',
-    version='1.1',
+    version='1.2',
     author='Jake Harold Pensavalle',
 description="CAE helper functions, models and classes",url='https://github.com/Jake145/CAE-for-DM-segmentation',
     long_description=long_description,

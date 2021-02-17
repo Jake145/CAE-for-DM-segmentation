@@ -168,7 +168,7 @@ def read_dataset(        # pylint: disable=R0913
 
 
 def read_dataset_big(
-    dataset_path_mass, dataset_path_mask, benign_label, malign_label, ext="png"
+    dataset_path_mass, dataset_path_mask, benign_label, malign_label, ext="png", sort=True,
 ):
     """Versione di read_dataset per il dataset del TCIA.
     Data la cartella con le maschere e le immagini,
@@ -204,7 +204,8 @@ def read_dataset_big(
 
     if masknames == []:
         raise Exception("Immagini o path non trovati!")
-
+    if sort:
+        fnames.sort()
     images_ = []
     masks_ = []
     class_labels = []
