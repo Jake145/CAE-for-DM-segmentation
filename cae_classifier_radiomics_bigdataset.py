@@ -3,8 +3,8 @@ import argparse
 import concurrent.futures
 import logging
 import os
-from skimage.io import imread
-from skimage.transform import resize
+from functools import partial
+
 import keras
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,6 +12,8 @@ import pandas as pd
 import tensorflow as tf
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import to_categorical
+from skimage.io import imread
+from skimage.transform import resize
 from sklearn.decomposition import PCA
 from sklearn.metrics import auc, roc_curve
 from sklearn.model_selection import train_test_split
@@ -31,7 +33,7 @@ logger.addHandler(file_handler)
 
 
 def dice_big(  # pylint: disable=R0913
-    list_, k=1, mod=model_rad, shape=(1024, 768, 1), alpha=0.1, lists=dices
+    list_, mod, lists, k=1, shape=(1024, 768, 1), alpha=0.1,
 ):
     """calcola il dice di una singola immagine
     :type list_: lista
@@ -72,7 +74,7 @@ def dice_big(  # pylint: disable=R0913
 
 
 def ypred_creator(  # pylint: disable=R0913
-    list_, mod=model_rad, list_app=ypred, shape=(1024, 768, 1)
+    list_, mod, list_app, shape=(1024, 768, 1)
 ):
     """calcola le predizioni di classificazione
     :type list_: lista
@@ -128,14 +130,6 @@ if __name__ == "__main__":
         default=10,
     )
     parser.add_argument(
-        "-stp",
-        "--steps",
-        metavar="",
-        type=int,
-        help="step per epoca",
-        default=10,
-    )
-    parser.add_argument(
         "-df",
         "--dataframe",
         metavar="",
@@ -151,7 +145,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     DATAPATH = args.datapath
-    MAINDIR = "Mass_data_new"
+    MAINDIR = "Test2"
     MASSTRAIN = "Train_data"
     MASKTRAINRES = "resized_masks"
     BENIGN_LABEL = "BENIGN"
@@ -254,6 +248,7 @@ if __name__ == "__main__":
         class_train_rad_big_tr,
         feature_train_big_tr,
         train_datagen,
+        batch_size=10,
     )
 
     batch = mass_gen_rad_big[67]
@@ -263,6 +258,7 @@ if __name__ == "__main__":
         masks_train_rad_big_val,
         class_train_rad_big_val,
         feature_train_big_val,
+        batch_size=10,
     )
 
     batch = Validation_data[0]
@@ -293,7 +289,7 @@ if __name__ == "__main__":
 
     HISTORY_RAD = model_rad.fit(
         mass_gen_rad_big,
-        steps_per_epoch=args.steps,
+        steps_per_epoch=len(mass_gen_rad_big),
         epochs=args.epocs,
         validation_data=Validation_data,
         callbacks=[model_checkpoint_callback],
@@ -307,13 +303,14 @@ if __name__ == "__main__":
     dices = []
 
     listdicer = []
+
     for i, _ in enumerate(images_test_rad_big):
         listdicer.append(
             [images_test_rad_big[i], feature_test_bigg[i], masks_test_rad_big[i]]
         )
-
+    dice_big_p=partial(dice_big,mod=model_rad,lists=dices)
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.map(dice_big, listdicer)
+        future = executor.map(dice_big_p, listdicer)
         print(future)
 
     dices = np.array(dices)
@@ -326,8 +323,9 @@ if __name__ == "__main__":
     for i, _ in enumerate(images_test_rad_big):
         listrocer.append([images_test_rad_big[i], feature_test_bigg[i]])
 
+    ypred_creator_p=partial(ypred_creator,mod=model_rad,list_app=ypred)
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.map(ypred_creator, listrocer)
+        future = executor.map(ypred_creator_p, listrocer)
         print(future)
 
     fpr, tpr, thresholds = roc_curve(
