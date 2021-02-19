@@ -215,6 +215,7 @@ class TestCAE(unittest.TestCase):  # pylint:disable=R0902
         )
         self.assertEqual(len(images_), len(masks_))
         self.assertEqual(len(images_), len(class_))
+        np.testing.assert_array_equal(class_,np.array([0,1]))
         self.assertNotEqual(list(class_), [0, 0])
         self.assertNotEqual(list(class_), [1, 1])
 
@@ -259,6 +260,7 @@ class TestCAE(unittest.TestCase):  # pylint:disable=R0902
         )
         self.assertEqual(len(images_), len(masks_))
         self.assertEqual(len(images_), len(class_))
+        np.testing.assert_array_equal(class_,np.array([0,1]))
         self.assertNotEqual(list(class_), [0, 0])
         self.assertNotEqual(list(class_), [1, 1])
 

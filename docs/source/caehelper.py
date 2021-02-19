@@ -112,7 +112,7 @@ def unit_masks(file_name, data_path, ext1, ext2, endpath):
 
 
 def read_dataset(        # pylint: disable=R0913
-    dataset_path, ext, benign_label, malign_label, x_id="_resized", y_id="_mass_mask"
+    dataset_path, ext, benign_label, malign_label, x_id="_resized", y_id="_mass_mask", sort=True
 ):
     """Data la cartella con le maschere e le immagini, restituisce i vettori con le immagini,
     le maschere e le classi. Restituisce i vettori come tensori da dare alla rete.
@@ -138,6 +138,8 @@ def read_dataset(        # pylint: disable=R0913
     :type malign_label: str
     :param malign_label: identificativo delle masse maligne
 
+    :type sort: bool
+    :param sort: ordina le maschere con indice crescente
     :returns: restituisce i vettori con le immagini, le maschere e le classi
     :rtype: array
 
@@ -153,6 +155,8 @@ def read_dataset(        # pylint: disable=R0913
     images_ = []
     masks_ = []
     class_labels = []
+    if sort:
+        fnames.sort()
     for fname in fnames:
         images_.append(plt.imread(fname)[1:, 1:, np.newaxis])
         masks_.append(plt.imread(fname.replace(x_id, y_id))[1:, 1:, np.newaxis])
@@ -168,7 +172,7 @@ def read_dataset(        # pylint: disable=R0913
 
 
 def read_dataset_big(
-    dataset_path_mass, dataset_path_mask, benign_label, malign_label, ext="png"
+    dataset_path_mass, dataset_path_mask, benign_label, malign_label, ext="png", sort=True,
 ):
     """Versione di read_dataset per il dataset del TCIA.
     Data la cartella con le maschere e le immagini,
@@ -183,6 +187,8 @@ def read_dataset_big(
     :type ext: str
     :param ext: stringa identificativa dell'estenzione delle immagini e maschere
 
+    :type sort: bool
+    :param sort: ordina le maschere con indice crescente
 
     :returns: restituisce i vettori con i path delle immagini, le maschere e le classi
     :rtype: array
@@ -204,7 +210,8 @@ def read_dataset_big(
 
     if masknames == []:
         raise Exception("Immagini o path non trovati!")
-
+    if sort:
+        fnames.sort()
     images_ = []
     masks_ = []
     class_labels = []

@@ -33,7 +33,12 @@ logger.addHandler(file_handler)
 
 
 def dice_big(  # pylint: disable=R0913
-    list_, mod, lists, k=1, shape=(1024, 768, 1), alpha=0.1,
+    list_,
+    mod,
+    lists,
+    k=1,
+    shape=(1024, 768, 1),
+    alpha=0.1,
 ):
     """calcola il dice di una singola immagine
     :type list_: lista
@@ -73,9 +78,7 @@ def dice_big(  # pylint: disable=R0913
     return dice
 
 
-def ypred_creator(  # pylint: disable=R0913
-    list_, mod, list_app, shape=(1024, 768, 1)
-):
+def ypred_creator(list_, mod, list_app, shape=(1024, 768, 1)):  # pylint: disable=R0913
     """calcola le predizioni di classificazione
     :type list_: lista
     :param list_: lista con il path delle immagini e l'array di feature estratte
@@ -94,16 +97,13 @@ def ypred_creator(  # pylint: disable=R0913
 
     """
     input_ = resize(imread(str(list_[0])), shape)
-    output_ = mod.predict([input_[np.newaxis, ...], list_[1][np.newaxis, ...]])[
-        1
-    ][
-        0
-    ]
+    output_ = mod.predict([input_[np.newaxis, ...], list_[1][np.newaxis, ...]])[1][0]
     list_app.append(output_)
     return output_
 
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser(
         description="Allena la rete con classificazione radiomica e grande dataset. "
     )
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         "--datapath",
         metavar="",
         help="percorso della cartella dove vi sono le cartelle con le immagini e le maschere",
-        default="E:",
+        default="E:/Test2",
     )
     parser.add_argument(
         "-cp",
@@ -142,17 +142,37 @@ if __name__ == "__main__":
         action="store_true",
         help="salva il modello al fine dell'allenamento'",
     )
+    parser.add_argument(
+        "-t",
+        "--tensor",
+        help="Tensore di Reshape, scrivi tre interi separati da spazio",
+        metavar="",
+        nargs="+",
+        type=int,
+        default=[
+            1024,
+            768,
+        ],
+    )
+    parser.add_argument(
+        "-b",
+        "--batch",
+        metavar="",
+        type=int,
+        help="dimensione della batch",
+        default=10,
+    )
+
     args = parser.parse_args()
 
     DATAPATH = args.datapath
-    MAINDIR = "Test2"
     MASSTRAIN = "Train_data"
     MASKTRAINRES = "resized_masks"
     BENIGN_LABEL = "BENIGN"
     MALIGN_LABEK = "MALIGNANT"
 
-    path_mass_tr = os.path.join(DATAPATH, MAINDIR, MASSTRAIN)
-    path_masks_resized = os.path.join(DATAPATH, MAINDIR, MASKTRAINRES)
+    path_mass_tr = os.path.join(DATAPATH, MASSTRAIN)
+    path_masks_resized = os.path.join(DATAPATH, MASKTRAINRES)
 
     images_big_train, masks_big_train, class_big_train = caehelper.read_dataset_big(
         path_mass_tr, path_masks_resized, BENIGN_LABEL, MALIGN_LABEK
@@ -160,7 +180,7 @@ if __name__ == "__main__":
 
     Pandatabigframe = pd.read_csv(args.dataframe)
 
-    Pandatabigframe.sort_values(by='Unnamed: 0')
+    Pandatabigframe.sort_values(by="Unnamed: 0")
 
     Pandatabigframe = Pandatabigframe.iloc[:, 1:]
 
@@ -248,7 +268,8 @@ if __name__ == "__main__":
         class_train_rad_big_tr,
         feature_train_big_tr,
         train_datagen,
-        batch_size=10,
+        batch_size=args.batch,
+        shape_tensor=tuple(args.tensor),
     )
 
     batch = mass_gen_rad_big[67]
@@ -258,12 +279,13 @@ if __name__ == "__main__":
         masks_train_rad_big_val,
         class_train_rad_big_val,
         feature_train_big_val,
-        batch_size=10,
+        batch_size=args.batch,
+        shape_tensor=tuple(args.tensor),
     )
 
-    batch = Validation_data[0]
-
-    model_rad = cae_cnn_models.make_model_rad_big_unet(shape_tensor=(1024, 768, 1))
+    model_rad = cae_cnn_models.make_model_rad_big_unet(
+        shape_tensor=batch[0][0].shape[1:], feature_dim=batch[0][1].shape[1:]
+    )
     model_rad.summary()
     MAINPATH = args.checkpoint
     FILENAME = "big_weights.{epoch:02d}-{val_loss:.2f}.h5"
@@ -308,7 +330,7 @@ if __name__ == "__main__":
         listdicer.append(
             [images_test_rad_big[i], feature_test_bigg[i], masks_test_rad_big[i]]
         )
-    dice_big_p=partial(dice_big,mod=model_rad,lists=dices)
+    dice_big_p = partial(dice_big, mod=model_rad, lists=dices)
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future = executor.map(dice_big_p, listdicer)
         print(future)
@@ -323,7 +345,7 @@ if __name__ == "__main__":
     for i, _ in enumerate(images_test_rad_big):
         listrocer.append([images_test_rad_big[i], feature_test_bigg[i]])
 
-    ypred_creator_p=partial(ypred_creator,mod=model_rad,list_app=ypred)
+    ypred_creator_p = partial(ypred_creator, mod=model_rad, list_app=ypred)
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future = executor.map(ypred_creator_p, listrocer)
         print(future)

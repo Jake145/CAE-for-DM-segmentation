@@ -101,6 +101,7 @@ if __name__ == "__main__":
     extractor.enableFeatureClassByName("glszm")
     extractor.enableFeatureClassByName("ngtdm")
 
+    fnames.sort()
     dataframe = {
         f.replace(args.datapath, ""): extractor.execute(
             caehelper.read_pgm_as_sitk(f),
