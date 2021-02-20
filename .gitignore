@@ -105,3 +105,6 @@ venv.bak/
 
 # log files
 **/*.log
+# Models and checkpoints
+/good_models
+/models
