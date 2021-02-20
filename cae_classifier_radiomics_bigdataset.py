@@ -69,11 +69,7 @@ def dice_big(  # pylint: disable=R0913
     )
     true = resize(imread(str(list_[2])), shape).squeeze()
     intersection = np.sum(pred[true == k]) * 2.0
-    try:
-        dice = intersection / (np.sum(pred.squeeze()) + np.sum(true))
-    except ZeroDivisionError:
-        logger.exception("provato a dividere per zero!")
-    logger.info("calcolato correttamente il dice ottenendo %d", dice)
+    dice = intersection / (np.sum(pred.squeeze()) + np.sum(true))
     lists.append(dice)
     return dice
 
