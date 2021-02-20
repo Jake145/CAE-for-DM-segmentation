@@ -162,6 +162,14 @@ if __name__ == "__main__":
         help="dimensione della batch",
         default=10,
     )
+    parser.add_argument(
+        "-pca",
+        "--principalcomponents",
+        metavar="",
+        type=int,
+        help="Numero di componenti principali",
+        default=3,
+    )
 
     args = parser.parse_args()
 
@@ -229,7 +237,7 @@ if __name__ == "__main__":
     for index, var in enumerate(exp_var_cumsum):
         print("if n_components= %d,   variance=%f" % (index, np.round(var, 3)))
 
-    pca = PCA(n_components=3)
+    pca = PCA(n_components=args.principalcomponents)
     feature_train_bigg = pca.fit_transform(feature_train_bigg)
     feature_test_bigg = pca.transform(feature_test_bigg)
 
@@ -272,7 +280,7 @@ if __name__ == "__main__":
         shape_tensor=tuple(args.tensor),
     )
 
-    batch = mass_gen_rad_big[67]
+    #batch = mass_gen_rad_big[67]
 
     Validation_data = classes_cae.ValidatorGenerator(
         images_train_rad_big_val,
@@ -284,7 +292,7 @@ if __name__ == "__main__":
     )
 
     model_rad = cae_cnn_models.make_model_rad_big_unet(
-        shape_tensor=batch[0][0].shape[1:], feature_dim=batch[0][1].shape[1:]
+        shape_tensor=tuple(args.tensor), feature_dim=(args.principalcomponents,)
     )
     model_rad.summary()
     MAINPATH = args.checkpoint
@@ -330,7 +338,7 @@ if __name__ == "__main__":
         listdicer.append(
             [images_test_rad_big[i], feature_test_bigg[i], masks_test_rad_big[i]]
         )
-    dice_big_p = partial(dice_big, mod=model_rad, lists=dices)
+    dice_big_p = partial(dice_big, mod=model_rad, lists=dices,shape=tuple(args.tensor))
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future = executor.map(dice_big_p, listdicer)
         print(future)
@@ -345,7 +353,7 @@ if __name__ == "__main__":
     for i, _ in enumerate(images_test_rad_big):
         listrocer.append([images_test_rad_big[i], feature_test_bigg[i]])
 
-    ypred_creator_p = partial(ypred_creator, mod=model_rad, list_app=ypred)
+    ypred_creator_p = partial(ypred_creator, mod=model_rad, list_app=ypred,shape=tuple(args.tensor))
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future = executor.map(ypred_creator_p, listrocer)
         print(future)
