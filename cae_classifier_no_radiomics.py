@@ -77,13 +77,8 @@ if __name__ == "__main__":
         height_shift_range=0.2,
         shear_range=0.2,
         zoom_range=0.2,
-        horizontal_flip=True,
-        vertical_flip=True,
-        fill_mode="reflect",
     )
 
-    transform = train_datagen.get_random_transform((124, 124))
-    # transform
     (
         mass_train,
         mass_test,
@@ -178,7 +173,7 @@ if __name__ == "__main__":
     plt.subplot(1, 3, 2)
     plt.imshow(ytrain.squeeze())
     plt.subplot(1, 3, 3)
-    plt.imshow(caehelper.otsu(model.predict(xtrain)[0].squeeze()))
+    plt.imshow(model.predict(xtrain)[0].squeeze()>0.1)
 
     IDX = 16
     xtest = mass_test[IDX][np.newaxis, ...]
@@ -190,15 +185,15 @@ if __name__ == "__main__":
     plt.subplot(1, 3, 2)
     plt.imshow(ytest.squeeze())
     plt.subplot(1, 3, 3)
-    plt.imshow(caehelper.otsu(model.predict(xtest)[0].squeeze()))
+    plt.imshow(model.predict(xtest)[0].squeeze()>0.1)
 
     dicetr = caehelper.dice_vectorized(
         mask_train,
-        caehelper.otsu(model.predict(mass_train)[0]),
+        model.predict(mass_train)[0]>0.1,
     ).mean()
 
     docetest = caehelper.dice_vectorized(
-        mask_test, caehelper.otsu(model.predict(mass_test)[0])
+        mask_test, model.predict(mass_test)[0]>0.1
     ).mean()
 
     hmap = caehelper.heatmap(mass_test[18], model)

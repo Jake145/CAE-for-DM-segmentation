@@ -122,8 +122,6 @@ def dycomrconverter(             # pylint: disable=R0915,R0914
     try:
         assert len(files) == 1
         logger.debug("ho verificato che nella cartella vi è una sola immagine")
-        # questo va bene nel nostro caso specifico. Nel caso generale sarebbe meglio
-        # guardare il nome del file dal dicom, ma questo modo è più rapido
     except Exception as e_error:
         raise Exception(
             "Nella directory {} delle singole immagini ci sono più file".format(dir_masses)
@@ -267,7 +265,6 @@ if __name__ == "__main__":
         end_path_mask=ENDPATH_2,
     )
 
-    ##multi thread
     start = time.perf_counter()
     with concurrent.futures.ThreadPoolExecutor() as executor:
 

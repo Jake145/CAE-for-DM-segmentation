@@ -166,12 +166,7 @@ if __name__ == "__main__":
         height_shift_range=0.2,
         shear_range=0.2,
         zoom_range=0.2,
-        horizontal_flip=True,
-        vertical_flip=True,
-        fill_mode="reflect",
     )
-
-    transform = train_datagen.get_random_transform((124, 124))
 
     (
         mass_train_rad_tr,

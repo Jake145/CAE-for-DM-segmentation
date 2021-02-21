@@ -180,14 +180,6 @@ if __name__ == "__main__":
         for i, _ in enumerate(images_big_train)
     ]
 
-    # for item in images_masks:
-    #    try:
-    #        NAME = caehelper.radiomic_dooer(
-    #            item, ENDPATH_TR, 255, extractor
-    #        )
-    #    except: #pylint: disable=W0702
-    #        logger.debug("un file errato: %s",PATH_MASS_TR)
-
     rad_dooer = partial(
         caehelper.radiomic_dooer, endpath=ENDPATH_TR, lab=255, extrc=extractor
     )
