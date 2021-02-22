@@ -272,4 +272,4 @@ if __name__ == "__main__":
         print(results)
     end = time.perf_counter()
 
-    logger.info("Elapsed time for MT:%d", end - start)
+    logger.info("Elapsed time for MT:%.2f", end - start)

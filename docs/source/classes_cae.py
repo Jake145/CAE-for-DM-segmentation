@@ -27,14 +27,23 @@ class MassesSequence(keras.utils.Sequence):
     ):
         """
 
-        Parametri:
+        :type images: np.array
+        :param images: immagini
 
-        images (np.array): immagini
-        masks (np.array): maschere
-        label_array (np.array): label di classificazione (benigno o maligno)
-        batch_size (int): dimensione della batch
-        img_gen (ImageDatagenerator): istanza della classe ImageDatagenerator
-        shape (tuple): dimensione delle immagini. Di default (124, 124)
+        :type masks: np.array
+        :param masks: maschere
+
+        :type label_array: np.array
+        :param label_array: label di classificazione (benigno o maligno)
+
+        :type batch_size: int
+        :param batch_size: dimensione della batch
+
+        :type img_en: ImageDatagenerator
+        :param img_gen: istanza della classe ImageDatagenerator
+
+        :type shape: tuple
+        :type shape: dimensione delle immagini. Di default (124, 124)
 
         """
         self.images, self.masks, self.label_array = images, masks, label_array
@@ -98,15 +107,29 @@ class MassesSequenceRadiomics(keras.utils.Sequence):
     ):
         """Inizializza la sequenza
 
-        Parametri::
 
-        images (np.array): immagini
-        masks (np.array): maschere
-        label_array (np.array): label di classificazione
-        features (np.array): feature ottenute con pyradiomics
-        batch_size (int): dimensioni della batch
-        img_gen (ImageDatagenerator): istanza di ImageDatagenerator
-        shape (tuple): shape dell'immagine. Di Default (124, 124)
+
+        :type images: np.array
+        :param images: immagini
+
+        :type masks: np.array
+        :param masks: maschere
+
+        :type label_array: np.array
+        :param label_array: label di classificazione (benigno o maligno)
+
+        :type features: np.array
+        :param features: feature ottenute con pyradiomics
+
+        :type batch_size: int
+        :param batch_size: dimensione della batch
+
+        :type img_en: ImageDatagenerator
+        :param img_gen: istanza della classe ImageDatagenerator
+
+        :type shape: tuple
+        :type shape: dimensione delle immagini. Di default (124, 124)
+
 
         """
         self.images, self.masks, self.label_array, self.features = (
@@ -187,15 +210,29 @@ class MassesSequenceRadiomicsBig(keras.utils.Sequence):  # pylint: disable=R0902
     ):
         """Inizializza la sequenza
 
-        Parametri:
+        :type images: np.array
+        :param images: path delle immagini
 
-        images (np.array): path delle immagini
-        masks (np.array): path delle maschere
-        label_array (np.array): label di classificazione
-        features (np.array): array di feature dopo la pca
-        batch_size (int): dimensione della batch
-        img_gen (ImageDatagenerator): Una istanza della classe ImageDatagenerator
-        shape (tuple): shape dell'immagine.
+        :type masks: np.array
+        :param masks: path delle maschere
+
+        :type label_array: np.array
+        :param label_array: label di classificazione (benigno o maligno)
+
+        :type features: np.array
+        :param features: feature ottenute con pyradiomics
+
+        :type batch_size: int
+        :param batch_size: dimensione della batch
+
+        :type img_en: ImageDatagenerator
+        :param img_gen: istanza della classe ImageDatagenerator
+
+        :type shape: tuple
+        :type shape: dimensione delle immagini. Di default (2048, 1536)
+
+        :type shape_tensor: tuple
+        :type shape_tensor: dimensione del tensore di reshape. Di default (2048,1536,1)
 
         """
         self.images, self.masks, self.label_array, self.features = (
@@ -276,15 +313,26 @@ class ValidatorGenerator(keras.utils.Sequence):
     ):
         """Inizializza la sequenza
 
-        Parametri:
+        :type images: np.array
+        :param images: path delle immagini
 
-        images (np.array): path delle immagini
-        masks (np.array): path delle maschere
-        label_array (np.array): label di classificazione
-        features (np.array): array di feature dopo la pca
-        batch_size (int): dimensione della batch
-        img_gen (ImageDatagenerator): Una istanza della classe ImageDatagenerator
-        shape (tuple): shape dell'immagine.
+        :type masks: np.array
+        :param masks: path delle maschere
+
+        :type label_array: np.array
+        :param label_array: label di classificazione (benigno o maligno)
+
+        :type features: np.array
+        :param features: feature ottenute con pyradiomics
+
+        :type batch_size: int
+        :param batch_size: dimensione della batch
+
+        :type shape: tuple
+        :type shape: dimensione delle immagini. Di default (2048, 1536)
+
+        :type shape_tensor: tuple
+        :type shape_tensor: dimensione del tensore di reshape. Di default (2048,1536,1)
 
         """
         self.images, self.masks, self.label_array, self.features = (

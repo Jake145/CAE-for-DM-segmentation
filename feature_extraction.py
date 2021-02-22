@@ -89,7 +89,7 @@ def resizer(list_, endpath, pattern):
         )
     end_time = time.perf_counter()
 
-    logger.info("time elapsed: %d", end_time - start_time)
+    logger.info("time elapsed: %.2f", end_time - start_time)
     return filename
 
 
@@ -169,7 +169,7 @@ if __name__ == "__main__":
         print(results)
     end = time.perf_counter()
 
-    logger.info("Elapsed time for MT: %d", end - start)
+    logger.info("Elapsed time for MT: %.2f", end - start)
 
     images_big_train, masks_big_train, class_big_train = caehelper.read_dataset_big(
         PATH_MASS_TR, PATH_MASK_RESIZED, BENIGN_LABEL, MALIGN_LABEL
@@ -192,7 +192,7 @@ if __name__ == "__main__":
         print(results)
     end = time.perf_counter()
 
-    logger.info("Elapsed time for MT: %d", end - start)
+    logger.info("Elapsed time for MT: %.2f", end - start)
 
     new_dict = {}
     new_dict_up = partial(caehelper.dict_update_radiomics, dictionary=new_dict)
@@ -209,7 +209,7 @@ if __name__ == "__main__":
         print(results)
     end = time.perf_counter()
 
-    logger.info("Elapsed time for MT: %d", end - start)
+    logger.info("Elapsed time for MT: %.2f", end - start)
 
     import pandas as pd
 

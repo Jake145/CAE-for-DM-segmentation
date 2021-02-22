@@ -31,10 +31,11 @@ def make_model_rad_regulizer(
 ):  # pylint: disable=R0915
     """Modello CAE tratto da Liu et al, ma modificato con dropout, maxpooling e upsampling.
     Permette inoltre la classificazione delle masse grazie a layer fc.
-    type shape_tensor: array
+
+    type shape_tensor: tuple
     param shape_tensor: dimensione dell'immagine in ingresso
 
-    type feature_dim: array
+    type feature_dim: tuple
     param feature_dim: dimensione dell'array delle feature
 
     :returns: restituisce il modello
@@ -88,10 +89,11 @@ def make_model_rad(
 ):  # pylint: disable=R0915
     """Modello CAE tratto da Liu et al.
     Permette inoltre la classificazione delle masse grazie a layer fc.
-    type shape_tensor: array
+
+    type shape_tensor: tuple
     param shape_tensor: dimensione dell'immagine in ingresso
 
-    type feature_dim: array
+    type feature_dim: tuple
     param feature_dim: dimensione dell'array delle feature
 
     :returns: restituisce il modello
@@ -135,10 +137,11 @@ def make_model_rad_unet(
 ):  # pylint: disable=R0915
     """Modello UNET modificato con layer di resize.
     Permette inoltre la classificazione delle masse grazie a layer fc
-    type shape_tensor: array
+
+    type shape_tensor: tuple
     param shape_tensor: dimensione dell'immagine in ingresso
 
-    type feature_dim: array
+    type feature_dim: tuple
     param feature_dim: dimensione dell'array delle feature
 
     :returns: restituisce il modello
@@ -229,7 +232,8 @@ def make_model_rad_unet(
 def make_model(shape_tensor=(124, 124, 1)):  # pylint: disable=R0915
     """Modello CAE tratto da Liu et al.
     Permette inoltre la classificazione delle masse grazie a layer fc.
-    type shape_tensor: array
+
+    type shape_tensor: tuple
     param shape_tensor: dimensione dell'immagine in ingresso
 
 
@@ -267,7 +271,8 @@ def make_model(shape_tensor=(124, 124, 1)):  # pylint: disable=R0915
 def make_model_regulizer(shape_tensor=(124, 124, 1)):  # pylint: disable=R0915
     """Modello CAE tratto da Liu et al, ma modificato con dropout, maxpooling e upsampling.
     Permette inoltre la classificazione delle masse grazie a layer fc.
-    type shape_tensor: array
+
+    type shape_tensor: tuple
     param shape_tensor: dimensione dell'immagine in ingresso
 
 
@@ -314,7 +319,8 @@ def make_model_regulizer(shape_tensor=(124, 124, 1)):  # pylint: disable=R0915
 def make_model_unet(shape_tensor=(124, 124, 1)):  # pylint: disable=R0915
     """Modello Unet modificato con layer di resize.
     Permette inoltre la classificazione delle masse grazie a layer fc.
-    type shape_tensor: array
+
+    type shape_tensor: tuple
     param shape_tensor: dimensione dell'immagine in ingresso
 
 
@@ -403,10 +409,11 @@ def make_model_rad_big_unet(
 ):  # pylint: disable=R0915
     """Modello Unet.
     Permette inoltre la classificazione delle masse grazie a layer fc.
-    type shape_tensor: array
+
+    type shape_tensor: tuple
     param shape_tensor: dimensione dell'immagine in ingresso
 
-    type feature_dim: array
+    type feature_dim: tuple
     param feature_dim: dimensione dell'array delle feature
 
     :returns: restituisce il modello

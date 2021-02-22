@@ -273,7 +273,7 @@ def radiomic_dooer(list_test, endpath, lab, extrc):
         ) from e_error
 
     extr_end = time.perf_counter()
-    logging.info("tempo di estrazione: %d", extr_end - extr_start)
+    logging.info("tempo di estrazione: %.2f", extr_end - extr_start)
     updt_start = time.perf_counter()
     pattern = re.compile(r"[M][\w-]*[0-9]*[\w]{13}")
     logging.debug("in regex il pattern è %s", pattern)
@@ -290,7 +290,7 @@ def radiomic_dooer(list_test, endpath, lab, extrc):
 
     del dict_r
     updt_end = time.perf_counter()
-    logger.info("time to update:%d", updt_end - updt_start)
+    logger.info("time to update:%.2f", updt_end - updt_start)
 
     return "time to update:{updt_end-updt_start}"
 
@@ -362,7 +362,7 @@ def blender(img1, img2, weight_1, weight_2):
             img1, weight_1, img2, weight_2, 0
         )
         logger.debug(
-            "sto cercando di sovrapporre le immagini con pesi rispettivamente %d e %d",
+            "sto cercando di sovrapporre le immagini con pesi rispettivamente %.2f e %.2f",
             weight_1,
             weight_2,
         )
@@ -395,7 +395,7 @@ def dice(pred, true, k=1):
         dice_value = intersection / (np.sum(pred) + np.sum(true))
     except ZeroDivisionError:
         logger.exception("provato a dividere per zero!")
-    logger.info("calcolato correttamente il dice ottenendo %d", dice_value)
+    logger.info("calcolato correttamente il dice ottenendo %.2f", dice_value)
     return dice_value
 
 
@@ -421,7 +421,7 @@ def dice_vectorized(pred, true, k=1):
         )
     except ZeroDivisionError:
         logger.exception("provato a dividere per zero!")
-    logger.info("calcolato correttamente il dice medio ottenendo %d", dice_value.mean())
+    logger.info("calcolato correttamente il dice medio ottenendo %.2f", dice_value.mean())
     return dice_value
 
 
