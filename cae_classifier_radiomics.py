@@ -1,7 +1,6 @@
-"""docstring"""
+"""Implementazione CAE con feature radiomiche"""
 import argparse
 import glob
-import logging
 import os
 import keras
 import matplotlib.pyplot as plt
@@ -68,16 +67,6 @@ if __name__ == "__main__":
         help="salva il modello al fine dell'allenamento'",
     )
     args = parser.parse_args()
-
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-
-    formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
-
-    file_handler = logging.FileHandler("RadiomicsSegm.log")
-    file_handler.setFormatter(formatter)
-
-    logger.addHandler(file_handler)
 
     images_rad, masks_rad, labels_rad = caehelper.read_dataset(
         args.datapath, "pgm", "_2_resized", "_1_resized"

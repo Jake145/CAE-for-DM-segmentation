@@ -1,4 +1,4 @@
-"""docstring"""
+"""Funzioni helper per il progetto CAE"""
 import glob
 import logging
 import os
@@ -15,6 +15,7 @@ from tensorflow.python.keras import backend as K  # pylint: disable=E0611
 from skimage.filters import threshold_multiotsu
 import matplotlib.pyplot as plt
 from PIL import Image
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -54,9 +55,7 @@ def save_newext(file_name, data_path, ext1, ext2, endpath):
         )
     try:
         image = plt.imread(os.path.join(data_path, file_name))
-        file_name = file_name.replace(
-            f".{ext1}", f".{ext2}"
-        )
+        file_name = file_name.replace(f".{ext1}", f".{ext2}")
         logger.info(
             "read %s and changed extension from %s to%s",
             os.path.join(data_path, file_name),
@@ -65,7 +64,7 @@ def save_newext(file_name, data_path, ext1, ext2, endpath):
         )
     except Exception as e_error:
         raise Exception("immagine o path non trovati") from e_error
-    status = cv2.imwrite(                       # pylint: disable=E1101
+    status = cv2.imwrite(  # pylint: disable=E1101
         os.path.join(endpath, file_name), image
     )
     logger.info("ho scritto il file %s in %s come .%s ", file_name, endpath, ext2)
@@ -104,15 +103,21 @@ def unit_masks(file_name, data_path, ext1, ext2, endpath):
 
     image = image / 255
     file_name = file_name.replace(f".{ext1}", f".{ext2}")
-    status = cv2.imwrite(                       # pylint: disable=E1101
+    status = cv2.imwrite(  # pylint: disable=E1101
         os.path.join(endpath, file_name), image
     )
     logging.info("ho scritto %s in %s con successo", file_name, endpath)
     return status, image
 
 
-def read_dataset(        # pylint: disable=R0913
-    dataset_path, ext, benign_label, malign_label, x_id="_resized", y_id="_mass_mask", sort=True
+def read_dataset(  # pylint: disable=R0913
+    dataset_path,
+    ext,
+    benign_label,
+    malign_label,
+    x_id="_resized",
+    y_id="_mass_mask",
+    sort=True,
 ):
     """Data la cartella con le maschere e le immagini, restituisce i vettori con le immagini,
     le maschere e le classi. Restituisce i vettori come tensori da dare alla rete.
@@ -172,7 +177,12 @@ def read_dataset(        # pylint: disable=R0913
 
 
 def read_dataset_big(
-    dataset_path_mass, dataset_path_mask, benign_label, malign_label, ext="png", sort=True,
+    dataset_path_mass,
+    dataset_path_mask,
+    benign_label,
+    malign_label,
+    ext="png",
+    sort=True,
 ):
     """Versione di read_dataset per il dataset del TCIA.
     Data la cartella con le maschere e le immagini,
@@ -286,7 +296,7 @@ def radiomic_dooer(list_test, endpath, lab, extrc):
             pickle.dump(dict_r, handle, protocol=pickle.HIGHEST_PROTOCOL)
             logging.info("salvato il pickle feats_%s.pickle in %s", name[0], endpath)
     except Exception as e_error:
-        raise Exception("Controlla che %s sia giusto"%endpath) from e_error
+        raise Exception("Controlla che %s sia giusto" % endpath) from e_error
 
     del dict_r
     updt_end = time.perf_counter()
@@ -306,12 +316,12 @@ def read_pgm_as_sitk(image_path):
     try:
         np_array = np.asarray(Image.open(image_path))
     except Exception as e_error:
-        raise Exception('impossibile leggere %s'%image_path) from e_error
+        raise Exception("impossibile leggere %s" % image_path) from e_error
     logger.info("sto leggendo %s", image_path)
     try:
         sitk_image = sitk.GetImageFromArray(np_array)
     except Exception as e_error:
-        raise Exception('impossibile convertire %s in ITK'%image_path) from e_error
+        raise Exception("impossibile convertire %s in ITK" % image_path) from e_error
     logger.info("sto convertendo %s", image_path)
 
     return sitk_image
@@ -358,7 +368,7 @@ def blender(img1, img2, weight_1, weight_2):
     """
 
     try:
-        image = cv2.addWeighted(                        # pylint: disable=E1101
+        image = cv2.addWeighted(  # pylint: disable=E1101
             img1, weight_1, img2, weight_2, 0
         )
         logger.debug(
@@ -421,7 +431,9 @@ def dice_vectorized(pred, true, k=1):
         )
     except ZeroDivisionError:
         logger.exception("provato a dividere per zero!")
-    logger.info("calcolato correttamente il dice medio ottenendo %.2f", dice_value.mean())
+    logger.info(
+        "calcolato correttamente il dice medio ottenendo %.2f", dice_value.mean()
+    )
     return dice_value
 
 
@@ -460,7 +472,7 @@ def modelviewer(model):
     plt.show()
 
 
-def heatmap(input_image, model,show=True):
+def heatmap(input_image, model, show=True):
     """
     Funzione che mostra la heatmap dell'ultimo layer convoluzionale
     prima del classificatore senza funzionalità radiomiche
@@ -499,18 +511,18 @@ def heatmap(input_image, model,show=True):
         input_image = np.asarray(255 * input_image, np.uint8)
         heat_map = np.asarray(255 * heat_map.squeeze(), np.uint8)
 
-        heat_map_res = cv2.resize(                      # pylint: disable=E1101
+        heat_map_res = cv2.resize(  # pylint: disable=E1101
             heat_map, (input_image.shape[1], input_image.shape[0])
         )
 
         plt.figure("Heatactivation")
-        plt.subplot(1,3,1)
+        plt.subplot(1, 3, 1)
         plt.imshow(input_image)
-        plt.title('image')
-        plt.subplot(1,3,2)
+        plt.title("image")
+        plt.subplot(1, 3, 2)
         plt.imshow(heat_map)
-        plt.title('heatmap')
-        plt.subplot(1,3,3)
+        plt.title("heatmap")
+        plt.subplot(1, 3, 3)
         plt.imshow(blender(input_image, heat_map_res, 1, 1))
         if argmax == 1:
             plt.title("the mass is malign")
@@ -520,7 +532,7 @@ def heatmap(input_image, model,show=True):
     return heat_map
 
 
-def heatmap_rad(input_image, feature, model,show=True):
+def heatmap_rad(input_image, feature, model, show=True):
     """
     Funzione che mostra la heatmap dell'ultimo layer convoluzionale
     prima del classificatore con funzionalità radiomiche
@@ -558,18 +570,18 @@ def heatmap_rad(input_image, feature, model,show=True):
         input_image = np.asarray(255 * input_image, np.uint8)
         heat_map = np.asarray(255 * heat_map.squeeze(), np.uint8)
 
-        heat_map_res = cv2.resize(                      # pylint: disable=E1101
+        heat_map_res = cv2.resize(  # pylint: disable=E1101
             heat_map, (input_image.shape[1], input_image.shape[0])
         )
 
         plt.figure("Heatactivation")
-        plt.subplot(1,3,1)
+        plt.subplot(1, 3, 1)
         plt.imshow(input_image)
-        plt.title('image')
-        plt.subplot(1,3,2)
+        plt.title("image")
+        plt.subplot(1, 3, 2)
         plt.imshow(heat_map)
-        plt.title('heatmap')
-        plt.subplot(1,3,3)
+        plt.title("heatmap")
+        plt.subplot(1, 3, 3)
         plt.imshow(blender(input_image, heat_map_res, 1, 1))
         if argmax == 1:
             plt.title("the mass is malign")

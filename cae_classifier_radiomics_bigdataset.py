@@ -1,9 +1,6 @@
-"""docstring"""
+"""Implementazione di CAE con feature radiomiche per il dataset TCIA"""
 import argparse
-import concurrent.futures
-import logging
 import os
-from functools import partial
 
 import keras
 import matplotlib.pyplot as plt
@@ -12,91 +9,11 @@ import pandas as pd
 import tensorflow as tf
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import to_categorical
-from skimage.io import imread
-from skimage.transform import resize
 from sklearn.decomposition import PCA
-from sklearn.metrics import auc, roc_curve
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 from functioncae import cae_cnn_models, caehelper, classes_cae
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
-
-file_handler = logging.FileHandler("BigRadiomicsSegm.log")
-file_handler.setFormatter(formatter)
-
-logger.addHandler(file_handler)
-
-
-def dice_big(  # pylint: disable=R0913
-    list_,
-    mod,
-    lists,
-    k=1,
-    shape=(1024, 768, 1),
-    alpha=0.1,
-):
-    """calcola il dice di una singola immagine
-    :type list_: lista
-    :param list_: lista con il path delle immagini e l'array di feature estratte
-
-    :type k: int
-    :param k: valore massimo binarizzato della maschera
-
-    :type mod: keras model
-    :param mod: modello di keras precedentemente allenato
-
-    :type shape: array
-    :param shape: dimensione di resize dell'immagine
-
-    :type alpha: float
-    :param alpha: valore di binarizzazione
-
-    :type lists: list
-    :param lists: lista vuota da appendere
-
-    :returns: l'indice di dice
-    :rtype: float
-    """
-    pred = resize(imread(str(list_[0])), shape)
-    pred = (
-        mod.predict([pred[np.newaxis, ...], list_[1][np.newaxis, ...]])[0].squeeze()
-        > alpha
-    )
-    true = resize(imread(str(list_[2])), shape).squeeze()
-    intersection = np.sum(pred[true == k]) * 2.0
-    dice = intersection / (np.sum(pred.squeeze()) + np.sum(true))
-    lists.append(dice)
-    return dice
-
-
-def ypred_creator(list_, mod, list_app, shape=(1024, 768, 1)):  # pylint: disable=R0913
-    """calcola le predizioni di classificazione
-    :type list_: lista
-    :param list_: lista con il path delle immagini e l'array di feature estratte
-
-    :type list_app: list
-    :param list_app: lista vuota da appendere
-
-    :type shape: array
-    :param shape: dimensione di resize dell'immagine
-
-
-
-    :returns: le probabilità di predizione della classificazione
-    :rtype: list
-
-
-    """
-    input_ = resize(imread(str(list_[0])), shape)
-    output_ = mod.predict([input_[np.newaxis, ...], list_[1][np.newaxis, ...]])[1][0]
-    list_app.append(output_)
-    return output_
-
 
 if __name__ == "__main__":
 
@@ -273,7 +190,7 @@ if __name__ == "__main__":
         shape_tensor=tuple(args.tensor),
     )
 
-    #batch = mass_gen_rad_big[67]
+    # batch = mass_gen_rad_big[67]
 
     Validation_data = classes_cae.ValidatorGenerator(
         images_train_rad_big_val,
@@ -322,40 +239,3 @@ if __name__ == "__main__":
         model_rad.save("model_big_radiomics")
 
     caehelper.modelviewer(HISTORY_RAD)
-
-    dices = []
-
-    listdicer = []
-
-    for i, _ in enumerate(images_test_rad_big):
-        listdicer.append(
-            [images_test_rad_big[i], feature_test_bigg[i], masks_test_rad_big[i]]
-        )
-    dice_big_p = partial(dice_big, mod=model_rad, lists=dices,shape=tuple(args.tensor))
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.map(dice_big_p, listdicer)
-        print(future)
-
-    dices = np.array(dices)
-
-    meandice = dices.mean()
-    logger.info("dice calcolato:%d", meandice)
-    ypred = []
-
-    listrocer = []
-    for i, _ in enumerate(images_test_rad_big):
-        listrocer.append([images_test_rad_big[i], feature_test_bigg[i]])
-
-    ypred_creator_p = partial(ypred_creator, mod=model_rad, list_app=ypred,shape=tuple(args.tensor))
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.map(ypred_creator_p, listrocer)
-        print(future)
-
-    fpr, tpr, thresholds = roc_curve(
-        class_test_rad_big, [item[0] for _, item in enumerate(ypred)], pos_label=0
-    )
-
-    auc = auc(fpr, tpr)
-    logger.info("auc calcolato:%d", auc)
-
-    caehelper.plot_roc_curve(fpr, tpr, auc)

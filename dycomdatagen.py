@@ -1,4 +1,4 @@
-"""docstring"""
+"""Legge i DICOM e crea il dataset da cui estrarre le feature del TCIA"""
 import argparse
 import concurrent.futures
 import logging

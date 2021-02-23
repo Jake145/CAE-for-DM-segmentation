@@ -1,4 +1,4 @@
-"""docstring"""
+"""Estrae le feature radiomiche dal dataset TCIA generato con dycomdatagen.py"""
 import argparse
 import concurrent.futures
 import logging

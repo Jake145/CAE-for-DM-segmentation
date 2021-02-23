@@ -1,5 +1,4 @@
-"""docstring"""
-import logging
+"""Implementazione CAE senza feature radiomiche"""
 import os
 import argparse
 
@@ -54,16 +53,6 @@ if __name__ == "__main__":
         help="salva il modello al fine dell'allenamento'",
     )
     args = parser.parse_args()
-
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-
-    formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
-
-    file_handler = logging.FileHandler("CAESegm.log")
-    file_handler.setFormatter(formatter)
-
-    logger.addHandler(file_handler)
 
     images, masks, labels = caehelper.read_dataset(
         args.datapath, "pgm", "_2_resized", "_1_resized"
@@ -173,7 +162,7 @@ if __name__ == "__main__":
     plt.subplot(1, 3, 2)
     plt.imshow(ytrain.squeeze())
     plt.subplot(1, 3, 3)
-    plt.imshow(model.predict(xtrain)[0].squeeze()>0.1)
+    plt.imshow(model.predict(xtrain)[0].squeeze() > 0.1)
 
     IDX = 16
     xtest = mass_test[IDX][np.newaxis, ...]
@@ -185,15 +174,15 @@ if __name__ == "__main__":
     plt.subplot(1, 3, 2)
     plt.imshow(ytest.squeeze())
     plt.subplot(1, 3, 3)
-    plt.imshow(model.predict(xtest)[0].squeeze()>0.1)
+    plt.imshow(model.predict(xtest)[0].squeeze() > 0.1)
 
     dicetr = caehelper.dice_vectorized(
         mask_train,
-        model.predict(mass_train)[0]>0.1,
+        model.predict(mass_train)[0] > 0.1,
     ).mean()
 
     docetest = caehelper.dice_vectorized(
-        mask_test, model.predict(mass_test)[0]>0.1
+        mask_test, model.predict(mass_test)[0] > 0.1
     ).mean()
 
     hmap = caehelper.heatmap(mass_test[18], model)

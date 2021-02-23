@@ -1,4 +1,4 @@
-"""docstring"""
+"""Ottimizzatore degli iperparametri. Modificando la funzione build_model* si può ottimizzare il modello"""
 
 import datetime
 import glob
