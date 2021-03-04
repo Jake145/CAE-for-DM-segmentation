@@ -66,6 +66,12 @@ if __name__ == "__main__":
         action="store_true",
         help="salva il modello al fine dell'allenamento'",
     )
+    parser.add_argument(
+        "-lr",
+        "--learningrate",
+        action="store_true",
+        help="Imposta una correzione sul LR in caso di plateu",
+    )
     args = parser.parse_args()
 
     images_rad, masks_rad, labels_rad = caehelper.read_dataset(
@@ -89,7 +95,7 @@ if __name__ == "__main__":
     extractor.enableFeatureClassByName("glrlm")
     extractor.enableFeatureClassByName("glszm")
     extractor.enableFeatureClassByName("ngtdm")
-
+    # extractor.enableImageTypeByName('Wavelet')
     fnames.sort()
     dataframe = {
         f.replace(args.datapath, ""): extractor.execute(
@@ -226,6 +232,14 @@ if __name__ == "__main__":
         },
     )
 
+    if args.learningrate:
+        lr_plateu_callback = keras.callbacks.ReduceLROnPlateau(
+            factor=0.1, patience=3, min_lr=0.001, verbose=1
+        )
+        call_backs = [model_checkpoint_callback, lr_plateu_callback]
+    else:
+        call_backs = [model_checkpoint_callback]
+
     HISTORY_RAD = model_rad.fit(
         mass_gen_rad,
         steps_per_epoch=len(mass_gen_rad),
@@ -234,7 +248,7 @@ if __name__ == "__main__":
             [mass_train_rad_val, feature_train_val],
             [mask_train_rad_val, class_train_rad_val],
         ),
-        callbacks=[model_checkpoint_callback],
+        callbacks=call_backs,
     )
 
     caehelper.modelviewer(HISTORY_RAD)

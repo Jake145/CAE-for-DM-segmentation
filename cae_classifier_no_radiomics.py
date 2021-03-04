@@ -52,6 +52,12 @@ if __name__ == "__main__":
         action="store_true",
         help="salva il modello al fine dell'allenamento'",
     )
+    parser.add_argument(
+        "-lr",
+        "--learningrate",
+        action="store_true",
+        help="Imposta una correzione sul LR in caso di plateu",
+    )
     args = parser.parse_args()
 
     images, masks, labels = caehelper.read_dataset(
@@ -136,6 +142,14 @@ if __name__ == "__main__":
         },
     )
 
+    if args.learningrate:
+        lr_plateu_callback = keras.callbacks.ReduceLROnPlateau(
+            factor=0.1, patience=3, min_lr=0.001, verbose=1
+        )
+        call_backs = [model_checkpoint_callback, lr_plateu_callback]
+    else:
+        call_backs = [model_checkpoint_callback]
+
     HISTORY = model.fit(
         mass_gen,
         steps_per_epoch=len(mass_gen),
@@ -144,7 +158,7 @@ if __name__ == "__main__":
             mass_train_val,
             [mask_train_val, class_train_val],
         ),
-        callbacks=[model_checkpoint_callback],
+        callbacks=call_backs,
     )
 
     caehelper.modelviewer(HISTORY)

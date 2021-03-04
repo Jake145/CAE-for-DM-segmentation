@@ -83,6 +83,12 @@ if __name__ == "__main__":
         help="Numero di componenti principali",
         default=3,
     )
+    parser.add_argument(
+        "-lr",
+        "--learningrate",
+        action="store_true",
+        help="Imposta una correzione sul LR in caso di plateu",
+    )
 
     args = parser.parse_args()
 
@@ -226,13 +232,19 @@ if __name__ == "__main__":
             "classification_output": tf.keras.metrics.AUC(),
         },
     )
-
+    if args.learningrate:
+        lr_plateu_callback = keras.callbacks.ReduceLROnPlateau(
+            factor=0.1, patience=3, min_lr=0.001, verbose=1
+        )
+        call_backs = [model_checkpoint_callback, lr_plateu_callback]
+    else:
+        call_backs = [model_checkpoint_callback]
     HISTORY_RAD = model_rad.fit(
         mass_gen_rad_big,
         steps_per_epoch=len(mass_gen_rad_big),
         epochs=args.epocs,
         validation_data=Validation_data,
-        callbacks=[model_checkpoint_callback],
+        callbacks=call_backs,
     )
 
     if args.save:
